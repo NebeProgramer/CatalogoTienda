@@ -1310,3 +1310,7 @@ app.post('/api/restablecer-contrasena', async (req, res) => {
         res.status(500).json({ error: 'Error al restablecer la contraseña.' });
     }
 });
+
+app.get('/' , (req, res) => {
+    res.sendFile('index.html', { root: __dirname });
+});
