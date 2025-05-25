@@ -38,8 +38,9 @@ mongoose.connection.on('error', (err) => {
 });
 
 // Middleware
-app.use(express.static(path.join(__dirname, '../public')));
-app.use('./public', express.static(path.join(__dirname, '..', 'public')));
+// Servir archivos estáticos desde la carpeta public
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
@@ -1156,7 +1157,7 @@ app.delete('/api/redes-sociales/:id', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(port, () => {
