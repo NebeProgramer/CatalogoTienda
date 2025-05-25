@@ -38,16 +38,8 @@ mongoose.connection.on('error', (err) => {
 });
 
 // Middleware
-// Servir archivos estáticos desde la carpeta public
-const publicPath = path.join(__dirname, '..', 'public');
-console.log('Carpeta public en:', publicPath);
-app.use(express.static(publicPath));
-app.use('/public', express.static(publicPath));
-// Middleware para debugging de rutas
-app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path}`);
-    next();
-});
+app.use(express.static(path.join(__dirname, '../public')));
+app.use('./public', express.static(path.join(__dirname, '..', 'public')));
 app.use(express.json());
 app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
@@ -1163,24 +1155,8 @@ app.delete('/api/redes-sociales/:id', async (req, res) => {
     }
 });
 
-// Servir index.html desde la ruta raíz y cualquier otra ruta no encontrada
-app.get('*', (req, res) => {
-    const indexPath = path.join(__dirname, '..', 'public', 'index.html');
-    console.log('Intentando servir index.html desde:', indexPath);
-    
-    try {
-        if (!fs.existsSync(indexPath)) {
-            throw new Error(`No existe el archivo en: ${indexPath}`);
-        }
-        res.sendFile(indexPath);
-    } catch (error) {
-        console.error('Error al servir index.html:', error);
-        res.status(404).send(`Error: ${error.message}`);
-    }
-});
-
 app.listen(port, () => {
-    console.log(`Servidor escuchando en http://0.0.0.0:${port}`);
+    console.log(`Servidor escuchando en http://localhost:${port}`);
 });
 
 // --- Crear carpeta y archivo de ubicación del mapa al iniciar el servidor ---
