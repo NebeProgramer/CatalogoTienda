@@ -1312,5 +1312,14 @@ app.post('/api/restablecer-contrasena', async (req, res) => {
 });
 
 app.get('/' , (req, res) => {
-    res.sendFile('index.html', { root: __dirname });
+    const direccionInicio = path.join(__dirname, '..', 'index.html');
+    if (fs.existsSync(direccionInicio)) {
+        res.status(200);
+        console.log('Enviando archivo index.html');
+        // Enviar el archivo index.html si existe
+        return res.sendFile(direccionInicio);
+    }
+    console.error('Archivo index.html no encontrado');
+    res.status(404).send('Archivo no encontrado');
+
 });
