@@ -39,8 +39,13 @@ mongoose.connection.on('error', (err) => {
 
 // Middleware
 // Servir archivos estáticos desde la carpeta public
-app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use('/', express.static(path.join(__dirname, '..', 'public')));
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
+// Middleware para debugging de rutas
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`);
+    next();
+});
 app.use(express.json());
 app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
@@ -1156,8 +1161,15 @@ app.delete('/api/redes-sociales/:id', async (req, res) => {
     }
 });
 
+// Servir index.html desde la ruta raíz
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+    const indexPath = path.resolve(__dirname, '..', 'public', 'index.html');
+    console.log('Intentando servir index.html desde:', indexPath);
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).send('No se encuentra index.html');
+    }
 });
 
 app.listen(port, () => {
