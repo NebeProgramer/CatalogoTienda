@@ -1156,7 +1156,7 @@ app.delete('/api/redes-sociales/:id', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.send('API del catalogo de productos en funcionamiento');
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 app.listen(port, () => {
