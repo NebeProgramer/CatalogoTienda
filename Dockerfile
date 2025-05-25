@@ -2,7 +2,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copiar archivos de dependencias e instalar
-COPY backend/package*.json ./
+COPY backend/package.json ./
 RUN npm install --omit=dev
 
 # Copiar el resto del código
