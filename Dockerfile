@@ -7,6 +7,7 @@ RUN npm install --omit=dev
 
 # Copiar el resto del código
 COPY backend/ ./
+COPY public/ ./public
 
 # Puerto por defecto y variable de entorno
 ENV PORT=3000
