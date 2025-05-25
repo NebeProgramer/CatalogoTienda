@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script>
+            
+        </script>
+        
+    </script>
+<meta name="viewport" content="width=device-width, initial-
+scale=1.0">
+
+<title>Catálogo de Productos</title>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+<div id="loader" style="display:none;">
+    <div class="spinner"></div>
+</div>
+<header>
+    <button id="Burguer">☰</button>
+    <div class="menuHamburguesa">
+        
+        <div class="Burguer-Items">
+            <section id="CRUD">
+                <div class="crud-container">
+                    <button class="crud-btn crud-btn-create" id="btnvolver">User View</button>
+
+                </div>
+            </section>
+            
+
+            <section id="filtro">
+                <div class="filtro-container">
+                    <h2>Filtros:</h2>
+                    <ul id="filtro-lista">
+                        <!-- Los filtros se agregarán dinámicamente aquí -->
+                    </ul>
+                    <div id="agregar-filtro-container" style="display: none;">
+                        <input type="text" id="nuevo-filtro" placeholder="Nombre del filtro">
+                        <button id="guardar-filtro">💾</button>
+                    </div>
+                    <button id="btn-agregar-filtro">Agregar Filtro</button>
+                </div>
+            </section>
+            <section id="footer">
+                <ul>
+                    <li><a href="datos-perfilAdmin.html">Todas las Cuentas</a></li>
+                    <li><a href="sobre-nosotrosAdmin.html">Sobre Nosotros</a></li>
+                    <li><a href="terminos-condicionesAdmin.html">Términos y Condiciones</a></li>
+                    <li><a href="preguntas-respuestasAdmin.html">Preguntas y Respuestas</a></li>
+                    <li><a href="#" id="preferencias">Preferencias</a></li>
+                </ul>
+            </section>
+        </div>
+        
+    </div>
+    
+    <nav> 
+        <ul class="iniciosesion">
+        </ul>
+    </nav>
+<h1>Catálogo de Productos</h1>
+<section id="CRUD">
+    
+    <div class="busqueda">
+        <input type="text" id="buscar" name="buscar" placeholder="Buscar">
+        <button class="btn-lupa">
+            🔍
+        </button>
+    </div>
+    <button class="crud-btn crud-btn-create" id="btnCrear">Agregar Producto</button>
+</section>
+
+
+</header>
+<main>
+
+    <div class="carrusel">
+        <div class="carrusel-items">
+
+        </div>
+        <button class="carrusel-prev">&#10094;</button>
+        <button class="carrusel-next">&#10095;</button>
+    </div>
+    
+</main>
+<footer>
+    <p>© 2024 Mi Catálogo de Productos</p>
+    <div id="footer-mapa" style="min-height:120px; margin-bottom:10px;"></div>
+    <p>Nuestras redes</p>
+
+    <ul class="redes-sociales">
+        <!-- Redes sociales dinámicas -->
+    </ul>
+
+    <div class="red-social-container">
+        <button id="btn-agregar-red">+</button>
+        <button id="btn-guardar-red" style="display: none;">Guardar</button>
+        <button id="Cancelar" style="display: none;">❌</button>
+    </div>
+    
+</footer>
+
+<!-- Modal para preferencias de monedas -->
+<div id="modal-preferencias" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModalPreferencias">&times;</span>
+        <h2>Preferencias de Monedas</h2>
+        <table id="tablaMonedas">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Prefijo</th>
+                    <th>Valor USD</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Las monedas se cargarán dinámicamente aquí -->
+            </tbody>
+        </table>
+        <h3>Agregar Nueva Moneda</h3>
+        <form id="formNuevaMoneda">
+            <label for="nombreMoneda">Nombre:</label>
+            <input type="text" id="nombreMoneda" name="nombreMoneda" required>
+
+            <label for="prefijoMoneda">Prefijo:</label>
+            <input type="text" id="prefijoMoneda" name="prefijoMoneda" required>
+
+            <label for="valorUSD">Valor en USD:</label>
+            <input type="number" id="valorUSD" name="valorUSD" step="0.01" required>
+
+            <button type="submit">Agregar Moneda</button>
+        </form>
+        <h2>Ubicaciones</h2>
+        <table id="tablaUbicaciones">
+            <thead>
+                <tr>
+                    <th>País</th>
+                    <th>Departamento</th>
+                    <th>Ciudad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="ubicaciones">
+                <!-- Las ubicaciones se cargarán dinámicamente aquí -->
+            </tbody>
+        </table>
+        
+        <h3>Agregar Nueva Ubicación</h3>
+        <form id="formNuevaUbicacion">
+            <label for="pais">País:</label>
+            <input type="text" id="pais" name="pais" required>
+
+            <label for="departamento">Departamento:</label>
+            <input type="text" id="departamento" name="departamento" required>
+
+            <label for="ciudad">Ciudad:</label>
+            <input type="text" id="ciudad" name="ciudad" required>
+
+            <button type="submit" id="btnAgregarUbicacion">Agregar Ubicación</button>
+    </div>  
+</div>
+<script src="./js/scriptAdmin.js"></script>
+</body>
+</html>

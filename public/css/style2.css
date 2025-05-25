@@ -1,0 +1,648 @@
+/* Estilos CSS Base - Los alumnos deben completar este archivo */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff5e6; /* Fondo base claro */
+}
+
+header {
+    background-color: #ffb700; /* Naranja base */
+    padding: 20px;
+    text-align: center;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    background-color: #fff5e6; /* Fondo claro */
+}
+
+.formPerfilContainer {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff5e6; /* Fondo claro */
+    border: 1px solid #ffb700; /* Naranja base */
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+input, select, textarea, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+#fotoPerfil {
+    display: block;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin: 10px auto;
+}
+
+#dir, #mis-tarjetas {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff5e6; /* Fondo claro */
+    border: 1px solid #ffb700; /* Naranja base */
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex; 
+    justify-content: center;
+    align-items: center; 
+}
+
+nav ul li {
+    margin-left: 15px; 
+}
+
+nav ul li a {
+    color: #000;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+.producto {
+    border: 1px solid #ffb700; /* Naranja base */
+    margin: 10px;
+    padding: 15px;
+    text-align: center;
+    width: 250px;
+    background-color: #fff5e6; /* Fondo claro */
+    border-radius: 10px;
+}
+
+.producto img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+/* TODO: Agregar estilos responsive aquí (media queries) para diferentes
+tamaños de pantalla */
+
+footer {
+    background-color: #ffb700; /* Naranja base */
+    padding: 10px;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+}
+
+.social-icons {
+    display: flex;
+    gap: 30px;
+    margin-top: 10px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.social-icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 5px;
+}
+
+.social-icon-item img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.social-icon-item span {
+    font-size: 16px;
+    color: #222;
+    margin-top: 2px;
+    font-weight: bold;
+}
+
+/* Ajustes para el modal */
+#modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #ffb700; /* Naranja base */
+    width: 90%; /* Ajuste responsivo para pantallas pequeñas */
+    max-width: 600px; /* Ancho máximo para pantallas grandes */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para el modal */
+    position: relative;
+    max-height: 90vh; /* Limitar la altura máxima */
+    overflow-y: auto; /* Habilitar scroll si el contenido es demasiado largo */
+    display: flex; /* Flexbox para centrar contenido */
+    flex-direction: column;
+    align-items: center; /* Centrar contenido horizontalmente */
+}
+
+/* Botón de cerrar el modal */
+.close-btn {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+/* Ajustes para los formularios dentro del modal */
+.modal-section form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espaciado entre los campos */
+}
+
+/* Ajustes para los campos de entrada */
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box; /* Asegurar que el padding no afecte el ancho */
+}
+
+/* Botones dentro del modal */
+.modal button {
+    width: 100%; /* Botones de ancho completo */
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #ffb700;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+    background-color: #a27400;
+    color: #fff;
+}
+
+/* Estilo para pantallas pequeñas */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%; /* Ajustar el ancho para pantallas pequeñas */
+        padding: 15px;
+    }
+
+    input, select, textarea {
+        font-size: 12px; /* Reducir el tamaño de fuente en pantallas pequeñas */
+    }
+
+    .modal button {
+        font-size: 14px; /* Reducir el tamaño de los botones */
+    }
+}
+
+/* Estilo general para los botones */
+button {
+    background-color: #ffb700; /* Naranja base */
+    color: #000; /* Texto negro */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /* Espaciado superior */
+    display: inline-block; /* Asegura que los botones se alineen correctamente */
+    text-align: center;
+}
+
+/* Hover para los botones */
+button:hover {
+    background-color: #cc8c00; /* Naranja oscuro */
+    color: #fff; /* Texto blanco */
+}
+
+/* Botones dentro de los formularios */
+button[type="submit"], #btnGuardarDireccion, #btnGuardarTarjeta {
+    width: 100%; /* Botones de ancho completo */
+    margin-top: 15px;
+}
+
+/* Botones de acción (Agregar/Borrar) */
+#btnDireccion, #btnBorrarDireccion, #btnAgregarTarjeta, #btnBorrarTarjeta {
+    width: auto; /* Botones de tamaño automático */
+    margin: 5px; /* Espaciado entre botones */
+    padding: 8px 12px; /* Tamaño compacto */
+}
+
+/* Botones dentro de los modales */
+.modal button {
+    width: auto;
+    margin: 10px auto; /* Centrar los botones dentro del modal */
+    display: block;
+}
+
+/* Estilo para los botones seleccionados */
+
+/* Ajustes para los formularios dentro del modal */
+.modal-section form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaciado entre los campos */
+}
+
+/* Ajustes para los campos de entrada */
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Contenedor para los botones de acción */
+#mis-tarjetas .botones-accion {
+    display: flex;
+    justify-content: space-between; /* Espaciado uniforme entre los botones */
+    gap: 10px; /* Espaciado entre los botones */
+    margin-top: 15px;
+}
+
+/* Botón de acción (Agregar/Borrar) */
+#btnDireccion, #btnBorrarDireccion, #btnAgregarTarjeta, #btnBorrarTarjeta {
+    flex: 1; /* Hacer que los botones ocupen el mismo ancho */
+    padding: 10px;
+    background-color: #ffb700;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+/* Hover para los botones de acción */
+#btnDireccion:hover, #btnBorrarDireccion:hover, #btnAgregarTarjeta:hover, #btnBorrarTarjeta:hover {
+    background-color: #a27400;
+    color: #fff;
+}
+
+/* Botón "Guardar Cambios" */
+#btnPerfil {
+    width: 100%; /* Botón de ancho completo */
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #ffb700;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+/* Hover para el botón "Guardar Cambios" */
+#btnPerfil:hover {
+    background-color: #a27400;
+    color: #fff;
+}
+
+.direccion-item {
+    display: flex; /* Usar flexbox para alinear los elementos en una línea */
+    flex-wrap: wrap; /* Permitir que los elementos se ajusten si no caben */
+    gap: 10px; /* Espaciado entre los elementos */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+.direccion-item p {
+    margin: 0; /* Eliminar márgenes */
+    font-size: 14px; /* Ajustar el tamaño de la fuente */
+    white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
+}
+
+/* Estilo para las tarjetas */
+.tarjeta-item {
+    display: flex; /* Usar flexbox para alinear los elementos en una línea */
+    flex-wrap: wrap; /* Permitir que los elementos se ajusten si no caben */
+    gap: 10px; /* Espaciado entre los elementos */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+.tarjeta-item p {
+    margin: 0; /* Eliminar márgenes */
+    font-size: 14px; /* Ajustar el tamaño de la fuente */
+    white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
+}
+
+/* Estilo para las tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+thead {
+    background-color: #f9f9f9;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+tr.selected {
+    background-color: #ffe4b5; /* Fondo amarillo claro */
+    font-weight: bold;
+}
+
+#tablaDirecciones, #tablaTarjetas {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#tablaDirecciones th, #tablaDirecciones td,
+#tablaTarjetas th, #tablaTarjetas td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+#tablaDirecciones th, #tablaTarjetas th {
+    background-color: #ffb700; /* Naranja base */
+    color: #fff;
+}
+
+#tablaDirecciones tbody tr:hover, #tablaTarjetas tbody tr:hover {
+    background-color: #fff5e6; /* Fondo claro al pasar el mouse */
+}
+
+#numeroTarjeta {
+    font-size: 16px;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#fechaExpiracion {
+    font-size: 16px;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#modalFactura {
+    display: none; /* Ocultar el modal por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    justify-content: center;
+    align-items: center;
+}
+
+#modalFactura.mostrar {
+    display: flex; /* Mostrar el modal cuando se active */
+}
+
+.modal-contenido {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #ffb700; /* Naranja base */
+    width: 90%; /* Ajuste responsivo para pantallas pequeñas */
+    max-width: 600px; /* Ancho máximo para pantallas grandes */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para el modal */
+    position: relative;
+    max-height: 90vh; /* Limitar la altura máxima */
+    overflow-y: auto; /* Habilitar scroll si el contenido es demasiado largo */
+}
+
+.cerrar {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+.cerrar:hover {
+    color: #000;
+}
+
+/* Estilo para el switch tipo checkbox */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+  margin-left: 10px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 28px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #ffb700;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #ffb700;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.slider.round {
+  border-radius: 28px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+:root {
+  --swal2-popup-background: #ffb700;
+  --swal2-title-color: #222;
+  --swal2-confirm-button-background: #ffb700;
+  --swal2-confirm-button-color: #fff;
+  --swal2-cancel-button-background: #ffb700;
+  --swal2-cancel-button-color: #fff;
+  --swal2-deny-button-background: #ffb700;
+  --swal2-deny-button-color: #fff;
+  --swal2-confirm-button-border: none;
+  --swal2-confirm-button-border-radius: 5px;
+  --swal2-confirm-button-font-weight: bold;
+}
+
+.swal2-styled.swal2-confirm,
+.swal2-styled.swal2-cancel,
+.swal2-styled.swal2-deny {
+  background-color: #ffb700 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 5px !important;
+  font-weight: bold !important;
+  font-size: 16px !important;
+  padding: 10px 24px !important;
+  box-shadow: none !important;
+  transition: background 0.3s, color 0.3s;
+}
+
+.swal2-styled.swal2-confirm:hover, .swal2-styled.swal2-confirm:focus {
+  color: #1bc700 !important; /* Verde al pasar el mouse en aceptar */
+}
+.swal2-styled.swal2-cancel:hover, .swal2-styled.swal2-cancel:focus {
+  color: #e53935 !important; /* Rojo al pasar el mouse en cancelar */
+}
+.swal2-styled.swal2-deny:hover, .swal2-styled.swal2-deny:focus {
+  color: #e53935 !important; /* Rojo para deny si se usa */
+}
+.swal2-styled.swal2-confirm:active,
+.swal2-styled.swal2-cancel:active,
+.swal2-styled.swal2-deny:active {
+  filter: brightness(0.95);
+}
+
+/* El botón OK (cuando solo hay uno) se mantiene blanco al pasar el mouse */
+.swal2-styled.swal2-confirm:only-child:hover, .swal2-styled.swal2-confirm:only-child:focus {
+  color: #fff !important;
+}
+
+#loader {
+  position: fixed;
+  z-index: 9999;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #ffb700;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}

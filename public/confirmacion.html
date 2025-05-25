@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Compra</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="./css/style.css"> <!-- Asegúrate de tener un archivo CSS para estilos -->
+</head>
+<body class="confirmacion-body">
+        <div id="loader" style="display:none;">
+      <div class="spinner"></div>
+    </div>
+    <header class="confirmacion-header">
+        <h1 class="confirmacion-h1">¡Gracias por tu compra!</h1>
+    </header>
+    <main class="confirmacion-main">
+        <section id="resumen-compra" class="confirmacion-resumen-compra">
+            <h2 class="confirmacion-h2">Resumen de tu compra</h2>
+            <p id="NumeroFactura">Factura Numero:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="detalle-compra">
+                    <!-- Los detalles de la compra se llenarán dinámicamente con JavaScript -->
+                </tbody>
+            </table>
+            <p id="total-compra" class="confirmacion-total-compra"><strong>Total General:</strong> $0.00</p>
+        </section>
+        <section id="informacion-comprador" class="confirmacion-informacion-comprador">
+            <h2 class="confirmacion-h2">Información del Comprador</h2>
+            <p id="nombre-comprador">Nombre: <span></span></p>
+            <p id="direccion-envio">Dirección de Envío: <span></span></p>
+            <p id="Numero-de-Tarjeta">Numero de tarjeta: <span></span></p>
+        </section>
+        <section id="mensaje-agradecimiento" class="confirmacion-mensaje-agradecimiento">
+            <p>Esperamos que disfrutes de tu compra. Si tienes alguna pregunta, no dudes en contactarnos.</p>
+        </section>
+        <button id="btn-regresar" class="confirmacion-button">Regresar al Inicio</button>
+    </main>
+    <script src="./js/confirmacion.js"></script> <!-- Asegúrate de tener un archivo JS para la lógica -->
+</body>
+</html>

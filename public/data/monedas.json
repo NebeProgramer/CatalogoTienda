@@ -1,0 +1,147 @@
+[
+    {
+        "moneda": "USD",
+        "nombre": "Dólar Estadounidense",
+        "valor_en_usd": 1
+    },
+    {
+        "moneda": "EUR",
+        "nombre": "Euro",
+        "valor_en_usd": 1.06
+    },
+    {
+        "moneda": "JPY",
+        "nombre": "Yen Japonés",
+        "valor_en_usd": 0.0067
+    },
+    {
+        "moneda": "GBP",
+        "nombre": "Libra Esterlina",
+        "valor_en_usd": 1.22
+    },
+    {
+        "moneda": "AUD",
+        "nombre": "Dólar Australiano",
+        "valor_en_usd": 0.64
+    },
+    {
+        "moneda": "CAD",
+        "nombre": "Dólar Canadiense",
+        "valor_en_usd": 0.73
+    },
+    {
+        "moneda": "CHF",
+        "nombre": "Franco Suizo",
+        "valor_en_usd": 1.10
+    },
+    {
+        "moneda": "CNY",
+        "nombre": "Yuan Chino",
+        "valor_en_usd": 0.14
+    },
+    {
+        "moneda": "COP",
+        "nombre": "Peso Colombiano",
+        "valor_en_usd": 0.00025
+    },
+    {
+        "moneda": "INR",
+        "nombre": "Rupia India",
+        "valor_en_usd": 0.012
+    },
+    {
+        "moneda": "BRL",
+        "nombre": "Real Brasileño",
+        "valor_en_usd": 0.20
+    },
+    {
+        "moneda": "MXN",
+        "nombre": "Peso Mexicano",
+        "valor_en_usd": 0.052
+    },
+    {
+        "moneda": "ARS",
+        "nombre": "Peso Argentino",
+        "valor_en_usd": 0.0027
+    },
+    {
+        "moneda": "CLP",
+        "nombre": "Peso Chileno",
+        "valor_en_usd": 0.0011
+    },
+    {
+        "moneda": "ZAR",
+        "nombre": "Rand Sudafricano",
+        "valor_en_usd": 0.053
+    },
+    {
+        "moneda": "KRW",
+        "nombre": "Won Surcoreano",
+        "valor_en_usd": 0.00075
+    },
+    {
+        "moneda": "RUB",
+        "nombre": "Rublo Ruso",
+        "valor_en_usd": 0.010
+    },
+    {
+        "moneda": "TRY",
+        "nombre": "Lira Turca",
+        "valor_en_usd": 0.037
+    },
+    {
+        "moneda": "SAR",
+        "nombre": "Riyal Saudí",
+        "valor_en_usd": 0.27
+    },
+    {
+        "moneda": "AED",
+        "nombre": "Dirham de los Emiratos Árabes Unidos",
+        "valor_en_usd": 0.27
+    },
+    {
+        "moneda": "SEK",
+        "nombre": "Corona Sueca",
+        "valor_en_usd": 0.091
+    },
+    {
+        "moneda": "NOK",
+        "nombre": "Corona Noruega",
+        "valor_en_usd": 0.093
+    },
+    {
+        "moneda": "DKK",
+        "nombre": "Corona Danesa",
+        "valor_en_usd": 0.14
+    },
+    {
+        "moneda": "PLN",
+        "nombre": "Zloty Polaco",
+        "valor_en_usd": 0.23
+    },
+    {
+        "moneda": "THB",
+        "nombre": "Baht Tailandés",
+        "valor_en_usd": 0.028
+    },
+    {
+        "moneda": "IDR",
+        "nombre": "Rupia Indonesia",
+        "valor_en_usd": 0.000065
+    },
+    {
+        "moneda": "MYR",
+        "nombre": "Ringgit Malayo",
+        "valor_en_usd": 0.21
+    },
+    {
+        "moneda": "SGD",
+        "nombre": "Dólar de Singapur",
+        "valor_en_usd": 0.73
+    },
+    {
+        "moneda": "HKD",
+        "nombre": "Dólar de Hong Kong",
+        "valor_en_usd": 0.13
+    }
+]
