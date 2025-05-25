@@ -39,7 +39,7 @@ mongoose.connection.on('error', (err) => {
 
 // Middleware
 // Servir archivos estáticos desde la carpeta public
-app.use('/', express.static(path.join(__dirname, '..', 'public')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 // Middleware para debugging de rutas
 app.use((req, res, next) => {
@@ -1161,15 +1161,16 @@ app.delete('/api/redes-sociales/:id', async (req, res) => {
     }
 });
 
-// Servir index.html desde la ruta raíz
+// Servir index.html desde la ruta raíz y cualquier otra ruta no encontrada
 app.get('/', (req, res) => {
-    const indexPath = path.resolve(__dirname, '..', 'public', 'index.html');
+    const indexPath = path.join(__dirname, '..', 'public', 'index.html');
     console.log('Intentando servir index.html desde:', indexPath);
-    if (fs.existsSync(indexPath)) {
-        res.sendFile(indexPath);
-    } else {
-        res.status(404).send('No se encuentra index.html');
-    }
+    res.sendFile(indexPath, err => {
+        if (err) {
+            console.error('Error al servir index.html:', err);
+            res.status(404).send('No se encuentra index.html');
+        }
+    });
 });
 
 app.listen(port, () => {
