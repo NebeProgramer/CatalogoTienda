@@ -38,7 +38,7 @@ mongoose.connection.on('error', (err) => {
 });
 
 // Middleware
-app.use(express.static('public')); // Servir archivos estáticos desde la carpeta 'public');
+app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());
 app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
@@ -1245,7 +1245,7 @@ app.post('/api/historia', (req, res) => {
 });
 
 // Función para enviar correo de recuperación
-async function enviarCorreoRecuperacion(destinatario, token) {
+async function enviarCorreoRecuperacion(destinatario, token, req) {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -1254,7 +1254,9 @@ async function enviarCorreoRecuperacion(destinatario, token) {
         }
     });
 
-    const enlace = `http://localhost:3000/restablecer-contrasena.html?token=${token}`;
+    // Usar BASE_URL de entorno o derivar del request
+    const baseUrl = process.env.BASE_URL || (req ? `${req.protocol}://${req.get('host')}` : '');
+    const enlace = `${baseUrl}/restablecer-contrasena.html?token=${token}`;
     let mailOptions = {
         from: process.env.EMAIL_USER,
         to: destinatario,
@@ -1277,10 +1279,9 @@ app.post('/api/recuperar-contrasena', async (req, res) => {
         }
         // Generar un token simple (en producción usa JWT o uuid)
         const token = Math.random().toString(36).substr(2);
-        // Aquí podrías guardar el token en la base de datos asociado al usuario
         usuario.token = token;
         await usuario.save();
-        await enviarCorreoRecuperacion(usuario.correo, token);
+        await enviarCorreoRecuperacion(usuario.correo, token, req);
         return res.status(200).json({ message: 'Si el correo existe, se enviarán instrucciones para recuperar la contraseña.' });
     } catch (error) {
         console.error('Error en recuperación de contraseña:', error);
