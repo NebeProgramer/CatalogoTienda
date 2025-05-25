@@ -1155,8 +1155,12 @@ app.delete('/api/redes-sociales/:id', async (req, res) => {
     }
 });
 
+app.get('/', (req, res) => {
+    res.send('API del catalogo de productos en funcionamiento');
+});
+
 app.listen(port, () => {
-    console.log(`Servidor escuchando en http://localhost:${port}`);
+    console.log(`Servidor escuchando en http://0.0.0.0:${port}`);
 });
 
 // --- Crear carpeta y archivo de ubicación del mapa al iniciar el servidor ---
