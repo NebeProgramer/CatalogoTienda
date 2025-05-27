@@ -544,12 +544,15 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
             alert('Por favor, completa todos los campos.');
             return;
         }
-
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+            console.log('IP pública obtenida:', ipResponse);
+            const ipData = await ipResponse.json();
+            const ip = ipData.ip;
         try {
             const respuesta = await fetch('/api/iniciar-sesion', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ correo, contrasena })
+                body: JSON.stringify({ correo, contrasena, ip })
             });
 
             const data = await respuesta.json();

@@ -351,7 +351,7 @@ app.post('/api/crear-cuenta', async (req, res) => {
 // Endpoint para iniciar sesión
 app.post('/api/iniciar-sesion', async (req, res) => {
     try {
-        const { correo, contrasena } = req.body;
+        const { correo, contrasena, ip } = req.body;
         if (!correo || !contrasena) {
             return res.status(400).json({ error: 'Correo y contraseña son obligatorios.' });
         }
@@ -365,12 +365,8 @@ app.post('/api/iniciar-sesion', async (req, res) => {
         // Si es admin, verificar IP
         if (usuario.rol === 'admin') {
             // Obtener IP pública del request
-            const ipResponse = await fetch('https://api.ipify.org?format=json');
-            console.log('IP pública obtenida:', ipResponse);
-            const ipData = await ipResponse.json();
-            const ip = ipData.ip;
+            
             // Limpiar IPv6 localhost
-            const ipLimpia = ip.replace('::ffff:', '');
             const IPPermitida = require('./models/ipPermitida');
             const ipRegistrada = await IPPermitida.findOne({ direccionIP: ip });
             if (!ipRegistrada) {
