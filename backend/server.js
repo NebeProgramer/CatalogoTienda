@@ -1282,7 +1282,7 @@ app.post('/api/recuperar-contrasena', async (req, res) => {
         usuario.token = token;
         await usuario.save();
         await enviarCorreoRecuperacion(usuario.correo, token, req);
-        return res.status(200).json({ message: 'Si el correo existe, se enviarán instrucciones para recuperar la contraseña.' });
+        return res.status(200).json({ message: 'Revisa tu correo electronico para continuar.' });
     } catch (error) {
         console.error('Error en recuperación de contraseña:', error);
         res.status(500).json({ error: 'Error al procesar la solicitud de recuperación.' });
