@@ -1,0 +1,132 @@
+[
+    {
+        "nombre": "Colombia",
+        "departamentos": [
+            {
+                "nombre": "Cundinamarca",
+                "ciudades": ["Bogotá"]
+            },
+            {
+                "nombre": "Antioquia",
+                "ciudades": ["Medellín"]
+            }
+        ]
+    },
+    {
+        "nombre": "México",
+        "departamentos": [
+            {
+                "nombre": "Distrito Federal",
+                "ciudades": ["Ciudad de México"]
+            },
+            {
+                "nombre": "Jalisco",
+                "ciudades": ["Guadalajara"]
+            }
+        ]
+    },
+    {
+        "nombre": "Estados Unidos",
+        "departamentos": [
+            {
+                "nombre": "California",
+                "ciudades": ["Los Ángeles", "San Francisco", "San Diego"]
+            },
+            {
+                "nombre": "Nueva York",
+                "ciudades": ["Nueva York", "Buffalo", "Rochester"]
+            }
+        ]
+    },
+    {
+        "nombre": "Canadá",
+        "departamentos": [
+            {
+                "nombre": "Ontario",
+                "ciudades": ["Toronto", "Ottawa", "Hamilton"]
+            },
+            {
+                "nombre": "Quebec",
+                "ciudades": ["Montreal", "Quebec City", "Laval"]
+            }
+        ]
+    },
+    {
+        "nombre": "Reino Unido",
+        "departamentos": [
+            {
+                "nombre": "Inglaterra",
+                "ciudades": ["Londres", "Manchester", "Birmingham"]
+            },
+            {
+                "nombre": "Escocia",
+                "ciudades": ["Edimburgo", "Glasgow", "Aberdeen"]
+            }
+        ]
+    },
+    {
+        "nombre": "Australia",
+        "departamentos": [
+            {
+                "nombre": "Nueva Gales del Sur",
+                "ciudades": ["Sídney", "Newcastle", "Wollongong"]
+            },
+            {
+                "nombre": "Victoria",
+                "ciudades": ["Melbourne", "Geelong", "Ballarat"]
+            }
+        ]
+    },
+    {
+        "nombre": "India",
+        "departamentos": [
+            {
+                "nombre": "Maharashtra",
+                "ciudades": ["Mumbai", "Pune", "Nagpur"]
+            },
+            {
+                "nombre": "Karnataka",
+                "ciudades": ["Bangalore", "Mysore", "Mangalore"]
+            }
+        ]
+    },
+    {
+        "nombre": "Brasil",
+        "departamentos": [
+            {
+                "nombre": "São Paulo",
+                "ciudades": ["São Paulo", "Campinas", "Santos"]
+            },
+            {
+                "nombre": "Río de Janeiro",
+                "ciudades": ["Río de Janeiro", "Niterói", "Petrópolis"]
+            }
+        ]
+    },
+    {
+        "nombre": "Sudáfrica",
+        "departamentos": [
+            {
+                "nombre": "Gauteng",
+                "ciudades": ["Johannesburgo", "Pretoria", "Soweto"]
+            },
+            {
+                "nombre": "Cabo Occidental",
+                "ciudades": ["Ciudad del Cabo", "Stellenbosch", "Paarl"]
+            }
+        ]
+    },
+    {
+        "nombre": "Japón",
+        "departamentos": [
+            {
+                "nombre": "Tokio",
+                "ciudades": ["Tokio", "Hachioji", "Machida"]
+            },
+            {
+                "nombre": "Osaka",
+                "ciudades": ["Osaka", "Sakai", "Higashiōsaka"]
+            }
+        ]
+    }
+]

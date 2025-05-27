@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restablecer Contraseña</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <main style="max-width:400px;margin:40px auto;padding:2em;background:#fff;border-radius:8px;box-shadow:0 2px 8px #0001;">
+        <h2>Restablecer Contraseña</h2>
+        <form id="formRestablecer">
+            <label for="nuevaContrasena">Nueva contraseña:</label>
+            <input type="password" id="nuevaContrasena" required><br>
+            <ul id="password-requisitos" style="list-style: none; padding-left: 0;">
+                <li id="req-length">Al menos 8 caracteres</li>
+                <li id="req-mayus">Al menos una mayúscula</li>
+                <li id="req-minus">Al menos una minúscula</li>
+                <li id="req-num">Al menos un número</li>
+                <li id="req-especial">Al menos un carácter especial</li>
+            </ul>
+            <label for="confirmarContrasena">Confirmar contraseña:</label>
+            <input type="password" id="confirmarContrasena" required><br>
+            <span id="match-msg"></span><br>
+            <button type="submit">Restablecer</button>
+        </form>
+        <p id="mensaje" style="color:red;"></p>
+    </main>
+    <script src="./js/restablecer-contrasena.js"></script>
+</body>
+</html>

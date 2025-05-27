@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas y Respuestas</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div id="loader" style="display:none;">
+        <div class="spinner"></div>
+    </div>
+    <header>
+        <nav> 
+            <ul class="iniciosesion">
+                <li><a id="iniciarSesion" href="#">Iniciar Sesión</a></li>
+                <li><a id="crearCuenta" href="#">Crear Cuenta</a></li>
+            </ul>
+        </nav>
+        <h1>Preguntas y Respuestas</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html" id='inicio'>Inicio</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Preguntas y Respuestas</h2>
+            <div id="lista-mensajes"></div>
+        </section>
+    </main>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">&times;</button>
+            <div class="form-container">
+                <!-- Formulario de Sesión (Login / Registro) -->
+                <div id="formSesionContainer" class="modal-section">
+                    <h2 id="opcion">Iniciar Sesión</h2>
+                    <form id="formSesion">
+                        <p>Correo</p>
+                        <input type="email" id="emailSesion" placeholder="nombre@mail.com" required>
+                        <p id="TCo">Confirmar Correo</p>
+                        <input type="email" id="emailSesionC" placeholder="nombre@mail.com" required>
+                        <p>Contraseña</p>
+                        <input type="password" id="passwordSesion" required>
+
+                        <p id="TCa">Confirmar Contraseña</p>
+                        <input type="password" id="passwordSesionC" required>
+                        <ul id="password-requisitos" style="list-style: none; padding-left: 0;">
+                            <li id="req-length">Al menos 8 caracteres</li>
+                            <li id="req-mayus">Al menos una mayúscula</li>
+                            <li id="req-minus">Al menos una minúscula</li>
+                            <li id="req-num">Al menos un número</li>
+                            <li id="req-especial">Al menos un carácter especial</li>
+                        </ul>
+
+                        <p><a href="#" id="olvidoContrasena">¿Olvidó su contraseña?</a></p>
+
+                        <div id="extrasRegistro">
+                            <input type="checkbox" id="terminos" required> 
+                            <label for="terminos" id="imputTerminos">Acepto los <a href="#">términos y condiciones</a></label>
+                            
+                            <input type="checkbox" id="privacidad" required> 
+                            <label for="privacidad" id="imputPrivacidad">Acepto la <a href="#">política de privacidad</a></label>
+                        </div>
+
+                        <button type="submit" id="btnSesion">Iniciar Sesión</button>
+                    </form>
+                </div>
+
+                <div id="formOlvidoContainer" class="modal-section">
+                    <h3>Olvidé mi contraseña</h3>
+                    <form id="formOlvidoContrasena">
+                        <label for="emailOlvido">Correo:</label>
+                        <input type="email" id="emailOlvido" placeholder="nombre@mail.com" required>
+                        <button type="submit" id="btnContra">Recuperar Contraseña</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Mi Catálogo de Productos</p>
+        <div id="footer-mapa" style="min-height:120px; margin-bottom:10px;"></div>
+        <nav>
+            <p>Nuestras redes</p>
+            <ul class="redes-sociales">
+                
+            </ul>
+        </nav>
+    </footer>
+    <script src="./js/preguntas-respuestas.js"></script>
+</body>
+</html>
