@@ -366,6 +366,7 @@ app.post('/api/iniciar-sesion', async (req, res) => {
         if (usuario.rol === 'admin') {
             // Obtener IP pública del request
             const ipResponse = await fetch('https://api.ipify.org?format=json');
+            console.log('IP pública obtenida:', ipResponse);
             const ipData = await ipResponse.json();
             const ip = ipData.ip;
             // Limpiar IPv6 localhost
