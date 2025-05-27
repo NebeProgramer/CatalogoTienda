@@ -1096,6 +1096,20 @@ console.log('Datos de pago recibidos:', req.body); // Log para depuración
     }
 });
 
+app.get('/api/usuarios/:correo', async (req, res) => {
+    const { correo } = req.params;
+    try {
+        const usuario = await Usuario.findOne({ correo });
+        if (!usuario) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+        res.status(200).json(usuario);
+    } catch (error) {
+        console.error('Error al obtener el usuario:', error);
+        res.status(500).json({ error: 'Hubo un error al obtener el usuario.' });
+    }
+});
+
 // Endpoint para obtener el registro de compras de un usuario
 app.get('/api/usuarios/:correo/compras', async (req, res) => {
     const { correo } = req.params;
