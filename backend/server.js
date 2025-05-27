@@ -1311,3 +1311,36 @@ app.post('/api/restablecer-contrasena', async (req, res) => {
     }
 });
 
+
+// --- API para gestionar IPs permitidas ---
+// Obtener todas las IPs permitidas
+app.get('/api/ips', async (req, res) => {
+    try {
+        const ips = await IPPermitida.find();
+        res.status(200).json(ips);
+    } catch (error) {
+        console.error('Error al obtener las IPs permitidas:', error);
+        res.status(500).json({ error: 'Error al obtener las IPs permitidas.' });
+    }
+});
+
+// Agregar una nueva IP permitida
+app.post('/api/ips', async (req, res) => {
+    try {
+        const { direccionIP, descripcion } = req.body;
+        if (!direccionIP) {
+            return res.status(400).json({ error: 'La dirección IP es obligatoria.' });
+        }
+        // Evitar duplicados
+        const existente = await IPPermitida.findOne({ direccionIP });
+        if (existente) {
+            return res.status(400).json({ error: 'La IP ya está registrada.' });
+        }
+        const nuevaIP = new IPPermitida({ direccionIP, descripcion });
+        await nuevaIP.save();
+        res.status(201).json({ message: 'IP permitida agregada correctamente.', nuevaIP });
+    } catch (error) {
+        console.error('Error al agregar la IP permitida:', error);
+        res.status(500).json({ error: 'Error al agregar la IP permitida.' });
+    }
+});
