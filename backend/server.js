@@ -881,6 +881,8 @@ app.delete('/api/monedas/:id', async (req, res) => {
     }
 });
 
+
+
 // Endpoints para Ubicaciones
 // Obtener todas las ubicaciones
 app.get('/api/ubicaciones', async (req, res) => {
@@ -893,6 +895,44 @@ app.get('/api/ubicaciones', async (req, res) => {
     }
 });
 
+// Crear nueva ubicación (país, departamento, ciudad)
+app.post('/api/ubicaciones', async (req, res) => {
+    try {
+        const { pais, departamento, ciudad } = req.body;
+        if (!pais || !departamento || !ciudad) {
+            return res.status(400).json({ error: 'País, departamento y ciudad son obligatorios.' });
+        }
+        let ubicacion = await Ubicacion.findOne({ nombre: pais });
+        if (!ubicacion) {
+            // Crear país con departamento y ciudad
+            ubicacion = new Ubicacion({
+                nombre: pais,
+                departamentos: [{ nombre: departamento, ciudades: [{ nombre: ciudad }] }]
+            });
+            await ubicacion.save();
+            return res.status(201).json({ message: 'Ubicación creada correctamente.' });
+        }
+        // Buscar departamento
+        let depto = ubicacion.departamentos.find(d => d.nombre === departamento);
+        if (!depto) {
+            // Agregar departamento con ciudad
+            ubicacion.departamentos.push({ nombre: departamento, ciudades: [{ nombre: ciudad }] });
+            await ubicacion.save();
+            return res.status(201).json({ message: 'Departamento y ciudad agregados correctamente.' });
+        }
+        // Buscar ciudad
+        let ciudadExistente = depto.ciudades.find(c => c.nombre === ciudad);
+        if (!ciudadExistente) {
+            depto.ciudades.push({ nombre: ciudad });
+            await ubicacion.save();
+            return res.status(201).json({ message: 'Ciudad agregada correctamente.' });
+        }
+        res.status(200).json({ message: 'La ubicación ya existe.' });
+    } catch (error) {
+        console.error('Error al crear la ubicación:', error);
+        res.status(500).json({ error: 'Error al crear la ubicación.' });
+    }
+});
 
 // Eliminar país
 app.delete('/api/ubicaciones/:paisId', async (req, res) => {
