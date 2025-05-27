@@ -1222,6 +1222,18 @@ function ocultarLoader() {
             botonesEliminar.forEach(boton => {
                 boton.addEventListener('click', async (event) => {
                     const ip = event.target.dataset.ip;
+
+                    if(ip === ipData.ip) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'No puedes eliminar tu propia IP',
+                            text: 'No puedes eliminar la IP que estás utilizando actualmente.',
+                            toast: true,
+                            position: 'top-end'
+                        });
+                        return;
+
+                    }
                     const confirmar = await Swal.fire({
                         icon: 'warning',
                         title: 'Eliminar IP',
