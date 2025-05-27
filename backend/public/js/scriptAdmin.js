@@ -1198,7 +1198,6 @@ function ocultarLoader() {
                     toast: true,
                     position: 'top-end'
                 });
-                window.location.href = '/';
                 return;
             }
 
