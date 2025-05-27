@@ -87,20 +87,22 @@ scale=1.0">
     
 </main>
 <footer>
-    <p>© 2024 Mi Catálogo de Productos</p>
-    <div id="footer-mapa" style="min-height:120px; margin-bottom:10px;"></div>
-    <p>Nuestras redes</p>
-
-    <ul class="redes-sociales">
-        <!-- Redes sociales dinámicas -->
-    </ul>
-
-    <div class="red-social-container">
-        <button id="btn-agregar-red">+</button>
-        <button id="btn-guardar-red" style="display: none;">Guardar</button>
-        <button id="Cancelar" style="display: none;">❌</button>
+  <div class="footer-content">
+    <div class="footer-left">
+      <div id="footer-mapa" style="min-height:120px; margin-bottom:10px;"></div>
     </div>
-    
+    <div class="footer-center">
+      <p>© 2024 Mi Catálogo de Productos</p>
+    </div>
+    <div class="footer-right">
+      <nav>
+        <p>Nuestras redes</p>
+        <ul class="redes-sociales">
+          <!-- Redes sociales dinámicas -->
+        </ul>
+      </nav>
+    </div>
+  </div>
 </footer>
 
 <!-- Modal para preferencias de monedas -->
@@ -161,6 +163,23 @@ scale=1.0">
             <input type="text" id="ciudad" name="ciudad" required>
 
             <button type="submit" id="btnAgregarUbicacion">Agregar Ubicación</button>
+        </form>
+
+        <h2>IPs autorizadas</h2>
+        <p id="infoIP">Tu dirección IP es: <span id="direccionIP"></span></p>
+        <table id="tablaIPs">
+            <thead>
+                <tr>
+                    <th>IP</th>
+                    <th>Descripción</th>
+                    <th>Fecha de creación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Las IPs se cargarán dinámicamente aquí -->
+            </tbody>
+        </table>
     </div>  
 </div>
 <script src="./js/scriptAdmin.js"></script>

@@ -1170,6 +1170,100 @@ function ocultarLoader() {
         }
         renderMapaFooter();
     }
+
+    cargarIpsPermitidas = async () => {
+        mostrarLoader();
+        try {
+            const respuesta = await fetch('/api/ips');
+            if (!respuesta.ok) {
+                throw new Error('Error al cargar las IPs permitidas.');
+            }
+            const ips = await respuesta.json();
+            const listaIps = document.getElementById('tablaIPs').getElementsByTagName('tbody')[0];
+            const infoip = document.getElementById('infoIP');
+            const ipResponse = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipResponse.json();
+            const ip = ipData.ip;
+            let ipExistente = false;
+            ips.forEach(ip => {
+                if(ip === ipData.ip) {
+                    ipExistente = true;
+                };
+            }); 
+            if (!ipExistente) {
+                swal.fire({
+                    icon: 'warning',
+                    title: 'IP no permitida',
+                    text: 'Tu dirección IP no está en la lista de IPs permitidas. Por favor, contacta al administrador.',
+                    toast: true,
+                    position: 'top-end'
+                });
+                window.location.href = '/';
+                return;
+            }
+
+            infoip.textContent = `Tu dirección IP es: ${ip}`;
+            listaIps.innerHTML = '';
+            ips.forEach(ip => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${ip.direccionIP}</td>
+                    <td>${ip.descripcion}</td>
+                    <td>${ip.CreadaEn}</td>
+                    <td>
+                        <button class="btn-eliminar-ip" data-ip="${ip.direccionIP}">Eliminar</button>
+                    </td>
+                `;
+                listaIps.appendChild(tr);
+            });
+
+            // Agregar evento de eliminación a los botones
+            const botonesEliminar = document.querySelectorAll('.btn-eliminar-ip');
+            botonesEliminar.forEach(boton => {
+                boton.addEventListener('click', async (event) => {
+                    const ip = event.target.dataset.ip;
+                    const confirmar = await Swal.fire({
+                        icon: 'warning',
+                        title: 'Eliminar IP',
+                        text: `¿Estás seguro de que deseas eliminar la IP ${ip}?`,
+                        showCancelButton: true,
+                        confirmButtonText: 'Eliminar',
+                        cancelButtonText: 'Cancelar'
+                    });
+                    if (confirmar.isConfirmed) {
+                        const response = await fetch(`/api/ips/${ip}`, {
+                            method: 'DELETE'
+                        });
+                        if (response.ok) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'IP eliminada',
+                                text: `La IP ${ip} ha sido eliminada correctamente.`,
+                                toast: true,
+                                position: 'top-end'
+                            });
+                            cargarIpsPermitidas();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error al eliminar IP',
+                                text: `No se pudo eliminar la IP ${ip}.`,
+                                toast: true,
+                                position: 'top-end'
+                            });
+                        }
+                    }
+                });
+            });
+        } catch (error) {
+            console.error('Error al cargar las IPs permitidas:', error);
+        } finally {
+            ocultarLoader();
+        }
+    };
+
+    // Cargar las IPs permitidas al cargar la página
+    cargarIpsPermitidas();
 });
 
 

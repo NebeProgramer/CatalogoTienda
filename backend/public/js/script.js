@@ -443,7 +443,6 @@ function validarCoincidencia() {
         }
 
         const ipResponse = await fetch('https://api.ipify.org?format=json');
-            console.log('IP pública obtenida:', ipResponse);
             const ipData = await ipResponse.json();
             const ip = ipData.ip;
         try {

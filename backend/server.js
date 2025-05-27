@@ -1341,3 +1341,18 @@ app.post('/api/ips', async (req, res) => {
         res.status(500).json({ error: 'Error al agregar la IP permitida.' });
     }
 });
+
+// Eliminar una IP permitida por su ID
+app.delete('/api/ips/:ip', async (req, res) => {
+    try {
+        const { ip } = req.params;
+        const ipEliminada = await IPPermitida.findOneAndDelete({ direccionIP: ip });
+        if (!ipEliminada) {
+            return res.status(404).json({ error: 'IP no encontrada.' });
+        }
+        res.status(200).json({ message: 'IP eliminada correctamente.', ipEliminada });
+    } catch (error) {
+        console.error('Error al eliminar la IP permitida:', error);
+        res.status(500).json({ error: 'Error al eliminar la IP permitida.' });
+    }
+});
