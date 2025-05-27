@@ -1186,7 +1186,7 @@ function ocultarLoader() {
             const ip = ipData.ip;
             let ipExistente = false;
             ips.forEach(ip => {
-                if(ip === ipData.ip) {
+                if(ip.direccionIP === ipData.ip) {
                     ipExistente = true;
                 };
             }); 
@@ -1198,6 +1198,7 @@ function ocultarLoader() {
                     toast: true,
                     position: 'top-end'
                 });
+                window.location.href = '/';
                 return;
             }
 
