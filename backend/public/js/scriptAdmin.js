@@ -1209,7 +1209,7 @@ function ocultarLoader() {
                 tr.innerHTML = `
                     <td>${ip.direccionIP}</td>
                     <td>${ip.descripcion}</td>
-                    <td>${ip.CreadaEn}</td>
+                    <td>${ip.creadaEn}</td>
                     <td>
                         <button class="btn-eliminar-ip" data-ip="${ip.direccionIP}">Eliminar</button>
                     </td>
