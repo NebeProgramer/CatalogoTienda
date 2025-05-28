@@ -821,7 +821,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Manejar el botón para agregar red social
     document.getElementById('btn-agregar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes-sociales');
+        const contenedor = document.querySelector('.redes_sociales');
         contenedor.innerHTML = ''; // Limpiar el contenedor para preparar la edición
 
         try {
@@ -895,7 +895,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-guardar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes-sociales');
+        const contenedor = document.querySelector('.redes_sociales');
         const items = contenedor.querySelectorAll('li');
 
         for (const item of items) {
@@ -1191,10 +1191,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
             });
             if (!ipExistente) {
+                document.getElementById('overlay-bloqueo').style.display = 'block';
                 const result = await Swal.fire({
                     icon: 'warning',
                     title: 'IP no permitida',
                     text: 'Tu dirección IP no está en la lista de IPs permitidas. Por favor, contacta al administrador.',
+                    allowOutsideClick: false, // No permite cerrar haciendo click fuera
+                    allowEscapeKey: false,    // No permite cerrar con escape
                     toast: true,
                     position: 'top-end'
                 });
