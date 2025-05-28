@@ -1312,7 +1312,10 @@ async function enviarCorreoRecuperacion(destinatario, token, req) {
         from: process.env.EMAIL_USER,
         to: destinatario,
         subject: 'Recuperación de contraseña',
-        html: `<p>Hemos recibido una solicitud de recuperación de contraseña para la cuenta asociada al correo ${destinatario}.</p><p>Si no has solicitado este cambio, puedes ignorar este mensaje.</p><p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p><a href="${enlace}">${enlace}</a>`
+        html: `<p>Hemos recibido una solicitud de recuperación de contraseña para la cuenta asociada al correo ${destinatario}.</p>
+        <p>Si no has solicitado este cambio, puedes ignorar este mensaje.</p>
+        <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p><a href="${enlace}">${enlace}</a>
+        <p>Este enlace es válido por 1 hora a partir de las ${new Date(Date.now()).toLocaleString()}.</p>`
     };
     await transporter.sendMail(mailOptions);
 }
@@ -1331,6 +1334,7 @@ app.post('/api/recuperar-contrasena', async (req, res) => {
         // Generar un token simple (en producción usa JWT o uuid)
         const token = Math.random().toString(36).substr(2);
         usuario.token = token;
+        usuario.tokenExpira = Date.now() + 3600000; // Expira en 1 hora
         await usuario.save();
         await enviarCorreoRecuperacion(usuario.correo, token, req);
         return res.status(200).json({ message: 'Revisa tu correo electronico para continuar.' });
@@ -1408,5 +1412,28 @@ app.delete('/api/ips/:ip', async (req, res) => {
     } catch (error) {
         console.error('Error al eliminar la IP permitida:', error);
         res.status(500).json({ error: 'Error al eliminar la IP permitida.' });
+    }
+});
+
+// Endpoint para verificar si un token existe en algún usuario (para restablecer contraseña)
+app.get('/api/usuarios/token/:token', async (req, res) => {
+    try {
+        const { token } = req.params;
+        const usuario = await Usuario.findOne({ token });
+        if (!usuario) {
+            return res.status(404).json({ error: 'Token no válido o expirado.', usuario: null });
+        }
+        // Verificar expiración del token
+        if (!usuario.tokenExpira || usuario.tokenExpira < Date.now()) {
+            // Eliminar token y expiración
+            usuario.token = undefined;
+            usuario.tokenExpira = undefined;
+            await usuario.save();
+            return res.status(404).json({ error: 'Token expirado.', usuario: null });
+        }
+        res.status(200).json({ usuario });
+    } catch (error) {
+        console.error('Error al buscar el token:', error);
+        res.status(500).json({ error: 'Error al buscar el token.' });
     }
 });

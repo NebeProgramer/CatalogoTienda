@@ -1,11 +1,51 @@
 // Script para restablecer contraseña usando el token de la URL
 
-document.addEventListener('DOMContentLoaded', function() {
+const { default: Swal } = require("sweetalert2");
+
+document.addEventListener('DOMContentLoaded', async function() {
     const form = document.getElementById('formRestablecer');
     const mensaje = document.getElementById('mensaje');
     // Obtener token de la URL
     const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
+
+    // Verificar si el token existe en algún usuario
+    if (!token) {
+        Swal.fire({
+            title: 'Error',
+            text: 'Token no válido o no proporcionado.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+        }).then(() => {
+            window.location.href = '/';
+        });
+        return;
+    }
+    try {
+        const resp = await fetch(`/api/usuarios/token/${token}`);
+        const data = await resp.json();
+        if (!resp.ok || !data.usuario) {
+            Swal.fire({
+                title: 'Error',
+                text: 'El enlace de recuperación no es válido o ya fue utilizado.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                window.location.href = '/';
+            });
+            return;
+        }
+    } catch (err) {
+        Swal.fire({
+            title: 'Error',
+            text: 'No se pudo verificar el enlace de recuperación.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+        }).then(() => {
+            window.location.href = '/';
+        });
+        return;
+    }
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -17,11 +57,21 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         if (nuevaContrasena !== confirmarContrasena) {
-            mensaje.textContent = 'Las contraseñas no coinciden.';
+            swal.fire({
+                title: 'Error',
+                text: 'Las contraseñas no coinciden.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
             return;
         }
         if (!token) {
-            mensaje.textContent = 'Token inválido o expirado.';
+            Swal.fire({
+                title: 'Error',
+                text: 'Token no válido o no proporcionado.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
             return;
         }
         try {
@@ -32,14 +82,30 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             const data = await resp.json();
             if (resp.ok) {
-                mensaje.style.color = 'green';
-                mensaje.textContent = 'Contraseña restablecida correctamente. Ahora puedes iniciar sesión.';
+                Swal.fire({
+                    title: 'Éxito',
+                    text: 'Contraseña restablecida correctamente.',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    window.location.href = '/login'; // Redirigir al login
+                });
                 form.reset();
             } else {
-                mensaje.textContent = data.error || 'Error al restablecer la contraseña.';
+                Swal.fire({
+                    title: 'Error',
+                    text: data.error || 'Error al restablecer la contraseña.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
             }
         } catch (err) {
-            mensaje.textContent = 'Error de red o servidor.';
+            Swal.fire({
+                title: 'Error',
+                text: 'Error de red o servidor.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
         }
     });
 

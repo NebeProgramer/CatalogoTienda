@@ -48,6 +48,7 @@ const PerfilSchema = new mongoose.Schema({
     registroCompra: [RegistroCompra],
     rol: { type: String, default: "usuario" },
     token: { type: String, default: "" },
+    tokenExpira: { type: Date },
 });
 
 module.exports = mongoose.model('Perfil', PerfilSchema);
