@@ -1195,7 +1195,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await Swal.fire({
                     icon: 'warning',
                     title: 'IP no permitida',
-                    text: 'Tu dirección IP no está en la lista de IPs permitidas. Por favor, contacta al administrador.',
+                    text: 'Tu dirección IP no está en la lista de IPs permitidas.',
                     allowOutsideClick: false, // No permite cerrar haciendo click fuera
                     allowEscapeKey: false,    // No permite cerrar con escape
                     toast: true,
