@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const carrito = document.getElementById('carrito');
     let Actualizar = false
     let eliminar = false;
+    const mensajeContainer = document.getElementById('mensaje');
 
     function showModal(container) {
         modal.style.display = 'block';
@@ -423,8 +424,7 @@ const ipResponse = await fetch('https://api.ipify.org?format=json');
                     toast: true,
                     position: 'top-end'
                 });
-                formulario.reset();
-                cargarMensajes(); // Recargar los mensajes después de enviar
+                mensajeContainer.innerHTML = ''; // Limpiar el mensaje
             } else {
                 const error = await respuesta.json();
                 Swal.fire({

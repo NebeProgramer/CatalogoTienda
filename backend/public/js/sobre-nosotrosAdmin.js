@@ -276,7 +276,7 @@ function ocultarLoader() {
                 toast: true,
                 position: 'top-end'
             });
-            location.reload();
+            cargarEquipoParaEditar(); // Recargar los datos del equipo después de guardarlos
         } catch (error) {
             console.error('Error al guardar los datos del equipo:', error);
             Swal.fire({

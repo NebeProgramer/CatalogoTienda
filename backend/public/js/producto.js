@@ -139,131 +139,139 @@ carrusel.appendChild(nextButton);
 const perfil = JSON.parse(localStorage.getItem('usuario'));
 
 // Mostrar los comentarios con opción de edición si corresponde
-producto.comentarios.forEach(comentario => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-        <strong>${comentario.usuario}:</strong>
-        <span class="comentario-texto">${comentario.comentario}</span>
-        <p>Calificación: ⭐ <span class="comentario-calificacion">${comentario.calificacion}</span></p>
-    `;
-
-    // Verificar si el usuario actual es el autor del comentario
-    if (perfil && perfil.correo === comentario.correo) {
-        const btnEditar = document.createElement('button');
-        btnEditar.textContent = 'Editar';
-        btnEditar.addEventListener('click', () => habilitarEdicionComentario(comentario, li));
-        li.appendChild(btnEditar);
-    }
-
-    listaComentarios.appendChild(li);
-});
-
-// Verificar si los elementos de texto y calificación existen antes de intentar acceder a sus propiedades
-function habilitarEdicionComentario(comentario, li) {
-    const comentarioTexto = li.querySelector('.comentario-texto');
-    const comentarioCalificacion = li.querySelector('.comentario-calificacion');
-
-    if (!comentarioTexto || !comentarioCalificacion) {
-        console.error('No se encontraron los elementos de texto o calificación para editar.');
-        alert('Hubo un error al intentar editar el comentario.');
+function CargarComentarios() {
+    mostrarLoader();
+    const listaComentarios = document.getElementById('comentarios');
+    if (!listaComentarios) return;
+    listaComentarios.innerHTML = '';
+    if (!producto.comentarios || producto.comentarios.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = 'No hay comentarios aún.';
+        listaComentarios.appendChild(li);
         return;
     }
-
-    // Convertir el texto del comentario en un input
-    const inputComentario = document.createElement('input');
-    inputComentario.type = 'text';
-    inputComentario.value = comentarioTexto.textContent;
-    comentarioTexto.replaceWith(inputComentario);
-
-    // Convertir la calificación en un selector
-    const selectCalificacion = document.createElement('select');
-    for (let i = 1; i <= 5; i += 0.5) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = `${i} ⭐`;
-        if (i === parseFloat(comentarioCalificacion.textContent)) {
-            option.selected = true;
+    producto.comentarios.forEach(comentario => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <strong>${comentario.usuario}:</strong>
+            <span class="comentario-texto">${comentario.comentario}</span>
+            <p>Calificación: ⭐ <span class="comentario-calificacion">${comentario.calificacion}</span></p>
+        `;
+        // Verificar si el usuario actual es el autor del comentario
+        if (perfil && perfil.correo === comentario.correo) {
+            const btnEditar = document.createElement('button');
+            btnEditar.textContent = 'Editar';
+            btnEditar.addEventListener('click', () => habilitarEdicionComentario(comentario, li));
+            li.appendChild(btnEditar);
         }
-        selectCalificacion.appendChild(option);
-    }
-    comentarioCalificacion.replaceWith(selectCalificacion);
-
-    // Cambiar el botón de edición a guardar
-    const btnGuardar = li.querySelector('button');
-    btnGuardar.textContent = 'Guardar';
-    btnGuardar.removeEventListener('click', habilitarEdicionComentario);
-    btnGuardar.addEventListener('click', () => guardarEdicionComentario(comentario, li, inputComentario, selectCalificacion));
+        listaComentarios.appendChild(li);
+    });
+    ocultarLoader();
 }
 
-// Función para guardar la edición de un comentario
-async function guardarEdicionComentario(comentario, li, inputComentario, selectCalificacion) {
-    mostrarLoader();
-    const nuevoComentario = inputComentario.value.trim();
-    const nuevaCalificacion = parseInt(selectCalificacion.value);
+    // Verificar si los elementos de texto y calificación existen antes de intentar acceder a sus propiedades
+    function habilitarEdicionComentario(comentario, li) {
+        const comentarioTexto = li.querySelector('.comentario-texto');
+        const comentarioCalificacion = li.querySelector('.comentario-calificacion');
 
-    if (!nuevoComentario || isNaN(nuevaCalificacion) || nuevaCalificacion < 1 || nuevaCalificacion > 5) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Datos inválidos',
-            text: 'Por favor, completa todos los campos con valores válidos.',
-            toast: true,
-            position: 'top-end'
-        });
-        return;
+        if (!comentarioTexto || !comentarioCalificacion) {
+            console.error('No se encontraron los elementos de texto o calificación para editar.');
+            alert('Hubo un error al intentar editar el comentario.');
+            return;
+        }
+
+        // Convertir el texto del comentario en un input
+        const inputComentario = document.createElement('input');
+        inputComentario.type = 'text';
+        inputComentario.value = comentarioTexto.textContent;
+        comentarioTexto.replaceWith(inputComentario);
+
+        // Convertir la calificación en un selector
+        const selectCalificacion = document.createElement('select');
+        for (let i = 1; i <= 5; i += 0.5) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `${i} ⭐`;
+            if (i === parseFloat(comentarioCalificacion.textContent)) {
+                option.selected = true;
+            }
+            selectCalificacion.appendChild(option);
+        }
+        comentarioCalificacion.replaceWith(selectCalificacion);
+
+        // Cambiar el botón de edición a guardar
+        const btnGuardar = li.querySelector('button');
+        btnGuardar.textContent = 'Guardar';
+        btnGuardar.removeEventListener('click', habilitarEdicionComentario);
+        btnGuardar.addEventListener('click', () => guardarEdicionComentario(comentario, li, inputComentario, selectCalificacion));
     }
 
-    try {
-        const respuesta = await fetch(`/api/productos/${productoId}/comentarios/${comentario._id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ comentario: nuevoComentario, calificacion: nuevaCalificacion }),
-        });
+    // Función para guardar la edición de un comentario
+    async function guardarEdicionComentario(comentario, li, inputComentario, selectCalificacion) {
+        mostrarLoader();
+        const nuevoComentario = inputComentario.value.trim();
+        const nuevaCalificacion = parseInt(selectCalificacion.value);
 
-        if (!respuesta.ok) {
+        if (!nuevoComentario || isNaN(nuevaCalificacion) || nuevaCalificacion < 1 || nuevaCalificacion > 5) {
             Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Error al guardar el comentario.',
+                icon: 'warning',
+                title: 'Datos inválidos',
+                text: 'Por favor, completa todos los campos con valores válidos.',
                 toast: true,
                 position: 'top-end'
             });
-            throw new Error('Error al guardar el comentario editado.');
+            return;
         }
 
-        Swal.fire({
-            icon: 'success',
-            title: 'Comentario editado',
-            text: 'Comentario editado exitosamente.',
-            toast: true,
-            position: 'top-end'
-        });
+        try {
+            const respuesta = await fetch(`/api/productos/${productoId}/comentarios/${comentario._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ comentario: nuevoComentario, calificacion: nuevaCalificacion }),
+            });
 
-        // Actualizar la interfaz con los nuevos valores
-        inputComentario.replaceWith(document.createTextNode(nuevoComentario));
-        selectCalificacion.replaceWith(document.createTextNode(`${nuevaCalificacion} ⭐`));
+            if (!respuesta.ok) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al editar el comentario.',
+                    toast: true,
+                    position: 'top-end'
+                });
+                throw new Error('Error al editar el comentario.');
+            }
 
-        const btnEditar = li.querySelector('button');
-        btnEditar.textContent = 'Editar';
-        btnEditar.removeEventListener('click', guardarEdicionComentario);
-        btnEditar.addEventListener('click', () => habilitarEdicionComentario(comentario, li));
-    } catch (error) {
-        console.error('Error al guardar el comentario editado:', error);
-        alert('Hubo un error al guardar el comentario editado.');
-    } finally {
-        ocultarLoader();
+            Swal.fire({
+                icon: 'success',
+                title: 'Comentario editado',
+                text: 'Comentario editado exitosamente.',
+                toast: true,
+                position: 'top-end'
+            });
+
+            // Actualizar la interfaz con los nuevos valores
+            inputComentario.replaceWith(document.createTextNode(nuevoComentario));
+            selectCalificacion.replaceWith(document.createTextNode(`${nuevaCalificacion} ⭐`));
+
+            const btnEditar = li.querySelector('button');
+            btnEditar.textContent = 'Editar';
+            btnEditar.removeEventListener('click', guardarEdicionComentario);
+            btnEditar.addEventListener('click', () => habilitarEdicionComentario(comentario, li));
+        } catch (error) {
+            console.error('Error al guardar el comentario editado:', error);
+            alert('Hubo un error al guardar el comentario editado.');
+        } finally {
+            ocultarLoader();
+        }
     }
-}
 
 } catch (error) {
 console.error('Error al cargar el producto:', error);
 alert('Hubo un error al cargar el producto. Intenta nuevamente.');
 
 }
-
-
-    
 
     const perfil = JSON.parse(localStorage.getItem('usuario'));
     const formComentario = document.getElementById('formComentario');
@@ -635,9 +643,6 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
     const cerrarSesion = () => {
         // Limpiar el Local Storage
         localStorage.removeItem('usuario');
-
-        // Recargar la página para restablecer el estado inicial
-        alert('Sesión cerrada.');
         location.reload();
     };
 
@@ -891,7 +896,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 toast: true,
                 position: 'top-end'
             });
-            window.location.reload(); // Recargar la página para mostrar el nuevo comentario
+            CargarComentarios(); // Recargar la página para mostrar el nuevo comentario
         } catch (error) {
             console.error('Error al agregar el comentario:', error);
             Swal.fire({

@@ -46,14 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Loader functions
-function mostrarLoader() {
-    const loader = document.getElementById('loader');
-    if (loader) loader.style.display = 'flex';
-}
-function ocultarLoader() {
-    const loader = document.getElementById('loader');
-    if (loader) loader.style.display = 'none';
-}
+    function mostrarLoader() {
+        const loader = document.getElementById('loader');
+        if (loader) loader.style.display = 'flex';
+    }
+    function ocultarLoader() {
+        const loader = document.getElementById('loader');
+        if (loader) loader.style.display = 'none';
+    }
 
     // Modificar la función cargarProductos para ocultar el botón "Comprar todo" al aplicar filtros
     const cargarProductos = async (categoria = 'Todos') => {
@@ -113,7 +113,7 @@ function ocultarLoader() {
                     // Agregar el div del producto al carrusel
                     carruselItems.appendChild(divProducto);
 
-                        document.getElementById(`estado-${producto.id}`).addEventListener('change', async (event) => {
+                    document.getElementById(`estado-${producto.id}`).addEventListener('change', async (event) => {
                         const labelEstado = divProducto.querySelector('.estado-label');
                         const nuevoEstado = event.target.checked ? 'disponible' : 'no disponible';
                         try {
@@ -470,8 +470,8 @@ function ocultarLoader() {
                 nuevoFiltroInput.value = '';
                 agregarFiltroContainer.style.display = 'none';
                 btnAgregarFiltro.style.display = 'block'; // Volver a mostrar el botón "Agregar Filtro"
-                
-            
+
+
             } catch (error) {
                 console.error('Error al guardar la categoría:', error);
                 alert('Hubo un error al guardar la categoría.');
@@ -532,7 +532,7 @@ function ocultarLoader() {
                                     title: 'Categoría eliminada',
                                     text: 'Categoría eliminada exitosamente.',
                                     toast: true,
-                                    position: 'top-end' 
+                                    position: 'top-end'
                                 });
                                 cargarFiltros(); // Recargar los filtros después de eliminar
                             } else {
@@ -797,31 +797,31 @@ function ocultarLoader() {
                         return;
                     }
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Red social eliminada',
-                    text: 'Red social eliminada exitosamente.',
-                    toast: true,
-                    position: 'top-end'
-                });
-                cargarRedesSociales(); // Recargar las redes sociales después de eliminar
-            } catch (error) {
-                console.error('Error al eliminar la red social:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Hubo un error al eliminar la red social.',
-                    toast: true,
-                    position: 'top-end'
-                });
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Red social eliminada',
+                        text: 'Red social eliminada exitosamente.',
+                        toast: true,
+                        position: 'top-end'
+                    });
+                    cargarRedesSociales(); // Recargar las redes sociales después de eliminar
+                } catch (error) {
+                    console.error('Error al eliminar la red social:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un error al eliminar la red social.',
+                        toast: true,
+                        position: 'top-end'
+                    });
+                }
             }
-        }
         });
     };
 
     // Manejar el botón para agregar red social
     document.getElementById('btn-agregar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes-sociales'); 
+        const contenedor = document.querySelector('.redes-sociales');
         contenedor.innerHTML = ''; // Limpiar el contenedor para preparar la edición
 
         try {
@@ -970,7 +970,7 @@ function ocultarLoader() {
         document.getElementById('btn-guardar-red').style.display = 'none'; // Ocultar el botón de guardar
         document.getElementById('Cancelar').style.display = 'none';
     });
-        
+
 
     // Cargar redes sociales al cargar la página
     cargarRedesSociales();
@@ -1186,20 +1186,22 @@ function ocultarLoader() {
             const ip = ipData.ip;
             let ipExistente = false;
             ips.forEach(ip => {
-                if(ip.direccionIP === ipData.ip) {
+                if (ip.direccionIP === ipData.ip) {
                     ipExistente = true;
                 };
-            }); 
+            });
             if (!ipExistente) {
-                swal.fire({
+                const result = await Swal.fire({
                     icon: 'warning',
                     title: 'IP no permitida',
                     text: 'Tu dirección IP no está en la lista de IPs permitidas. Por favor, contacta al administrador.',
                     toast: true,
                     position: 'top-end'
                 });
-                window.location.href = '/';
-                return;
+                if (result.isConfirmed || result.isDismissed) {
+                    window.location.href = '/';
+                    return;
+                }
             }
 
             infoip.textContent = `Tu dirección IP es: ${ip}`;
@@ -1223,7 +1225,7 @@ function ocultarLoader() {
                 boton.addEventListener('click', async (event) => {
                     const ip = event.target.dataset.ip;
 
-                    if(ip === ipData.ip) {
+                    if (ip === ipData.ip) {
                         Swal.fire({
                             icon: 'error',
                             title: 'No puedes eliminar tu propia IP',

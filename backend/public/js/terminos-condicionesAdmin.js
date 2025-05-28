@@ -164,9 +164,11 @@ function ocultarLoader() {
             Swal.fire({
                 icon: 'success',
                 title: 'Términos guardados',
-                text: 'Términos y condiciones guardados exitosamente.'
+                text: 'Términos y condiciones guardados exitosamente.',
+                toast: true,
+                position: 'top-end'
             });
-            location.reload();
+            await cargarTerminosParaEditar(); // Recargar los términos después de guardarlos
         } catch (error) {
             console.error('Error al guardar los términos y condiciones:', error);
             Swal.fire({
