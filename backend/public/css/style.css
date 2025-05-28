@@ -32,7 +32,7 @@ main {
 .modal {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 100;
     left: 0;
     top: 0;
     width: 100%;
@@ -658,7 +658,7 @@ footer {
     background-color: #ffb700;
     color: black;
     transition: left 0.3s ease;
-    z-index: 998;
+    z-index: 100;
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 }
@@ -684,7 +684,7 @@ footer {
     cursor: pointer;
     font-size: 16px;
     border-radius: 5px;
-    z-index: 999;
+    z-index: 100;
     transition: left 0.3s ease;
 }
 
@@ -1481,7 +1481,7 @@ footer {
     background-color: #ffb700;
     color: black;
     transition: left 0.3s ease;
-    z-index: 998;
+    z-index: 100;
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 }
@@ -1507,7 +1507,7 @@ footer {
     cursor: pointer;
     font-size: 16px;
     border-radius: 5px;
-    z-index: 999;
+    z-index: 100;
     transition: left 0.3s ease;
 }
 
@@ -1695,7 +1695,7 @@ footer {
 #modal-preferencias {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 100;
     left: 0;
     top: 0;
     width: 100%;
