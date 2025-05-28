@@ -821,7 +821,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Manejar el botón para agregar red social
     document.getElementById('btn-agregar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes_sociales');
+        const contenedor = document.querySelector('.redes-sociales');
         contenedor.innerHTML = ''; // Limpiar el contenedor para preparar la edición
 
         try {
@@ -895,7 +895,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-guardar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes_sociales');
+        const contenedor = document.querySelector('.redes-sociales');
         const items = contenedor.querySelectorAll('li');
 
         for (const item of items) {
