@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const paisSelect = document.getElementById('pais');
     const ciudadSelect = document.getElementById('ciudad');
     const departamentoSelect = document.getElementById('departamento');
+    const eliminarCuenta = document.getElementById('btnEliminarCuenta');
 
     let direccionSeleccionada = null;
     let tarjetaSeleccionada = null;
@@ -661,8 +662,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    eliminarCuenta.addEventListener('click', async () => {
+        const confirmacion = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción eliminará tu cuenta permanentemente.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (confirmacion.isConfirmed) {
+            try {
+                const respuesta = await fetch(`/api/usuarios/${usuario.correo}`, {
+                                    method: 'DELETE'
+                                });
+                if (!respuesta.ok) {
+                    throw new Error('Error al eliminar la cuenta.');
+                }
+
+                localStorage.removeItem('usuario');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Cuenta eliminada',
+                    text: 'Tu cuenta ha sido eliminada exitosamente.',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    localStorage.removeItem('usuario'); // Limpiar el localStorage
+                    window.location.href = 'index.html'; // Redirigir al index
+                });
+            } catch (error) {
+                console.error('Error al eliminar la cuenta:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: `No se pudo eliminar la cuenta: ${error.message}`,
+                    confirmButtonText: 'Aceptar',
+                    toast: true,
+                    position: 'top-end'
+                });
+            }
+        }
+    });
+
     cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
-    
+
     function renderMapaFooter() {
         const footerMapa = document.getElementById('footer-mapa');
         if (!footerMapa) return;

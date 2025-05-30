@@ -1,3 +1,5 @@
+const { default: Swal } = require("sweetalert2");
+
 document.addEventListener('DOMContentLoaded', async () => {
     const usuario = JSON.parse(localStorage.getItem('usuario')) || {
         nombre: '',
@@ -139,11 +141,52 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span class="slider round"></span>
                     </label>
                     <button class="btn-ver-facturas" data-id="${usuario.correo}">Ver Facturas</button>
+                    <button class="btn-eliminar-usuario" data-id="${usuario.correo}">Eliminar Usuario</button>
                     
                 `;
 
+                // Agregar evento al botón de eliminar usuario
+                const btnEliminarUsuario = usuarioDiv.querySelector('.btn-eliminar-usuario');
+                btnEliminarUsuario.addEventListener('click', async () => {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "No podrás revertir esta acción.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            try {
+                                const respuesta = await fetch(`/api/usuarios/${usuario.correo}`, {
+                                    method: 'DELETE'
+                                });
+                                if (!respuesta.ok) {
+                                    throw new Error('Error al eliminar el usuario.');
+                                }
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Usuario eliminado',
+                                    text: 'El usuario ha sido eliminado exitosamente.',
+                                    toast: true,
+                                    position: 'top-end'
+                                });
+                                cargarUsuarios(); // Recargar la lista de usuarios
+                            } catch (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Hubo un error al eliminar el usuario.',
+                                    toast: true,
+                                    position: 'top-end'
+                                });
+                            }
+                        }
+                    });
+                });
+
                 usuariosContainer.appendChild(usuarioDiv);
-                
+
                 //Subir facturas al modal
                 const cargarFacturasEnModal = async (correo) => {
                     detalleFactura.innerHTML = '';

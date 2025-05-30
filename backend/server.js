@@ -1415,6 +1415,19 @@ app.delete('/api/ips/:ip', async (req, res) => {
     }
 });
 
+app.delete('/api/usuarios/:correo', async (req, res) => {
+    const { correo } = req.params;
+    try {
+        const usuario = await Usuario.findOneAndDelete({ correo });
+        if (!usuario) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+        res.status(200).json({ message: 'Usuario eliminado correctamente.' });
+    } catch (error) {
+        console.error('Error al eliminar el usuario:', error);
+        res.status(500).json({ error: 'Error al eliminar el usuario.' });
+    }
+});
 // Endpoint para verificar si un token existe en algún usuario (para restablecer contraseña)
 app.get('/api/usuarios/token/:token', async (req, res) => {
     try {
