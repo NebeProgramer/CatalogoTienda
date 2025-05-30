@@ -1195,14 +1195,14 @@ function ocultarLoader() {
             mostrarLoader();
             cargarCarrito();
             if (carruselRecomendados) carruselRecomendados.style.display = 'none';
-            btnCarrito.innerHTML = '<a>Todos</a>';
+            btnCarrito.innerHTML = '<a href="">Todos</a>';
             mostrandoCarrito = true;
             ocultarLoader();
         } else {
             mostrarLoader();
             cargarProductos();
             if (carruselRecomendados) carruselRecomendados.style.display = '';
-            btnCarrito.innerHTML = '<a>Mi carrito</a>';
+            btnCarrito.innerHTML = '<a href="#carrito">Mi carrito</a>';
             mostrandoCarrito = false;
             ocultarLoader();
         }

@@ -88,8 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const mensajes = await respuesta.json();
-            const listaMensajes = document.getElementById('lista-mensajes');
-            listaMensajes.innerHTML = ''; // Limpiar la lista
+            const listaMensajes = document.querySelector('faq-container');
+            listaMensajes.innerHTML = '';
 
             if (mensajes.length === 0) {
                 const mensajeVacio = document.createElement('p');
@@ -99,13 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 mensajes.forEach((mensaje) => {
                     const item = document.createElement('div');
-                    item.classList.add('mensaje-item');
-
+                    item.classList.add('faq-item');
                     item.innerHTML = `
-                        <h2>${mensaje.Nombre}</h2>
-                        <h3>${mensaje.Correo}</h3>
-                        <p>${mensaje.Mensaje}</p>
-                        <p><strong>Respuesta:</strong> ${mensaje.Respuesta || 'Sin respuesta aún.'}</p>
+                        <div class="faq-author">${mensaje.Nombre}</div>
+                        <div class="faq-email">${mensaje.Correo}</div>
+                        <div class="faq-question">${mensaje.Mensaje}</div>
+                        <div class="faq-answer"><strong>Respuesta:</strong> ${mensaje.Respuesta || 'Sin respuesta aún.'}</div>
                         <button class="responder-btn">Responder</button>
                         <div class="respuesta-container" style="display: none;">
                             <input type="text" class="respuesta-input" placeholder="Escribe tu respuesta aquí..." />
