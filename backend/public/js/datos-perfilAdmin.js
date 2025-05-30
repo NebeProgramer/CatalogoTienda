@@ -1,4 +1,3 @@
-const { default: Swal } = require("sweetalert2");
 
 document.addEventListener('DOMContentLoaded', async () => {
     const usuario = JSON.parse(localStorage.getItem('usuario')) || {
