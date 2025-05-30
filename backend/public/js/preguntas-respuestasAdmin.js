@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const mensajes = await respuesta.json();
-            const listaMensajes = document.querySelector('faq-container');
+            const listaMensajes = document.querySelector('.faq-container');
             listaMensajes.innerHTML = '';
 
             if (mensajes.length === 0) {
