@@ -60,7 +60,7 @@ const convertirPrecio = async (precio, monedaOriginal, monedaDestino) => {
     }
 
     try {
-        const respuesta = await fetch('/data/monedas.json');
+        const respuesta = await fetch('/api/monedas');
         if (!respuesta.ok) {
             throw new Error('Error al cargar las tasas de cambio.');
         }
