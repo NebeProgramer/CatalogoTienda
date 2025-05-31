@@ -312,7 +312,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
     }
 
     function setupLoginForm() {
-        document.getElementById('opcion').textContent = 'Iniciar Sesión';
+        opcionTitulo.textContent = 'Iniciar Sesión';
         tco.style.display = 'none';
         tca.style.display = 'none';
         emailSesionC.style.display = 'none';
@@ -320,14 +320,24 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
         emailSesionC.required = false;
         passwordSesionC.required = false;
         btnSesion.textContent = 'Iniciar Sesión';
+        olvidoContainer.style.display = 'none';
         terminos.style.display = 'none';
         privacidad.style.display = 'none';
         imputTerminos.style.display = 'none';
         imputPrivacidad.style.display = 'none';
+        imputPrivacidad.required = false;
+        imputTerminos.required = false;
+        reqLength.style.display = 'none';
+        reqMayus.style.display = 'none';
+        reqMinus.style.display = 'none';
+        reqNum.style.display = 'none';
+        reqEspecial.style.display = 'none';
+
+
     }
 
     function setupRegisterForm() {
-        document.getElementById('opcion').textContent = 'Crear Cuenta';
+        opcionTitulo.textContent = 'Crear Cuenta';
         tco.style.display = 'block';
         tca.style.display = 'block';
         emailSesionC.style.display = 'block';
@@ -335,6 +345,18 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
         emailSesionC.required = true;
         passwordSesionC.required = true;
         btnSesion.textContent = 'Crear Cuenta';
+        olvidoContainer.style.display = 'none';
+        terminos.style.display = 'block';
+        privacidad.style.display = 'block';
+        imputTerminos.style.display = 'block';
+        imputPrivacidad.style.display = 'block';
+        imputPrivacidad.required = true;
+        imputTerminos.required = true;
+        reqLength.style.display = 'block';
+        reqMayus.style.display = 'block';
+        reqMinus.style.display = 'block';
+        reqNum.style.display = 'block';
+        reqEspecial.style.display = 'block';
     }
 
     iniciarSesionBtn.addEventListener('click', (e) => {

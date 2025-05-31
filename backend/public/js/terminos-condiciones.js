@@ -69,6 +69,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         imputPrivacidad.style.display = 'none';
         imputPrivacidad.required = false;
         imputTerminos.required = false;
+        reqLength.style.display = 'none';
+        reqMayus.style.display = 'none';
+        reqMinus.style.display = 'none';
+        reqNum.style.display = 'none';
+        reqEspecial.style.display = 'none';
+
 
     }
 
@@ -88,6 +94,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         imputPrivacidad.style.display = 'block';
         imputPrivacidad.required = true;
         imputTerminos.required = true;
+        reqLength.style.display = 'block';
+        reqMayus.style.display = 'block';
+        reqMinus.style.display = 'block';
+        reqNum.style.display = 'block';
+        reqEspecial.style.display = 'block';
     }
 
     olvidoContainerbtn.addEventListener('click', function (e) {
