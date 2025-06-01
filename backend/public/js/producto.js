@@ -141,7 +141,7 @@ const perfil = JSON.parse(localStorage.getItem('usuario'));
 // Mostrar los comentarios con opción de edición si corresponde
 function CargarComentarios() {
     mostrarLoader();
-    const listaComentarios = document.getElementById('listacomentarios');
+    const listaComentarios = document.getElementById('listaComentarios');
     if (!listaComentarios) return;
     listaComentarios.innerHTML = '';
     if (!producto.comentarios || producto.comentarios.length === 0) {
