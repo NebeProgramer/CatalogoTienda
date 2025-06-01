@@ -998,9 +998,6 @@ async function cargarRedesSociales() {
     }
 }
 
-cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
-cargarProducto(productoId); // Cargar el producto al iniciar
-CargarComentarios(); // Cargar los comentarios al iniciar
 
     // Mostrar el minimapa en el footer si existe
     const footerMapa = document.getElementById('footer-mapa');
@@ -1008,8 +1005,12 @@ CargarComentarios(); // Cargar los comentarios al iniciar
         const mapaHTML = localStorage.getItem('footerMapaURL') || '';
         footerMapa.innerHTML = mapaHTML;
     }
-
+CargarComentarios(); // Cargar los comentarios al iniciar
+cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
 };
+
+
+cargarProducto(productoId); // Cargar el producto al iniciar
 
 
 function renderMapaFooter() {
