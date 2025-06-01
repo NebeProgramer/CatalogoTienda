@@ -1552,7 +1552,7 @@ button.eliminar-termino-btn:hover {
 
 .carrusel-items-recomendados {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: nowrap;
     justify-content: center;
     align-items: stretch;
