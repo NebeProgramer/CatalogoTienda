@@ -299,20 +299,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Función para guardar una nueva dirección
     const guardarDireccion = () => {
-        // Depuración: Verifica si el campo existe y su valor
+        // Obtener valores
+        const calle = document.getElementById('calle').value.trim();
+        const carrera = document.getElementById('carrera').value.trim();
+        const casa = document.getElementById('piso').value.trim();
+        const piso = document.getElementById('dpto').value.trim();
+        const codigoPostal = document.getElementById('cp').value.trim();
+        const departamento = document.getElementById('departamento').value.trim();
+        const ciudad = document.getElementById('ciudad').value.trim();
+        const pais = document.getElementById('pais').value.trim();
+
+        // Validaciones
+        const soloLetrasNumEsp = /^[A-Za-z0-9\s]+$/;
+        if (!calle || !carrera || !casa || !piso || !codigoPostal || !departamento || !ciudad || !pais) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campos incompletos',
+                text: 'Por favor, completa todos los campos de la dirección.',
+                toast: true,
+                position: 'top-end'
+            });
+            return;
+        }
+        if (!soloLetrasNumEsp.test(calle) || calle.length > 50) {
+            Swal.fire({ icon: 'warning', title: 'Calle inválida', text: 'La calle solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
+            return;
+        }
+        if (!soloLetrasNumEsp.test(carrera) || carrera.length > 50) {
+            Swal.fire({ icon: 'warning', title: 'Carrera inválida', text: 'La carrera solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
+            return;
+        }
+        if (!soloLetrasNumEsp.test(casa) || casa.length > 50) {
+            Swal.fire({ icon: 'warning', title: 'Casa inválida', text: 'La casa solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
+            return;
+        }
+        if (!soloLetrasNumEsp.test(piso) || piso.length > 50) {
+            Swal.fire({ icon: 'warning', title: 'Piso inválido', text: 'El piso solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
+            return;
+        }
+        if (!/^[0-9]{4,10}$/.test(codigoPostal)) {
+            Swal.fire({ icon: 'warning', title: 'Código Postal inválido', text: 'El código postal debe tener entre 4 y 10 dígitos numéricos.', toast: true, position: 'top-end' });
+            return;
+        }
+        if (!departamento) {
+            Swal.fire({ icon: 'warning', title: 'Departamento requerido', text: 'Selecciona un departamento.', toast: true, position: 'top-end' });
+            return;
+        }
+        if (!ciudad) {
+            Swal.fire({ icon: 'warning', title: 'Ciudad requerida', text: 'Selecciona una ciudad.', toast: true, position: 'top-end' });
+            return;
+        }
+        if (!pais) {
+            Swal.fire({ icon: 'warning', title: 'País requerido', text: 'Selecciona un país.', toast: true, position: 'top-end' });
+            return;
+        }
 
         const nuevaDireccion = {
-            Calle: document.getElementById('calle').value,
-            Carrera: document.getElementById('carrera').value, // Asegúrate de que el ID "carrera" esté correcto
-            Casa: document.getElementById('piso').value,
-            Piso: document.getElementById('dpto').value,
-            CodigoPostal: document.getElementById('cp').value,
-            Departamento: document.getElementById('departamento').value,
-            Ciudad: document.getElementById('ciudad').value,
-            Pais: document.getElementById('pais').value
+            Calle: calle,
+            Carrera: carrera,
+            Casa: casa,
+            Piso: piso,
+            CodigoPostal: codigoPostal,
+            Departamento: departamento,
+            Ciudad: ciudad,
+            Pais: pais
         };
-
-
         usuario.direccion.push(nuevaDireccion);
         actualizarLocalStorage();
         hideModal();
