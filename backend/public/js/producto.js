@@ -141,7 +141,7 @@ const perfil = JSON.parse(localStorage.getItem('usuario'));
 // Mostrar los comentarios con opción de edición si corresponde
 function CargarComentarios() {
     mostrarLoader();
-    const listaComentarios = document.getElementById('comentarios');
+    const listaComentarios = document.getElementById('listacomentarios');
     if (!listaComentarios) return;
     listaComentarios.innerHTML = '';
     if (!producto.comentarios || producto.comentarios.length === 0) {
@@ -204,6 +204,7 @@ function CargarComentarios() {
         btnGuardar.textContent = 'Guardar';
         btnGuardar.removeEventListener('click', habilitarEdicionComentario);
         btnGuardar.addEventListener('click', () => guardarEdicionComentario(comentario, li, inputComentario, selectCalificacion));
+        
     }
 
     // Función para guardar la edición de un comentario
