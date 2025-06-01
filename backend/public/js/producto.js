@@ -106,6 +106,18 @@ document.getElementById('productoCalificacion').textContent = producto.calificac
 // Crear un carrusel para las imágenes del producto
 const carrusel = document.getElementById('productoImagenes');
 let currentIndex = 0; // Índice actual del carrusel
+// Limpiar el carrusel antes de agregar nuevas imágenes
+carrusel.innerHTML = ''; // Limpiar el carrusel existente
+// Verificar si el producto tiene imágenes
+if (!producto.imagenes || producto.imagenes.length === 0) {
+    const imgPlaceholder = document.createElement('img');
+    imgPlaceholder.src = 'https://via.placeholder.com/300'; // Imagen de placeholder
+    imgPlaceholder.alt = 'Imagen no disponible';
+    imgPlaceholder.classList.add('carruselProd-imagen');
+    carrusel.appendChild(imgPlaceholder);
+    ocultarLoader();
+    return; // Salir si no hay imágenes
+}
 
 // Mostrar las imágenes en el carrusel
 producto.imagenes.forEach((imagen, index) => {
