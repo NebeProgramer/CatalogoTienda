@@ -182,12 +182,6 @@ function CargarComentarios() {
         const comentarioTexto = li.querySelector('.comentario-texto');
         const comentarioCalificacion = li.querySelector('.comentario-calificacion');
 
-        if (!comentarioTexto || !comentarioCalificacion) {
-            console.error('No se encontraron los elementos de texto o calificación para editar.');
-            alert('Hubo un error al intentar editar el comentario.');
-            return;
-        }
-
         // Convertir el texto del comentario en un input
         const inputComentario = document.createElement('input');
         inputComentario.type = 'text';
