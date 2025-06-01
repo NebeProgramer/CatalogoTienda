@@ -1572,7 +1572,7 @@ button.eliminar-termino-btn:hover {
     box-shadow: 0 4px 16px rgba(0,0,0,0.10);
     transition: transform 0.3s, box-shadow 0.3s;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: flex-start;
 }
