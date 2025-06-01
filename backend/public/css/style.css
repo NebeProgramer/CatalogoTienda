@@ -684,7 +684,7 @@ footer {
     cursor: pointer;
     font-size: 16px;
     border-radius: 5px;
-    z-index: 500;
+    z-index: 100;
     transition: left 0.3s ease;
 }
 
@@ -870,7 +870,8 @@ footer {
     background-color: #f9f9f9;
     border-radius: 10px;
     padding: 10px;
-    
+    display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
@@ -886,7 +887,7 @@ footer {
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     gap: 24px;
     width: 100%;
     transition: transform 0.5s ease-in-out;
@@ -905,6 +906,179 @@ footer {
     background-color: transparent;
     box-shadow: 0 4px 12px rgba(0,0,0,0.10);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.producto-recomendado-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(.4,2,.6,1);
+    transform-style: preserve-3d;
+}
+
+.producto-recomendado:hover .producto-recomendado-inner {
+    transform: rotateY(180deg);
+}
+
+.producto-recomendado-front, .producto-recomendado-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 14px;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+}
+
+.producto-recomendado-front {
+    background: #fff;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.producto-recomendado-front img {
+    width: 90%;
+    height: 220px;
+    object-fit: contain;
+    margin: 20px auto 10px auto;
+    display: block;
+}
+
+.producto-recomendado-back {
+    background: #fff;
+    transform: rotateY(180deg);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    text-align: center;
+}
+
+.producto-recomendado-back h3 {
+    font-size: 1.2rem;
+    margin: 10px 0 5px 0;
+    color: #222;
+}
+
+.producto-recomendado-back p {
+    font-size: 1rem;
+    margin: 5px 0;
+    color: #444;
+}
+
+.producto-recomendado-back .botones {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.carrusel-prev-recomendados {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.carrusel-next-recomendados {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.producto-recomendado-back button {
+    padding: 12px 22px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #ffb700;
+    color: #222;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+    outline: none;
+}
+
+.producto-recomendado-back button:hover {
+    background-color: #b88400;
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+}
+
+.carrusel-recomendados {
+    margin: 20px 0;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.carrusel-recomendados h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.carrusel-items-recomendados {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 24px;
+    width: 100%;
+    transition: transform 0.5s ease-in-out;
+    min-height: 420px;
+    padding: 40px 0;
+}
+
+.producto-recomendado {
+    perspective: 1000px;
+    position: relative;
+    width: 320px;
+    height: 420px;
+    border-radius: 14px;
+    overflow: visible;
+    cursor: pointer;
+    background-color: transparent;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .producto-recomendado-inner {
