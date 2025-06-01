@@ -1,5 +1,13 @@
 let imagenesSeleccionadas = []; // Arreglo para almacenar las imágenes seleccionadas
 document.addEventListener('DOMContentLoaded', async () => {
+    function mostrarLoader() {
+        const loader = document.getElementById('loader');
+        if (loader) loader.style.display = 'flex';
+    }
+    function ocultarLoader() {
+        const loader = document.getElementById('loader');
+        if (loader) loader.style.display = 'none';
+    }
     mostrarLoader();
     const params = new URLSearchParams(window.location.search);
     const productoId = parseInt(params.get('id'), 10); // Obtener el ID del producto de la URL
