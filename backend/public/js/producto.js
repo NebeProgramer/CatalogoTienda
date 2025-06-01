@@ -27,7 +27,7 @@ const id = params.get('id');
         window.location.href = 'index.html';
         return;
     }
-
+async function cargarProducto(productoId) {
 try {
 // Obtener los datos del producto desde el servidor
 const respuesta = await fetch('/api/productos');
@@ -265,6 +265,7 @@ function CargarComentarios() {
             alert('Hubo un error al guardar el comentario editado.');
         } finally {
             ocultarLoader();
+            cargarProducto(productoId); // Recargar los comentarios
         }
     }
 
@@ -998,7 +999,9 @@ CargarComentarios(); // Cargar los comentarios al iniciar
         footerMapa.innerHTML = mapaHTML;
     }
 
-});
+};
+
+
 function renderMapaFooter() {
     const footerMapa = document.getElementById('footer-mapa');
     if (!footerMapa) return;
@@ -1016,3 +1019,4 @@ function renderMapaFooter() {
         });
 }
 document.addEventListener('DOMContentLoaded', renderMapaFooter);
+});
