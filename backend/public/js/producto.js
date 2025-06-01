@@ -181,7 +181,11 @@ function CargarComentarios() {
         if (perfil && perfil.correo === comentario.correo) {
             const btnEditar = document.createElement('button');
             btnEditar.textContent = 'Editar';
-            btnEditar.addEventListener('click', () => habilitarEdicionComentario(comentario, li));
+            if(btnEditar.textContent === 'Editar') {
+                btnEditar.addEventListener('click', () => habilitarEdicionComentario(comentario, li));
+            }else{
+                btnEditar.addEventListener('click', () => guardarEdicionComentario(comentario, li));
+            }
             li.appendChild(btnEditar);
         }
         listaComentarios.appendChild(li);
