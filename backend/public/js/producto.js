@@ -989,7 +989,7 @@ async function cargarRedesSociales() {
 }
 
 cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
-
+CargarComentarios(); // Cargar los comentarios al iniciar
     // Mostrar el minimapa en el footer si existe
     const footerMapa = document.getElementById('footer-mapa');
     if (footerMapa) {
