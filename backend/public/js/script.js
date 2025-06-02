@@ -794,7 +794,7 @@ function ocultarLoader() {
                 .filter(producto => producto.calificacion >= 4.0)
                 .sort((a, b) => b.calificacion - a.calificacion);
             const monedaPreferida = localStorage.getItem('monedaPreferida') || 'USD';
-            const carruselItemsRecomendados = document.querySelector('.producto-recomendado');
+            const carruselItemsRecomendados = document.querySelector('.carrusel-recomendado');
             carruselItemsRecomendados.innerHTML = '';
             for (const producto of productosRecomendados) {
                 const precioConvertido = await convertirPrecio(producto.precio, producto.moneda, monedaPreferida);
