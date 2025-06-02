@@ -794,7 +794,7 @@ function ocultarLoader() {
                 .filter(producto => producto.calificacion >= 4.0)
                 .sort((a, b) => b.calificacion - a.calificacion);
             const monedaPreferida = localStorage.getItem('monedaPreferida') || 'USD';
-            const carruselItemsRecomendados = document.querySelector('.carrusel-recomendados');
+            const carruselItemsRecomendados = document.querySelector('.carrusel-items-recomendados');
             carruselItemsRecomendados.innerHTML = '';
             for (const producto of productosRecomendados) {
                 const precioConvertido = await convertirPrecio(producto.precio, producto.moneda, monedaPreferida);
@@ -837,7 +837,7 @@ function ocultarLoader() {
     };
     
     const inicializarCarruselRecomendados = () => {
-        const carruselItems = document.querySelector('.producto-recomendado');
+        const carruselItems = document.querySelector('.carrusel-recomendados');
         const prevButton = document.querySelector('.carrusel-prev-recomendados');
         const nextButton = document.querySelector('.carrusel-next-recomendados');
         const productos = carruselItems.querySelectorAll('.producto-recomendado-inner');
