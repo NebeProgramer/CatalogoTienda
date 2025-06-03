@@ -1552,7 +1552,7 @@ button.eliminar-termino-btn:hover {
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: center;
-    align-items: stretch;
+    align-items: center; /* Cambiado a center para centrar verticalmente los items */
     gap: 48px;
     width: 100%;
     min-height: 440px;
@@ -1572,15 +1572,16 @@ button.eliminar-termino-btn:hover {
     border-radius: 16px;
     background: #fff;
     box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-    padding: 28px 16px 28px 16px;
     min-height: 420px;
     max-width: 340px;
     transition: box-shadow 0.3s, transform 0.3s;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center; /* Centrar contenido verticalmente */
     perspective: 1200px;
+    padding: 0; /* Elimina padding para que el inner ocupe todo el espacio */
+    overflow: hidden;
 }
 
 .producto-recomendado-inner {
@@ -1589,10 +1590,10 @@ button.eliminar-termino-btn:hover {
     height: 100%;
     transition: transform 0.6s cubic-bezier(.4,2,.6,1);
     transform-style: preserve-3d;
-}
-
-.producto-recomendado:hover .producto-recomendado-inner {
-    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .producto-recomendado-front, .producto-recomendado-back {
@@ -1604,6 +1605,10 @@ button.eliminar-termino-btn:hover {
     overflow: hidden;
     top: 0;
     left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .producto-recomendado-front {
