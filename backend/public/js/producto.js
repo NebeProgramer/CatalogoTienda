@@ -894,8 +894,28 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 toast: true,
                 position: 'top-end'
             });
+            ocultarLoader();
             return;
         }
+
+        // Verificar si el usuario ya ha comentado
+        try {
+            const resp = await fetch(`/api/productos/${productoId}`);
+            if (resp.ok) {
+                const prod = await resp.json();
+                if (prod.comentarios && prod.comentarios.some(c => c.correo === perfil.correo)) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Ya comentaste',
+                        text: 'Solo puedes comentar una vez por producto.',
+                        toast: true,
+                        position: 'top-end'
+                    });
+                    ocultarLoader();
+                    return;
+                }
+            }
+        } catch (e) { /* ignorar error */ }
 
         if (!comentarioTexto || isNaN(calificacion) || calificacion < 0 || calificacion > 5) {
             Swal.fire({
@@ -905,6 +925,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 toast: true,
                 position: 'top-end'
             });
+            ocultarLoader();
             return;
         }
 
