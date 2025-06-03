@@ -1610,7 +1610,7 @@ button.eliminar-termino-btn:hover {
     backface-visibility: hidden;
     border-radius: 16px;
     overflow: hidden;
-    /* Elimina display: flex y centrado aquí para no romper el 3D */
+        /* Elimina display: flex y centrado aquí para no romper el 3D */
 }
 
 .producto-recomendado-front-content,
@@ -1713,4 +1713,8 @@ button.eliminar-termino-btn:hover {
     background-color: #b88400;
     color: #fff;
     transform: translateY(-2px) scale(1.04);
+}
+
+.producto-recomendado:hover .producto-recomendado-inner {
+    transform: rotateY(180deg);
 }
