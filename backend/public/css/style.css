@@ -1610,10 +1610,18 @@ button.eliminar-termino-btn:hover {
     backface-visibility: hidden;
     border-radius: 16px;
     overflow: hidden;
+    /* Elimina display: flex y centrado aquí para no romper el 3D */
+}
+
+.producto-recomendado-front-content,
+.producto-recomendado-back-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 100%;
+    width: 100%;
+    text-align: center;
 }
 
 .producto-recomendado-front img {
@@ -1635,7 +1643,6 @@ button.eliminar-termino-btn:hover {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 28px 18px;
     text-align: center;
 }
 
