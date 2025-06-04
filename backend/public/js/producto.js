@@ -1063,4 +1063,5 @@ function renderMapaFooter() {
         });
 }
 document.addEventListener('DOMContentLoaded', renderMapaFooter);
+ocultarLoader(); // Ocultar el loader al cargar la página
 });

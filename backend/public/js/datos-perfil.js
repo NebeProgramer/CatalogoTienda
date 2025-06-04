@@ -43,14 +43,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (usuario && usuario.correo) {
         // Cambiar el texto del botón "Editar perfil" al nombre del usuario
-        btnEditarPerfil.textContent = usuario.nombre || 'Perfil';
+        btnEditarPerfil.textContent = usuario.nombre || 'Editar Perfil';
         btnEditarPerfil.href = 'datos-perfil.html'; // Redirigir a la misma página
 
         // Asignar la función de cerrar sesión al botón "Cerrar sesión"
         btnCerrarSesion.addEventListener('click', () => {
             localStorage.clear(); // Limpiar el localStorage
-            alert('Sesión cerrada exitosamente.');
-            window.location.href = 'index.html'; // Redirigir al index
+            Swal.fire({
+                icon: 'success',
+                title: 'Sesión cerrada',
+                text: 'Has cerrado sesión correctamente.',
+            }).then(() => {
+                localStorage.removeItem('usuario'); // Limpiar el localStorage
+                window.location.href = 'index.html'; // Redirigir al index
+            });
         });
     } else {
         // Si no hay una cuenta iniciada, redirigir a la página de inicio de sesión
@@ -58,6 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
         btnEditarPerfil.href = 'index.html'; // Redirigir al index para iniciar sesión
 
         btnCerrarSesion.style.display = 'none'; // Ocultar el botón "Cerrar sesión"
+        Swal.fire({
+            icon: 'warning',
+            title: 'No hay sesión iniciada',
+            text: 'Por favor, inicia sesión para acceder a tu perfil.',
+            
+        }).then(() => {
+            window.location.href = 'index.html'; // Redirigir al index
+        });
     }
 
     
