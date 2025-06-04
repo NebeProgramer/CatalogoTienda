@@ -33,6 +33,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const imputTerminos = document.getElementById('imputTerminos');
     const imputPrivacidad = document.getElementById('imputPrivacidad');
     const carrito = document.getElementById('carrito');
+    const reqLength = document.getElementById('reqLength');
+    const reqMayus = document.getElementById('reqMayus');
+    const reqMinus = document.getElementById('reqMinus');
+    const reqNum = document.getElementById('reqNum');
+    const reqEspecial = document.getElementById('reqEspecial');
     let Actualizar = false
     let eliminar = false;
 
@@ -45,18 +50,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     iniciarSesionBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
         setupLoginForm({
             opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
         });
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
+        
     });
 
     crearCuentaBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
         setupRegisterForm({
             opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
         });
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
+        
     });
 
     closeModal.addEventListener('click', () => hideModal(modal, formSesionContainer, olvidoContainer));
