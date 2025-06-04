@@ -278,7 +278,7 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
             }
             perfilLink.id = 'perfilBtn';
             perfilLink.href = '#';
-            perfilLink.addEventListener('click', () => mostrarPerfil(data.user));
+            perfilLink.addEventListener('click', () => mostrarPerfil(data.user, Swal, mostrarLoader, ocultarLoader));
             perfilLi.appendChild(perfilLink);
             const cerrarSesionLi = document.createElement('li');
             const cerrarSesionLink = document.createElement('a');
