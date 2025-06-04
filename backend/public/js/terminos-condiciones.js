@@ -1,3 +1,8 @@
+import { showModal, hideModal, setupLoginForm, setupRegisterForm, validarRequisitos, validarCoincidencias, validarCorreos, recuperarContraseña, crearCuenta, iniciarSesion, cerrarSesion, mostrarPerfil, usuarioActivo } from './js/Sesion.js';
+import { mostrarLoader, ocultarLoader } from './js/Loaders.js';
+import { renderMapaFooter } from './js/Mapa.js';
+import { cargarRedesSociales } from './js/Redes.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
     const contenedorProductos = document.getElementById('contenedor-productos');
     const modal = document.getElementById('modal');
@@ -36,159 +41,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     let Actualizar = false
     let eliminar = false;
 
-    function showModal(container) {
-        modal.style.display = 'block';
-        formSesionContainer.style.display = 'none';
-        olvidoContainer.style.display = 'none';
-        container.style.display = 'block';
-    }
-
-    function hideModal() {
-        modal.style.display = 'none';
-        formSesionContainer.style.display = 'none';
-        olvidoContainer.style.display = 'none';
-        document.getElementById('emailSesion').value = '';
-        document.getElementById('passwordSesion').value = '';
-        document.getElementById('emailSesionC').value = '';
-        document.getElementById('passwordSesionC').value = '';
-    }
-
-    function setupLoginForm() {
-        opcionTitulo.textContent = 'Iniciar Sesión';
-        tco.style.display = 'none';
-        tca.style.display = 'none';
-        emailSesionC.style.display = 'none';
-        passwordSesionC.style.display = 'none';
-        emailSesionC.required = false;
-        passwordSesionC.required = false;
-        btnSesion.textContent = 'Iniciar Sesión';
-        olvidoContainer.style.display = 'none';
-        terminos.style.display = 'none';
-        privacidad.style.display = 'none';
-        imputTerminos.style.display = 'none';
-        imputPrivacidad.style.display = 'none';
-        imputPrivacidad.required = false;
-        imputTerminos.required = false;
-        reqLength.style.display = 'none';
-        reqMayus.style.display = 'none';
-        reqMinus.style.display = 'none';
-        reqNum.style.display = 'none';
-        reqEspecial.style.display = 'none';
-
-
-    }
-
-    function setupRegisterForm() {
-        opcionTitulo.textContent = 'Crear Cuenta';
-        tco.style.display = 'block';
-        tca.style.display = 'block';
-        emailSesionC.style.display = 'block';
-        passwordSesionC.style.display = 'block';
-        emailSesionC.required = true;
-        passwordSesionC.required = true;
-        btnSesion.textContent = 'Crear Cuenta';
-        olvidoContainer.style.display = 'none';
-        terminos.style.display = 'block';
-        privacidad.style.display = 'block';
-        imputTerminos.style.display = 'block';
-        imputPrivacidad.style.display = 'block';
-        imputPrivacidad.required = true;
-        imputTerminos.required = true;
-        reqLength.style.display = 'block';
-        reqMayus.style.display = 'block';
-        reqMinus.style.display = 'block';
-        reqNum.style.display = 'block';
-        reqEspecial.style.display = 'block';
-    }
-
+    // Reemplazar las funciones locales por llamadas a los imports
     olvidoContainerbtn.addEventListener('click', function (e) {
         e.preventDefault();
         formSesionContainer.style.display = 'none';
-        showModal(olvidoContainer);
-    })
+        showModal(olvidoContainer, modal, formSesionContainer, olvidoContainer);
+    });
 
     iniciarSesionBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        showModal(formSesionContainer);
-        setupLoginForm();
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
+        setupLoginForm({
+            opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
+        });
     });
 
     crearCuentaBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        showModal(formSesionContainer);
-        setupRegisterForm();
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
+        setupRegisterForm({
+            opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
+        });
     });
 
-    closeModal.addEventListener('click', hideModal);
+    closeModal.addEventListener('click', () => hideModal(modal, formSesionContainer, olvidoContainer));
 
     window.addEventListener('click', function (event) {
         if (event.target === modal) {
-            hideModal();
+            hideModal(modal, formSesionContainer, olvidoContainer);
         }
     });
 
 
 
     // Validación de requisitos de contraseña y coincidencia
-    const reqLength = document.getElementById('req-length');
-    const reqMayus = document.getElementById('req-mayus');
-    const reqMinus = document.getElementById('req-minus');
-    const reqNum = document.getElementById('req-num');
-    const reqEspecial = document.getElementById('req-especial');
-    
-    function validarRequisitos(password) {
-        let validos = 0;
-        if (password.length >= 8) { reqLength.style.color = 'green'; validos++; } else reqLength.style.color = 'red';
-        if (/[A-Z]/.test(password)) { reqMayus.style.color = 'green'; validos++; } else reqMayus.style.color = 'red';
-        if (/[a-z]/.test(password)) { reqMinus.style.color = 'green'; validos++; } else reqMinus.style.color = 'red';
-        if (/\d/.test(password)) { reqNum.style.color = 'green'; validos++; } else reqNum.style.color = 'red';
-        if (/[^A-Za-z0-9]/.test(password)) { reqEspecial.style.color = 'green'; validos++; } else reqEspecial.style.color = 'red';
-        return validos === 5;
-    }
-
-    function validarCoincidencia() {
-        if (passwordSesionC.value && passwordSesion.value) {
-            if (passwordSesionC.value === passwordSesion.value) {
-                passwordSesion.style.borderColor = 'green';
-                passwordSesionC.style.borderColor = 'green';
-            } else {
-                passwordSesion.style.borderColor = 'red';
-                passwordSesionC.style.borderColor = 'red';
-            }
-        } else {
-            passwordSesion.style.borderColor = '';
-            passwordSesionC.style.borderColor = '';
-        }
-    }
-
-    function validarCorreos() {
-        const correo1 = emailSesionC.value.trim();
-        const correo2 = emailSesion.value.trim();
-        const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!regexCorreo.test(correo1) || !regexCorreo.test(correo2)) {
-            emailSesionC.style.borderColor = 'red';
-            emailSesion.style.borderColor = 'red';
-            return false;
-        }
-        if (correo1 !== correo2) {
-            emailSesionC.style.borderColor = 'red';
-            emailSesion.style.borderColor = 'red';
-            return false;
-        }
-        emailSesionC.style.borderColor = 'green';
-        emailSesion.style.borderColor = 'green';
-        return true;
-    }
-
     passwordSesion.addEventListener('input', () => {
-        validarRequisitos(passwordSesionC.value);
-        validarCoincidencia();
+        validarRequisitos(passwordSesion.value, reqLength, reqMayus, reqMinus, reqNum, reqEspecial);
+        validarCoincidencias(passwordSesion.value, passwordSesionC.value, passwordSesion, passwordSesionC);
     });
-    passwordSesionC.addEventListener('input', validarCoincidencia);
-    emailSesionC.addEventListener('input', validarCorreos);
+    passwordSesionC.addEventListener('input', () => {
+        validarCoincidencias(passwordSesion.value, passwordSesionC.value, passwordSesion, passwordSesionC);
+    });
+    emailSesionC.addEventListener('input', () => {
+        validarCorreos(emailSesion.value, emailSesionC.value, emailSesion, emailSesionC);
+    });
     emailSesion.addEventListener('input', () => {
         if(emailSesionC.style.display !== 'none') {
-            validarCorreos();
+            validarCorreos(emailSesion.value, emailSesionC.value, emailSesion, emailSesionC);
         }
     });
 
@@ -198,242 +97,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         formOlvido.addEventListener('submit', async (e) => {
             e.preventDefault();
             const correoRecuperar = document.getElementById('emailOlvido').value.trim();
-            if (!correoRecuperar) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Campo requerido',
-                    text: 'Por favor, ingresa tu correo.',
-                    toast: true,
-                    position: 'top-end'
-                });
-                return;
-            }
-            try {
-                const resp = await fetch('/api/recuperar-contrasena', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ correo: correoRecuperar })
-                });
-                const data = await resp.json();
-                if (resp.ok) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Revisa tu correo',
-                        text: data.message,
-                        toast: true,
-                        position: 'top-end'
-                    });
-                    hideModal();
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: data.error || 'No se pudo enviar el correo de recuperación.',
-                        toast: true,
-                        position: 'top-end'
-                    });
-                }
-            } catch (err) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error de red',
-                    text: 'No se pudo conectar con el servidor.',
-                    toast: true,
-                    position: 'top-end'
-                });
-            }
+            await recuperarContraseña(correoRecuperar, Swal, () => hideModal(modal, formSesionContainer, olvidoContainer));
         });
     }
 
-    // Función para manejar la creación de cuenta
-    const crearCuenta = async () => {
-        const correo = emailSesionC.value;
-        const confirmCo = emailSesion.value;
-        const contrasena = passwordSesionC.value;
-        const confirmCon = passwordSesion.value;
-        const form = document.getElementById('formSesion');
-
-        if (!correo || !contrasena || !confirmCo || !confirmCon) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Campos incompletos',
-                text: 'Por favor, completa todos los campos.',
-                toast: true,
-                position: 'top-end'
-            });
-            return;
-        }
-        if (!validarRequisitos(contrasena)) {
-            Swal.fire({ icon: 'error', title: 'Contraseña insegura', text: 'La contraseña no cumple los requisitos.', toast: true, position: 'top-end' });
-            return;
-        }
-        if (contrasena !== confirmCon) {
-            Swal.fire({ icon: 'error', title: 'Contraseñas no coinciden', text: 'Las contraseñas no son iguales.', toast: true, position: 'top-end' });
-            return;
-        }
-        if (!validarCorreos()) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Correos no coinciden',
-                text: 'Por favor, verifica que los correos sean iguales.',
-                toast: true,
-                position: 'top-end'
-            });
-            return;
-        }
-        try {
-            const respuesta = await fetch('/api/crear-cuenta', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ correo, contrasena })
-            });
-            const data = await respuesta.json();
-            if (respuesta.ok) {
-                hideModal();
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.error,
-                    toast: true,
-                    position: 'top-end'
-                });
-            }
-        } catch (error) {
-            console.error('Error al crear la cuenta:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Hubo un error al crear la cuenta. Intenta nuevamente.',
-                toast: true,
-                position: 'top-end'
-            });
-        }
-        hideModal();
-        form.reset();
-    };
-
-    // Función para manejar el inicio de sesión
-    const iniciarSesion = async () => {
-        const correo = emailSesion.value;
-        const contrasena = passwordSesion.value;
-
-        if (!correo || !contrasena) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Campos incompletos',
-                text: 'Por favor, completa todos los campos.',
-                toast: true,
-                position: 'top-end'
-            });
-            return;
-        }
-
-
-        const ipResponse = await fetch('https://api.ipify.org?format=json');
-            console.log('IP pública obtenida:', ipResponse);
-            const ipData = await ipResponse.json();
-            const ip = ipData.ip;
-        try {
-            const respuesta = await fetch('/api/iniciar-sesion', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ correo, contrasena, ip })
-            });
-
-            const data = await respuesta.json();
-
-            if (respuesta.ok) {
-                localStorage.setItem('usuario', JSON.stringify(data.user));
-                iniciarSesionBtn.style.display = 'none';
-                crearCuentaBtn.style.display = 'none';
-                const listaSesion = document.querySelector('.iniciosesion');
-                const perfilLi = document.createElement('li');
-                const perfilLink = document.createElement('a');
-                if (data.user && data.user.nombre && data.user.nombre.trim() !== "") {
-                    perfilLink.textContent = data.user.nombre;
-                } else {
-                    perfilLink.textContent = 'Editar Perfil';
-                }
-                perfilLink.id = 'perfilBtn';
-                perfilLink.href = '#';
-                perfilLink.addEventListener('click', () => mostrarPerfil(data.user));
-                perfilLi.appendChild(perfilLink);
-                const cerrarSesionLi = document.createElement('li');
-                const cerrarSesionLink = document.createElement('a');
-                cerrarSesionLink.textContent = 'Cerrar Sesión';
-                cerrarSesionLink.id = 'cerrarSesionBtn';
-                cerrarSesionLink.href = '#';
-                cerrarSesionLink.addEventListener('click', cerrarSesion);
-                cerrarSesionLi.appendChild(cerrarSesionLink);
-                listaSesion.appendChild(perfilLi);
-                listaSesion.appendChild(cerrarSesionLi);
-                hideModal();
-                form.sesion.reset();
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.error,
-                    toast: true,
-                    position: 'top-end'
-                    
-                });
-            }
-        } catch (error) {
-            console.error('Error al iniciar sesión:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Hubo un error al iniciar sesión. Intenta nuevamente.',
-                toast: true,
-                position: 'top-end'
-            });
-        }
-    };
-
-    // Función para cerrar sesión
-    const cerrarSesion = () => {
-        localStorage.removeItem('usuario');
-        location.reload();
-    };
-
-    // Función para mostrar el perfil del usuario
-    const mostrarPerfil = async (user) => {
-        try {
-            const respuesta = await fetch(`/api/perfil?correo=${user.correo}`);
-            const perfil = await respuesta.json();
-
-            if (respuesta.ok) {
-                window.location.href = 'datos-perfil.html';
-                localStorage.setItem('usuario', JSON.stringify(perfil));
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: perfil.error,
-                    toast: true,
-                    position: 'top-end'
-                });
-            }
-        } catch (error) {
-            console.error('Error al cargar el perfil:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Hubo un error al cargar el perfil. Intenta nuevamente.',
-                toast: true,
-                position: 'top-end'
-            });
-        }
-    };
-
-    btnSesion.addEventListener('click', (e) => {
+    btnSesion.addEventListener('click', async (e) => {
         e.preventDefault();
         if (btnSesion.textContent === 'Crear Cuenta') {
-            crearCuenta();
+            await crearCuenta({ emailSesionC, emailSesion, passwordSesionC, passwordSesion, validarRequisitos, validarCorreos, Swal, mostrarLoader, ocultarLoader, hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer), formSesion: form.sesion, reqLength, reqMayus, reqMinus, reqNum, reqEspecial });
         } else if (btnSesion.textContent === 'Iniciar Sesión') {
-            iniciarSesion();
+            await iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn, crearCuentaBtn, hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer), formSesion: form.sesion, btnSesion, mostrarPerfil, cerrarSesion });
         }
     });
 
@@ -481,16 +154,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     }
 
-    // Loader functions
-function mostrarLoader() {
-    const loader = document.getElementById('loader');
-    if (loader) loader.style.display = 'flex';
-}
-function ocultarLoader() {
-    const loader = document.getElementById('loader');
-    if (loader) loader.style.display = 'none';
-}
-
     async function cargarTerminos() {
         mostrarLoader();
         try {
@@ -526,79 +189,9 @@ function ocultarLoader() {
             ocultarLoader();
         }
     }
-    // Función para cargar redes sociales desde el servidor
-    async function cargarRedesSociales() {
-        mostrarLoader();
-        try {
-            const respuesta = await fetch('/api/redes-sociales');
-            if (!respuesta.ok) {
-                throw new Error('Error al cargar las redes sociales.');
-            }
-
-            const redes = await respuesta.json();
-            const listaRedes = document.querySelector('.redes-sociales');
-            listaRedes.innerHTML = '';
-
-            redes.forEach(red => {
-                const li = document.createElement('li');
-
-                // Verificar si el enlace tiene un esquema completo
-                let enlaceCompleto = red.enlace;
-                if (!/^https?:\/\//i.test(enlaceCompleto)) {
-                    if (!enlaceCompleto.startsWith('www.')) {
-                        enlaceCompleto = `www.${enlaceCompleto}`;
-                    }
-                    enlaceCompleto = `https://${enlaceCompleto}`;
-                } else if (enlaceCompleto.startsWith('www.')) {
-                    enlaceCompleto = `https://${enlaceCompleto}`;
-
-                } else if (!enlaceCompleto.startsWith('http://') && !enlaceCompleto.startsWith('https://')) {
-                    enlaceCompleto = `https://${enlaceCompleto}`; // Corregido para usar https  
-                }
-                li.innerHTML = `
-                    <a href="${enlaceCompleto}" target="_blank">
-                    <img src="https://cdn.simpleicons.org/${red.nombre}" alt="${red.nombre}" width="24" height="24">
-                    ${red.nombre}
-                    </a>
-                `;
-                listaRedes.appendChild(li);
-            });
-        } catch (error) {
-            console.error('Error al cargar las redes sociales:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Hubo un error al cargar las redes sociales.',
-                toast: true,
-                position: 'top-end'
-            });
-        } finally {
-            ocultarLoader();
-        }
-    }
-
-    function renderMapaFooter() {
-        const footerMapa = document.getElementById('footer-mapa');
-        if (!footerMapa) return;
-        let mapaHTML = '';
-        fetch('/api/ubicacion-mapa')
-            .then(res => res.ok ? res.json() : Promise.reject())
-            .then(data => {
-                mapaHTML = data.html || '';
-                if (mapaHTML) localStorage.setItem('footerMapaURL', mapaHTML);
-                footerMapa.innerHTML = mapaHTML;
-            })
-            .catch(() => {
-                mapaHTML = localStorage.getItem('footerMapaURL') || '';
-                footerMapa.innerHTML = mapaHTML;
-            });
-    }
-
     renderMapaFooter();
-
     cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
     cargarTerminos();
-
     // Mostrar el minimapa en el footer si existe
     const footerMapa = document.getElementById('footer-mapa');
     if (footerMapa) {
