@@ -239,7 +239,7 @@ async function crearCuenta({ emailSesionC, emailSesion, passwordSesionC, passwor
     formSesion.reset();
 }
 
-async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn, crearCuentaBtn, hideModal, formSesion, btnSesion, mostrarPerfil, cerrarSesion }) {
+async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn, crearCuentaBtn, hideModal, formSesion, btnSesion, mostrarPerfil, cerrarSesion, openCRUD, perfiles, carrito }) {
     mostrarLoader();
     const correo = emailSesion.value;
     const contrasena = passwordSesion.value;
@@ -252,8 +252,10 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
             toast: true,
             position: 'top-end'
         });
+        ocultarLoader();
         return;
     }
+
     const ipResponse = await fetch('https://api.ipify.org?format=json');
     const ipData = await ipResponse.json();
     const ip = ipData.ip;
@@ -266,8 +268,48 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
         const data = await respuesta.json();
         if (respuesta.ok) {
             localStorage.setItem('usuario', JSON.stringify(data.user));
-            iniciarSesionBtn.style.display = 'none';
-            crearCuentaBtn.style.display = 'none';
+            // Si es admin y la función openCRUD existe, ejecutarla
+            if (data.user && data.user.rol === 'admin' && window.location.endsWith('index.html')) {
+                if (typeof openCRUD === 'function') {
+                    openCRUD();
+                } else {
+                    console.warn('openCRUD no está definida o no es una función.');
+            
+            }
+                // Verificación de IP para admin (puedes personalizar la IP permitida)
+                const ipAdminPermitida = await fetch('/api/ips'); // Cambia esto por la IP real permitida
+                if (ip === ipAdminPermitida && data.user.rol === 'admin') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Bienvenido, administrador!',
+                        text: 'Has iniciado sesión como administrador.',
+                        toast: true,
+                        position: 'top-end'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Acceso restringido',
+                        text: 'No tienes permiso para iniciar sesión como administrador desde esta IP.',
+                        toast: true,
+                        position: 'top-end'
+                    });
+                    ocultarLoader();
+                    return;
+                }
+                if(data.user.rol === 'usuario') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Bienvenido!',
+                        text: 'Has iniciado sesión correctamente.',
+                        toast: true,
+                        position: 'top-end'
+                    });
+                }
+            }
+
+            if (iniciarSesionBtn) iniciarSesionBtn.style.display = 'none';
+            if (crearCuentaBtn) crearCuentaBtn.style.display = 'none';
             const listaSesion = document.querySelector('.iniciosesion');
             const perfilLi = document.createElement('li');
             const perfilLink = document.createElement('a');
@@ -289,8 +331,10 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
             cerrarSesionLi.appendChild(cerrarSesionLink);
             listaSesion.appendChild(perfilLi);
             listaSesion.appendChild(cerrarSesionLi);
+            if (carrito) carrito.style.display = 'block';
             hideModal();
-            formSesion.reset();
+            if (formSesion) formSesion.reset();
+            if (typeof perfiles === 'function') perfiles();
         } else {
             Swal.fire({
                 icon: 'error',
