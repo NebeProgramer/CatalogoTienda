@@ -41,6 +41,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     let Actualizar = false
     let eliminar = false;
 
+    //color de req rojo
+    reqLength.style.color = 'red';
+    reqMayus.style.color = 'red';
+    reqMinus.style.color = 'red';
+    reqNum.style.color = 'red';
+    reqEspecial.style.color = 'red';
+
     // Reemplazar las funciones locales por llamadas a los imports
     olvidoContainerbtn.addEventListener('click', function (e) {
         e.preventDefault();
