@@ -1,7 +1,7 @@
-import { showModal, hideModal, setupLoginForm, setupRegisterForm, validarRequisitos, validarCoincidencias, validarCorreos, recuperarContraseña, crearCuenta, iniciarSesion, cerrarSesion, mostrarPerfil, usuarioActivo } from './js/Sesion.js';
-import { mostrarLoader, ocultarLoader } from './js/Loaders.js';
-import { renderMapaFooter } from './js/Mapa.js';
-import { cargarRedesSociales } from './js/Redes.js';
+import { showModal, hideModal, setupLoginForm, setupRegisterForm, validarRequisitos, validarCoincidencias, validarCorreos, recuperarContraseña, crearCuenta, iniciarSesion, cerrarSesion, mostrarPerfil, usuarioActivo } from './Sesion.js';
+import { mostrarLoader, ocultarLoader } from './loaders.js';
+import { renderMapaFooter } from './Mapa.js';
+import { cargarRedesSociales } from './redes.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const contenedorProductos = document.getElementById('contenedor-productos');
@@ -110,49 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    const usuario = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
-
-    if (usuario) {
-        console.log('Sesión activa:', usuario);
-
-        // Mostrar funciones relacionadas con el usuario
-        document.getElementById('crearCuenta').style.display = 'none';
-        document.getElementById('iniciarSesion').style.display = 'none';
-
-        // Obtener el ul donde se agregarán los elementos
-        const listaSesion = document.querySelector('.iniciosesion');
-
-        // Crear el elemento <li> para "Perfil"
-        const perfilLi = document.createElement('li');
-        const perfilLink = document.createElement('a');
-        if (usuario.nombre && usuario.nombre.trim() !== "") {
-            perfilLink.textContent = usuario.nombre;
-        } else {
-            perfilLink.textContent = 'Editar Perfil';
-        }
-        perfilLink.id = 'perfilBtn';
-        perfilLink.href = '#';
-        perfilLink.addEventListener('click', () => mostrarPerfil(usuario));
-        perfilLi.appendChild(perfilLink);
-
-        // Crear el elemento <li> para "Cerrar Sesión"
-        const cerrarSesionLi = document.createElement('li');
-        const cerrarSesionLink = document.createElement('a');
-        cerrarSesionLink.textContent = 'Cerrar Sesión';
-        cerrarSesionLink.id = 'cerrarSesionBtn';
-        cerrarSesionLink.href = '#';
-        cerrarSesionLink.addEventListener('click', cerrarSesion);
-        cerrarSesionLi.appendChild(cerrarSesionLink);
-
-        // Agregar ambos elementos al <ul>
-        listaSesion.innerHTML = '';
-        listaSesion.appendChild(perfilLi);
-        listaSesion.appendChild(cerrarSesionLi);
-    } else {
-        console.log('No hay sesión activa.');
-
-
-    }
+    usuarioActivo();
 
     async function cargarTerminos() {
         mostrarLoader();
