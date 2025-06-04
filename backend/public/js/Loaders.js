@@ -1,9 +1,9 @@
-export function mostrarLoader() {
+function mostrarLoader() {
     const loader = document.getElementById('loader');
     if (loader) loader.style.display = 'flex';
 }
 
-export function ocultarLoader() {
+function ocultarLoader() {
     const loader = document.getElementById('loader');
     if (loader) loader.style.display = 'none';
 }

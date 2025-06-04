@@ -1,5 +1,5 @@
 // Función para renderizar el mapa en el footer
-export function renderMapaFooter() {
+function renderMapaFooter() {
     const footerMapa = document.getElementById('footer-mapa');
     if (!footerMapa) return;
     let mapaHTML = '';

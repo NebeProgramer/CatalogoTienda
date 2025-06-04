@@ -1,4 +1,4 @@
-export async function cargarRedesSociales() {
+async function cargarRedesSociales() {
     const loader = document.getElementById('loader');
     if (loader) loader.style.display = 'flex';
     try {
