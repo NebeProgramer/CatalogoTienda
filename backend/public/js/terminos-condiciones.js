@@ -33,11 +33,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const imputTerminos = document.getElementById('imputTerminos');
     const imputPrivacidad = document.getElementById('imputPrivacidad');
     const carrito = document.getElementById('carrito');
-    const reqLength = document.getElementById('reqLength');
-    const reqMayus = document.getElementById('reqMayus');
-    const reqMinus = document.getElementById('reqMinus');
-    const reqNum = document.getElementById('reqNum');
-    const reqEspecial = document.getElementById('reqEspecial');
+    const reqLength = document.getElementById('req-length');
+    const reqMayus = document.getElementById('req-mayus');
+    const reqMinus = document.getElementById('req-minus');
+    const reqNum = document.getElementById('req-num');
+    const reqEspecial = document.getElementById('req-especial');
     let Actualizar = false
     let eliminar = false;
 
