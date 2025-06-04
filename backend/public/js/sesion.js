@@ -16,6 +16,16 @@ function hideModal(modal, formSesionContainer, olvidoContainer) {
     document.getElementById('passwordSesionC').value = '';
 }
 
+//color de req rojo
+function resetRequisitos(reqLength, reqMayus, reqMinus, reqNum, reqEspecial) {
+    
+    reqLength.style.color = 'red';
+    reqMayus.style.color = 'red';
+    reqMinus.style.color = 'red';
+    reqNum.style.color = 'red';
+    reqEspecial.style.color = 'red';
+}
+
 function setupLoginForm({
     opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
 }) {
@@ -64,6 +74,7 @@ function setupRegisterForm({
     reqMinus.style.display = 'block';
     reqNum.style.display = 'block';
     reqEspecial.style.display = 'block';
+    resetRequisitos(reqLength, reqMayus, reqMinus, reqNum, reqEspecial);
 }
 
 function validarRequisitos(password, reqLength, reqMayus, reqMinus, reqNum, reqEspecial) {
