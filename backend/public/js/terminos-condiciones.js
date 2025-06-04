@@ -1,8 +1,3 @@
-import { showModal, hideModal, setupLoginForm, setupRegisterForm, validarRequisitos, validarCoincidencias, validarCorreos, recuperarContraseña, crearCuenta, iniciarSesion, cerrarSesion, mostrarPerfil, usuarioActivo } from './Sesion.js';
-import { mostrarLoader, ocultarLoader } from './loaders.js';
-import { renderMapaFooter } from './Mapa.js';
-import { cargarRedesSociales } from './redes.js';
-
 document.addEventListener('DOMContentLoaded', async () => {
     const contenedorProductos = document.getElementById('contenedor-productos');
     const modal = document.getElementById('modal');
