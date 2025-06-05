@@ -147,16 +147,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const emailContact = document.getElementById('email-contact');
         const nombreContact = document.getElementById('nombre-contact');
-        if(nombreContact.value.trim() !== "" && emailContact.value.trim() !== "") {
-        emailContact.value = data.user.correo || '';
-        nombreContact.value = data.user.nombre || '';
+        if(nombreContact && emailContact && data && data.user) {
+            emailContact.value = data.user.correo || '';
+            nombreContact.value = data.user.nombre || '';
     }
     });
 
     usuarioActivo();
     const emailContact = document.getElementById('email-contact');
     const nombreContact = document.getElementById('nombre-contact');
-    if(nombreContact.value.trim() !== "" && emailContact.value.trim() !== "") {
+    if(nombreContact && emailContact && data && data.user) {
         emailContact.value = data.user.correo || '';
         nombreContact.value = data.user.nombre || '';
     }
