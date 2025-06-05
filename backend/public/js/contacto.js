@@ -145,20 +145,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 carrito:null
             });
         }
+        const usuario =localStorage.getItem('usuario');
         const emailContact = document.getElementById('email-contact');
         const nombreContact = document.getElementById('nombre-contact');
-        if(nombreContact && emailContact && data && data.user) {
-            emailContact.value = data.user.correo || '';
-            nombreContact.value = data.user.nombre || '';
+        if(nombreContact && emailContact && usuario) {
+            emailContact.value = usuario.correo || '';
+            nombreContact.value = usuario.nombre || '';
     }
     });
 
     usuarioActivo();
+    const usuario = localStorage.getItem('usuario');
     const emailContact = document.getElementById('email-contact');
     const nombreContact = document.getElementById('nombre-contact');
-    if(nombreContact && emailContact && data && data.user) {
-        emailContact.value = data.user.correo || '';
-        nombreContact.value = data.user.nombre || '';
+    if(nombreContact && emailContact && usuario) {
+        emailContact.value = usuario.correo || '';
+        nombreContact.value = usuario.nombre || '';
     }
     const formulario = document.querySelector('form');    
 
