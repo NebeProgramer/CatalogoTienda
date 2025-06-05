@@ -170,7 +170,7 @@ async function recuperarContraseña(correoRecuperar, Swal, hideModal) {
     }
 }
 
-async function crearCuenta({ emailSesionC, emailSesion, passwordSesionC, passwordSesion, validarRequisitos, validarCorreos, Swal, mostrarLoader, ocultarLoader, hideModal, formSesion, reqLength, reqMayus, reqMinus, reqNum, reqEspecial }) {
+async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn, crearCuentaBtn, hideModal, formSesion, btnSesion, mostrarPerfil, cerrarSesion, openCRUD, perfiles, carrito, emailSesionC, passwordSesionC, validarRequisitos, validarCorreos, reqLength, reqMayus, reqMinus, reqNum, reqEspecial }) {
     mostrarLoader();
     const correo = emailSesionC.value;
     const confirmCo = emailSesion.value;
@@ -185,6 +185,7 @@ async function crearCuenta({ emailSesionC, emailSesion, passwordSesionC, passwor
             toast: true,
             position: 'top-end'
         });
+        ocultarLoader();
         return;
     }
     if (!validarRequisitos(contrasena, reqLength, reqMayus, reqMinus, reqNum, reqEspecial, )) {
@@ -203,6 +204,7 @@ async function crearCuenta({ emailSesionC, emailSesion, passwordSesionC, passwor
             toast: true,
             position: 'top-end'
         });
+        ocultarLoader();
         return;
     }
     try {
@@ -220,23 +222,7 @@ async function crearCuenta({ emailSesionC, emailSesion, passwordSesionC, passwor
                 toast: true,
                 position: 'top-end'
             });
-            iniciarSesion({
-                emailSesion,
-                passwordSesion,
-                mostrarLoader,
-                ocultarLoader,
-                Swal,
-                iniciarSesionBtn: null,
-                crearCuentaBtn: null,
-                hideModal,
-                formSesion,
-                btnSesion: null,
-                mostrarPerfil,
-                cerrarSesion,
-                openCRUD: null,
-                perfiles: null,
-                carrito: null
-            });
+            iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn: null, crearCuentaBtn: null, hideModal, formSesion, btnSesion: null, mostrarPerfil: null, cerrarSesion: null, openCRUD: null, perfiles: null, carrito: null });
             hideModal();
         } else {
             Swal.fire({
@@ -246,6 +232,7 @@ async function crearCuenta({ emailSesionC, emailSesion, passwordSesionC, passwor
                 toast: true,
                 position: 'top-end'
             });
+            ocultarLoader();
         }
     } catch (error) {
         console.error('Error al crear la cuenta:', error);
@@ -256,6 +243,7 @@ async function crearCuenta({ emailSesionC, emailSesion, passwordSesionC, passwor
             toast: true,
             position: 'top-end'
         });
+        ocultarLoader();
     } finally {
         ocultarLoader();
     }
