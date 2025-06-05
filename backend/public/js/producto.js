@@ -430,20 +430,9 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
             });
         }
     });
-
-    usuarioActivo();
-
-    // Llamadas globales
-    cargarRedesSociales();
-    renderMapaFooter();
-    ocultarLoader();
-
-
-
-
+    CargarComentarios();
+ocultarLoader();
 }
-cargarProducto(productoId)
-CargarComentarios();
+cargarProducto(productoId);
 document.addEventListener('DOMContentLoaded', renderMapaFooter);
-ocultarLoader(); // Ocultar el loader al cargar la página
 });
