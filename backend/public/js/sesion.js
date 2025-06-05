@@ -222,7 +222,7 @@ async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultar
                 toast: true,
                 position: 'top-end'
             });
-            iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn: null, crearCuentaBtn: null, hideModal, formSesion, btnSesion: null, mostrarPerfil: null, cerrarSesion: null, openCRUD: null, perfiles: null, carrito: null });
+            iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn, crearCuentaBtn, hideModal, formSesion, btnSesion, mostrarPerfil, cerrarSesion, openCRUD, perfiles, carrito});
             hideModal();
         } else {
             Swal.fire({
