@@ -36,6 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let Actualizar = false
     let eliminar = false;
     const mensajeContainer = document.getElementById('mensaje');
+    const reqLength = document.getElementById('req-length');
+    const reqMayus = document.getElementById('req-mayus');
+    const reqMinus = document.getElementById('req-minus');
+    const reqNum = document.getElementById('req-num');
+    const reqEspecial = document.getElementById('req-especial');
+    
 
     // --- Sesión reutilizable ---
     olvidoContainerbtn.addEventListener('click', function (e) {
