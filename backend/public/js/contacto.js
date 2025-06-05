@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reqMinus = document.getElementById('req-minus');
     const reqNum = document.getElementById('req-num');
     const reqEspecial = document.getElementById('req-especial');
-    
+
 
     // --- Sesión reutilizable ---
     olvidoContainerbtn.addEventListener('click', function (e) {
@@ -232,48 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Eliminar la funcionalidad del carrusel y mover los mensajes a formato de lista
-    // Función para cargar redes sociales desde el servidor
-    async function cargarRedesSociales() {
-        try {
-            const respuesta = await fetch('/api/redes-sociales');
-            if (!respuesta.ok) {
-                throw new Error('Error al cargar las redes sociales.');
-            }
-
-            const redes = await respuesta.json();
-            const listaRedes = document.querySelector('.redes-sociales');
-            listaRedes.innerHTML = '';
-
-            redes.forEach(red => {
-                const li = document.createElement('li');
-
-                // Verificar si el enlace tiene un esquema completo
-                let enlaceCompleto = red.enlace;
-                if (!/^https?:\/\//i.test(enlaceCompleto)) {
-                    if (!enlaceCompleto.startsWith('www.')) {
-                        enlaceCompleto = `www.${enlaceCompleto}`;
-                    }
-                    enlaceCompleto = `https://${enlaceCompleto}`;
-                } else if (enlaceCompleto.startsWith('www.')) {
-                    enlaceCompleto = `https://${enlaceCompleto}`;
-
-                } else if (!enlaceCompleto.startsWith('http://') && !enlaceCompleto.startsWith('https://')) {
-                    enlaceCompleto = `https://${enlaceCompleto}`; // Corregido para usar https  
-                }
-
-                li.innerHTML = `
-                    <a href="${enlaceCompleto}" target="_blank">
-                    <img src="https://cdn.simpleicons.org/${red.nombre}" alt="${red.nombre}" width="24" height="24">
-                    ${red.nombre}
-                    </a>
-                `;
-                listaRedes.appendChild(li);
-            });
-        } catch (error) {
-            console.error('Error al cargar las redes sociales:', error);
-        }
-    }
 
     // Loader, Mapa y Redes globales
     cargarRedesSociales(); // Usar función global
