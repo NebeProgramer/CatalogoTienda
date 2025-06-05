@@ -187,7 +187,7 @@ async function crearCuenta({ emailSesionC, emailSesion, passwordSesionC, passwor
         });
         return;
     }
-    if (!validarRequisitos(contrasena, reqLength, reqMayus, reqMinus, reqNum, reqEspecial)) {
+    if (!validarRequisitos(contrasena, reqLength, reqMayus, reqMinus, reqNum, reqEspecial, )) {
         Swal.fire({ icon: 'error', title: 'Contraseña insegura', text: 'La contraseña no cumple los requisitos.', toast: true, position: 'top-end' });
         return;
     }
@@ -213,6 +213,30 @@ async function crearCuenta({ emailSesionC, emailSesion, passwordSesionC, passwor
         });
         const data = await respuesta.json();
         if (respuesta.ok) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Cuenta creada',
+                text: 'Tu cuenta ha sido creada exitosamente.',
+                toast: true,
+                position: 'top-end'
+            });
+            iniciarSesion({
+                emailSesion,
+                passwordSesion,
+                mostrarLoader,
+                ocultarLoader,
+                Swal,
+                iniciarSesionBtn: null,
+                crearCuentaBtn: null,
+                hideModal,
+                formSesion,
+                btnSesion: null,
+                mostrarPerfil,
+                cerrarSesion,
+                openCRUD: null,
+                perfiles: null,
+                carrito: null
+            });
             hideModal();
         } else {
             Swal.fire({

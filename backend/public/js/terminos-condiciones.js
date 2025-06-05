@@ -107,9 +107,50 @@ document.addEventListener('DOMContentLoaded', async () => {
     btnSesion.addEventListener('click', async (e) => {
         e.preventDefault();
         if (btnSesion.textContent === 'Crear Cuenta') {
-            await crearCuenta({ emailSesionC, emailSesion, passwordSesionC, passwordSesion, validarRequisitos, validarCorreos, Swal, mostrarLoader, ocultarLoader, hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer), formSesion: form.sesion, reqLength, reqMayus, reqMinus, reqNum, reqEspecial });
+            await crearCuenta({
+                emailSesion,
+                passwordSesion,
+                mostrarLoader,
+                ocultarLoader,
+                Swal,
+                iniciarSesionBtn,
+                crearCuentaBtn,
+                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer),
+                formSesion: form.sesion,
+                btnSesion,
+                mostrarPerfil,
+                cerrarSesion,
+                openCRUD: null,
+                perfiles: null,
+                carrito,
+                emailSesionC,
+                passwordSesionC,
+                validarRequisitos,
+                validarCorreos,
+                reqLength,
+                reqMayus,
+                reqMinus,
+                reqNum,
+                reqEspecial
+            });
         } else if (btnSesion.textContent === 'Iniciar Sesión') {
-            await iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn, crearCuentaBtn, hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer), formSesion: form.sesion, btnSesion, mostrarPerfil, cerrarSesion });
+            await iniciarSesion({
+                emailSesion,
+                passwordSesion,
+                mostrarLoader,
+                ocultarLoader,
+                Swal,
+                iniciarSesionBtn,
+                crearCuentaBtn,
+                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer),
+                formSesion: form.sesion,
+                btnSesion,
+                mostrarPerfil,
+                cerrarSesion,
+                openCRUD: null,
+                perfiles: null,
+                carrito
+            });
         }
     });
 
