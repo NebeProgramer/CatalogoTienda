@@ -296,7 +296,9 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                     ocultarLoader();
                     return;
                 }
-                if(data.user.rol === 'usuario') {
+                
+            }
+            if(data.user.rol === 'usuario') {
                     Swal.fire({
                         icon: 'success',
                         title: '¡Bienvenido!',
@@ -305,8 +307,6 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                         position: 'top-end'
                     });
                 }
-            }
-
             if (iniciarSesionBtn) iniciarSesionBtn.style.display = 'none';
             if (crearCuentaBtn) crearCuentaBtn.style.display = 'none';
             const listaSesion = document.querySelector('.iniciosesion');
