@@ -45,19 +45,23 @@ document.addEventListener('DOMContentLoaded', () => {
     olvidoContainerbtn.addEventListener('click', function (e) {
         e.preventDefault();
         formSesionContainer.style.display = 'none';
-        showModal(olvidoContainer);
+        showModal(olvidoContainer, modal, formSesionContainer, olvidoContainer);
     })
 
     iniciarSesionBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        showModal(formSesionContainer);
-        setupLoginForm();
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
+        setupLoginForm({
+            opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
+        });
     });
 
     crearCuentaBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        showModal(formSesionContainer);
-        setupRegisterForm();
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
+        setupRegisterForm({
+            opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
+        });
     });
 
     closeModal.addEventListener('click', hideModal);
