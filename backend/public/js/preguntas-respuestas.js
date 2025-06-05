@@ -75,9 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     passwordSesion.addEventListener('input', () => {
-        validarCoincidencia();
+        validarCoincidencias();
     });
-    passwordSesionC.addEventListener('input', validarCoincidencia);
+    passwordSesionC.addEventListener('input', validarCoincidencias);
     emailSesionC.addEventListener('input', validarCorreos);
     emailSesion.addEventListener('input', () => {
         if(emailSesionC.style.display !== 'none') {
