@@ -145,6 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 carrito:null
             });
         }
+        const emailContact = document.getElementById('email-contact');
+        const nombreContact = document.getElementById('nombre-contact');
         if(nombreContact.value.trim() !== "" && emailContact.value.trim() !== "") {
         emailContact.value = data.user.correo || '';
         nombreContact.value = data.user.nombre || '';
@@ -152,6 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     usuarioActivo();
+    const emailContact = document.getElementById('email-contact');
+    const nombreContact = document.getElementById('nombre-contact');
     if(nombreContact.value.trim() !== "" && emailContact.value.trim() !== "") {
         emailContact.value = data.user.correo || '';
         nombreContact.value = data.user.nombre || '';

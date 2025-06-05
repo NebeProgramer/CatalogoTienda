@@ -103,22 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let direccionSeleccionada = null;
     let tarjetaSeleccionada = null;
 
-    // Función para mostrar el modal
-    const showModal = (container) => {
-        formTarjetaContainer.style.display = 'none';
-        formDireccionContainer.style.display = 'none';
-        modal.style.display = 'block';
-        container.style.display = 'flex';
-    };
-
-    // Función para ocultar el modal
-    const hideModal = () => {
-        modal.style.display = 'none';
-        formTarjetaContainer.style.display = 'none';
-        formDireccionContainer.style.display = 'none';
-        formDireccion.reset();
-        formTarjeta.reset();
-    };
 
     // Función para actualizar el localStorage
     const actualizarLocalStorage = () => {
@@ -504,15 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Loader functions
-    function mostrarLoader() {
-        const loader = document.getElementById('loader');
-        if (loader) loader.style.display = 'flex';
-    }
-    function ocultarLoader() {
-        const loader = document.getElementById('loader');
-        if (loader) loader.style.display = 'none';
-    }
+
 
     // Ajustar el envío de datos para que todos los campos de la tarjeta se envíen correctamente
     const subirPerfilAlServidor = async () => {
@@ -687,46 +663,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Función para cargar redes sociales desde el servidor
-    async function cargarRedesSociales() {
-        try {
-            const respuesta = await fetch('/api/redes-sociales');
-            if (!respuesta.ok) {
-                throw new Error('Error al cargar las redes sociales.');
-            }
-
-            const redes = await respuesta.json();
-            const listaRedes = document.querySelector('.redes-sociales');
-            listaRedes.innerHTML = '';
-
-            redes.forEach(red => {
-                const li = document.createElement('li');
-                let enlaceCompleto = red.enlace;
-               if (!/^https?:\/\//i.test(enlaceCompleto)) {
-                    if (!enlaceCompleto.startsWith('www.')) {
-                        enlaceCompleto = `www.${enlaceCompleto}`;
-                    }
-                    enlaceCompleto = `https://${enlaceCompleto}`;
-                } else if (enlaceCompleto.startsWith('www.')) {
-                    enlaceCompleto = `https://${enlaceCompleto}`;
-
-                } else if (!enlaceCompleto.startsWith('http://') && !enlaceCompleto.startsWith('https://')) {
-                    enlaceCompleto = `https://${enlaceCompleto}`; // Corregido para usar https  
-                }
-
-                li.innerHTML = `
-                    <a href="${enlaceCompleto}" target="_blank">
-                    <img src="https://cdn.simpleicons.org/${red.nombre}" alt="${red.nombre}" width="24" height="24">
-                    ${red.nombre}
-                    </a>
-                `;
-                listaRedes.appendChild(li);
-            });
-        } catch (error) {
-            console.error('Error al cargar las redes sociales:', error);
-        }
-    }
-
     eliminarCuenta.addEventListener('click', async () => {
         const confirmacion = await Swal.fire({
             title: '¿Estás seguro?',
@@ -770,23 +706,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Llamadas a funciones globales de loader, redes y mapa
     cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
-
-    function renderMapaFooter() {
-        const footerMapa = document.getElementById('footer-mapa');
-        if (!footerMapa) return;
-        let mapaHTML = '';
-        fetch('/api/ubicacion-mapa')
-            .then(res => res.ok ? res.json() : Promise.reject())
-            .then(data => {
-                mapaHTML = data.html || '';
-                if (mapaHTML) localStorage.setItem('footerMapaURL', mapaHTML);
-                footerMapa.innerHTML = mapaHTML;
-            })
-            .catch(() => {
-                mapaHTML = localStorage.getItem('footerMapaURL') || '';
-                footerMapa.innerHTML = mapaHTML;
-            });
-    }
     renderMapaFooter(); // Llamar a la función para renderizar el mapa en el footer
 });
