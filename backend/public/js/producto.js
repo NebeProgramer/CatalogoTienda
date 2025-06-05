@@ -321,6 +321,9 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
     const reqMinus = document.getElementById('req-minus');
     const reqNum = document.getElementById('req-num');
     const reqEspecial = document.getElementById('req-especial');
+    const olvidoContainerbtn = document.getElementById('olvidoContrasena');
+    const olvidoContainer = document.getElementById('formOlvidoContainer');
+    
 
     
     // --- Sesión reutilizable ---
