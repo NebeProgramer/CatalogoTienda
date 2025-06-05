@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         emailContact.value = data.user.correo || '';
         nombreContact.value = data.user.nombre || '';
     }
-    const formulario = document.getElementById('form');    
+    const formulario = document.querySelector('form');    
 
     formulario.addEventListener('submit', async (event) => {
         event.preventDefault();
