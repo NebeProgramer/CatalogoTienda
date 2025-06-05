@@ -151,17 +151,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 carrito:null
             });
         }
-        const usuario =localStorage.getItem('usuario');
+        // Actualizar campos de contacto tras iniciar sesión
+        const usuarioStr = localStorage.getItem('usuario');
+        let usuario = null;
+        try {
+            usuario = usuarioStr ? JSON.parse(usuarioStr) : null;
+        } catch (e) {
+            usuario = null;
+        }
         const emailContact = document.getElementById('email-contact');
         const nombreContact = document.getElementById('nombre-contact');
         if(nombreContact && emailContact && usuario) {
             emailContact.value = usuario.correo || '';
             nombreContact.value = usuario.nombre || '';
-    }
+        }
     });
 
     usuarioActivo();
-    const usuario = localStorage.getItem('usuario');
+    // Actualizar campos de contacto tras usuarioActivo
+    const usuarioStr = localStorage.getItem('usuario');
+    let usuario = null;
+    try {
+        usuario = usuarioStr ? JSON.parse(usuarioStr) : null;
+    } catch (e) {
+        usuario = null;
+    }
     const emailContact = document.getElementById('email-contact');
     const nombreContact = document.getElementById('nombre-contact');
     if(nombreContact && emailContact && usuario) {
