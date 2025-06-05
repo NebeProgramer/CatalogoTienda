@@ -439,9 +439,11 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
     ocultarLoader();
 
 
-cargarProducto(productoId); // Cargar el producto al iniciar
+
 
 }
+cargarProducto(productoId)
+CargarComentarios();
 document.addEventListener('DOMContentLoaded', renderMapaFooter);
 ocultarLoader(); // Ocultar el loader al cargar la página
 });
