@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    usuarioActivo();
+    usuarioActivo(Swal, mostrarLoader, ocultarLoader);
 
     async function cargarTerminos() {
         mostrarLoader();

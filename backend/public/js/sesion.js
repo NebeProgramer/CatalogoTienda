@@ -417,7 +417,7 @@ async function mostrarPerfil(user, Swal, mostrarLoader, ocultarLoader) {
     }
 }
 
-function usuarioActivo() {
+function usuarioActivo(Swal, mostrarLoader, ocultarLoader) {
     const usuario = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
     if (usuario) {
         console.log('Sesión activa:', usuario);
@@ -433,7 +433,7 @@ function usuarioActivo() {
         }
         perfilLink.id = 'perfilBtn';
         perfilLink.href = '#';
-        perfilLink.addEventListener('click', () => mostrarPerfil(usuario));
+        perfilLink.addEventListener('click', () => mostrarPerfil(usuario, Swal, mostrarLoader, ocultarLoader));
         perfilLi.appendChild(perfilLink);
         const cerrarSesionLi = document.createElement('li');
         const cerrarSesionLink = document.createElement('a');

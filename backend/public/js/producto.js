@@ -1,9 +1,7 @@
 let imagenesSeleccionadas = []; // Arreglo para almacenar las imágenes seleccionadas
 document.addEventListener('DOMContentLoaded', async () => {
     
-    mostrarLoader();
-    cargarRedesSociales();
-    renderMapaFooter();
+    
     const params = new URLSearchParams(window.location.search);
     const productoId = parseInt(params.get('id'), 10); // Obtener el ID del producto de la URL
     const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -150,7 +148,6 @@ nextButton.addEventListener('click', () => {
 carrusel.appendChild(prevButton);
 carrusel.appendChild(nextButton);
 
-// Muevo la declaración de 'perfil' al inicio del script para evitar errores de referencia
 const perfil = JSON.parse(localStorage.getItem('usuario'));
 
 // Mostrar los comentarios con opción de edición si corresponde
@@ -325,6 +322,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
     const reqEspecial = document.getElementById('req-especial');
     const olvidoContainerbtn = document.getElementById('olvidoContrasena');
     const olvidoContainer = document.getElementById('formOlvidoContainer');
+    const opcionTitulo = document.getElementById('opcion');
 
 
     
@@ -334,6 +332,11 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
         formSesionContainer.style.display = 'none';
         showModal(olvidoContainer, modal, formSesionContainer, olvidoContainer, null, null);
     });
+
+    mostrarLoader();
+    cargarRedesSociales();
+    renderMapaFooter();
+    usuarioActivo(Swal, mostrarLoader, ocultarLoader);
 
     iniciarSesionBtn.addEventListener('click', function (e) {
         e.preventDefault();

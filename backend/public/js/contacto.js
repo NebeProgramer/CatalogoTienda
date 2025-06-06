@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    usuarioActivo();
+    usuarioActivo(Swal, mostrarLoader, ocultarLoader);
     // Actualizar campos de contacto tras usuarioActivo
     const usuarioStr = localStorage.getItem('usuario');
     let usuario = null;

@@ -285,7 +285,7 @@ function openCRUD() {
         }
     });
 
-    usuarioActivo();
+    usuarioActivo(Swal, mostrarLoader, ocultarLoader);
 
     document.querySelector('.btn-lupa').addEventListener('click', async (event) => {
         event.preventDefault();

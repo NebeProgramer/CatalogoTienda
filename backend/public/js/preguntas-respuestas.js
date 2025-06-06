@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    usuarioActivo();
+    usuarioActivo(Swal, mostrarLoader, ocultarLoader);
 
     // Función para cargar mensajes en formato de lista con opción de responder
     const cargarMensajes = async () => {
