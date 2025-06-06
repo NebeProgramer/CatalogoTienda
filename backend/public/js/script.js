@@ -276,6 +276,12 @@ function openCRUD() {
         btnCrear.style.display = "block";
     }
 
+    function closeCRUD() {
+        const crudSection = document.getElementById('CRUD');
+        crudSection.style.display = "none";
+        btnCrear.style.display = "none";
+    }
+
     btnSesion.addEventListener('click', async (e) => {
         e.preventDefault();
         if (btnSesion.textContent === 'Crear Cuenta') {
@@ -327,6 +333,7 @@ function openCRUD() {
     });
 
     usuarioActivo(Swal, mostrarLoader, ocultarLoader);
+    localStorage.getItem('usuario') ? openCRUD() : closeCRUD();
 
     document.querySelector('.btn-lupa').addEventListener('click', async (event) => {
         event.preventDefault();

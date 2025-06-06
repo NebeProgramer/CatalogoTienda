@@ -182,7 +182,7 @@ async function recuperarContraseña(correoRecuperar, Swal, hideModal) {
     }
 }
 
-async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn, crearCuentaBtn, hideModal, formSesion, btnSesion, mostrarPerfil, cerrarSesion, openCRUD, perfiles, carrito, emailSesionC, passwordSesionC, validarRequisitos, validarCorreos, reqLength, reqMayus, reqMinus, reqNum, reqEspecial }) {
+async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn, crearCuentaBtn, hideModal, formSesion, btnSesion, mostrarPerfil, cerrarSesion, openCRUD, closeCRUD, perfiles, carrito, emailSesionC, passwordSesionC, validarRequisitos, validarCorreos, reqLength, reqMayus, reqMinus, reqNum, reqEspecial }) {
     mostrarLoader();
     const correo = emailSesionC.value;
     const confirmCo = emailSesion.value;
@@ -383,6 +383,7 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
 
 function cerrarSesion() {
     localStorage.removeItem('usuario');
+    closeCRUD();
     location.reload();
 }
 
