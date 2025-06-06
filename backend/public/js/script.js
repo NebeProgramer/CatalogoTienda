@@ -161,6 +161,7 @@ const reqEspecial = document.getElementById('req-especial');
 
 
     function perfiles() {
+        const crudSection = document.getElementById('CRUD');
         const usuarioSesion = JSON.parse(localStorage.getItem('usuario')) || { nombre: 'Invitado'};
 
     // Mostrar mensaje de bienvenida si hay un usuario
@@ -228,7 +229,9 @@ const reqEspecial = document.getElementById('req-especial');
             validarCorreos(emailSesion.value, emailSesionC.value, emailSesion, emailSesionC);
         }
     });
+
 function openCRUD() {
+    const crudSection = document.getElementById('CRUD');
         crudSection.style.display = "block";
         btnCrear.style.display = "block";
     }
