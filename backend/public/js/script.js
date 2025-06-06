@@ -39,7 +39,48 @@ const reqMinus = document.getElementById('req-minus');
 const reqNum = document.getElementById('req-num');
 const reqEspecial = document.getElementById('req-especial');
 
+    const cargarMonedas = async () => {
+        try {
+            const respuesta = await fetch('/api/monedas');
+            if (!respuesta.ok) {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudieron cargar las monedas.',
+                    toast: true,
+                    position: 'top-end'
+                });
+            }
+    
+            const monedas = await respuesta.json();
+            
 
+            const selectorMonedas = document.getElementById('monedaPreferida');
+            selectorMonedas.innerHTML = '<option value="">Seleccione una moneda</option>';
+    
+            monedas.forEach((moneda) => {
+                if (moneda.moneda && moneda.nombre) {
+                    const opcion = document.createElement('option');
+                    opcion.value = moneda.moneda;
+                    opcion.textContent = `${moneda.nombre} <${moneda.moneda}>`;
+                    selectorMonedas.appendChild(opcion);
+                } else {
+                    console.warn('Moneda con datos incompletos:', moneda);
+                }
+            });
+            //seleccionar la moneda preferida del localStorage
+            const monedaPreferida = localStorage.getItem('monedaPreferida');
+            if (monedaPreferida) {
+                selectorMonedas.value = monedaPreferida;
+            }
+        } catch (error) {
+            console.error('Error al cargar las monedas:', error);
+            alert('Hubo un error al cargar las monedas. Intenta nuevamente.');
+        }
+    };
+    
+    // Llamar a la función para cargar las monedas al iniciar
+    cargarMonedas();
 
     const convertirPrecio = async (precio, monedaOriginal, monedaDestino) => {
         if (monedaOriginal === monedaDestino) {
@@ -375,6 +416,97 @@ function openCRUD() {
         }
     });
 
+    // --- Carrusel normal (16 productos por página, paginación con botones) ---
+    let paginaActual = 0;
+    const productosPorPagina = 16;
+    let productosFiltradosGlobal = [];
+
+    // Renderizar carrusel normal con paginación
+    function renderizarCarrusel(productos) {
+        const carruselItems = document.querySelector('.carrusel-items');
+        carruselItems.innerHTML = '';
+        const inicio = paginaActual * productosPorPagina;
+        const fin = inicio + productosPorPagina;
+        const productosPagina = productos.slice(inicio, fin);
+        for (const producto of productosPagina) {
+            if (producto.estado === 'disponible' && producto.stock > 0) {
+                const precioConvertido = producto.precio; // Usa tu lógica de conversión si es necesario
+                const divProducto = document.createElement('div');
+                divProducto.classList.add('producto');
+                divProducto.dataset.id = producto.id;
+                const primeraImagen = producto.imagenes.length > 0 ? producto.imagenes[0] : '/placeholder.jpg';
+                divProducto.innerHTML = `
+                    <div class="producto-frontal">
+                        <img src="${primeraImagen}" alt="${producto.nombre}" class="producto-imagen">
+                        <h3 class="producto-nombre">${producto.nombre}</h3>
+                        <p class="producto-precio">💰 ${producto.moneda} ${precioConvertido}</p>
+                        <p class="producto-stock">📦 Stock: ${producto.stock}</p>
+                        <div class="producto-acciones">
+                            <button class="btnMasInfo" data-id="${producto.id}">ℹ️ Más información</button>
+                            <button class="btnCarrito" data-id="${producto.id}" ${producto.stock === 0 ? 'disabled' : ''}>🛒 Añadir al carrito</button>
+                        </div>
+                    </div>
+                `;
+                // ...agrega listeners si es necesario...
+                carruselItems.appendChild(divProducto);
+            }
+        }
+    }
+
+    // Botones de paginación para el carrusel normal
+    const btnPrev = document.querySelector('.carrusel-prev');
+    const btnNext = document.querySelector('.carrusel-next');
+    if (btnPrev && btnNext) {
+        btnPrev.addEventListener('click', () => {
+            if (paginaActual > 0) {
+                paginaActual--;
+                renderizarCarrusel(productosFiltradosGlobal);
+            }
+        });
+        btnNext.addEventListener('click', () => {
+            const totalPaginas = Math.ceil(productosFiltradosGlobal.length / productosPorPagina);
+            if (paginaActual < totalPaginas - 1) {
+                paginaActual++;
+                renderizarCarrusel(productosFiltradosGlobal);
+            }
+        });
+    }
+
+    // --- Carrusel recomendados (3 productos, mueve de 1 en 1, automático) ---
+    const inicializarCarruselRecomendados = () => {
+        const carruselItems = document.querySelector('.carrusel-items-recomendados');
+        const prevButton = document.querySelector('.carrusel-prev-recomendados');
+        const nextButton = document.querySelector('.carrusel-next-recomendados');
+        const productos = carruselItems.querySelectorAll('.producto-recomendado');
+        const productosPorVista = 3;
+        let currentIndex = 0;
+
+        const actualizarCarrusel = () => {
+            productos.forEach((producto, index) => {
+                if (index >= currentIndex && index < currentIndex + productosPorVista) {
+                    producto.style.display = 'block';
+                } else {
+                    producto.style.display = 'none';
+                }
+            });
+        };
+
+        const moverCarrusel = (direccion) => {
+            const totalProductos = productos.length;
+            currentIndex += direccion;
+            if (currentIndex < 0) currentIndex = totalProductos - productosPorVista;
+            else if (currentIndex > totalProductos - productosPorVista) currentIndex = 0;
+            actualizarCarrusel();
+        };
+
+        if (prevButton && nextButton) {
+            prevButton.addEventListener('click', () => moverCarrusel(-1));
+            nextButton.addEventListener('click', () => moverCarrusel(1));
+        }
+        setInterval(() => moverCarrusel(1), 5000);
+        actualizarCarrusel();
+    };
+    
     const cargarProductosRecomendados = async () => {
         mostrarLoader();
         try {
@@ -427,48 +559,6 @@ function openCRUD() {
         } finally {
             ocultarLoader();
         }
-    };
-    
-    const inicializarCarruselRecomendados = () => {
-        const carruselItems = document.querySelector('.carrusel-recomendados');
-        const prevButton = document.querySelector('.carrusel-prev-recomendados');
-        const nextButton = document.querySelector('.carrusel-next-recomendados');
-        const productos = carruselItems.querySelectorAll('.producto-recomendado-inner');
-        const productosPorVista = 3; // Mostrar 3 productos al mismo tiempo
-        let currentIndex = 0;
-    
-        const actualizarCarrusel = () => {
-            const totalProductos = productos.length;
-            productos.forEach((producto, index) => {
-                if (index >= currentIndex && index < currentIndex + productosPorVista) {
-                    producto.style.display = 'block';
-                } else {
-                    producto.style.display = 'none';
-                }
-            });
-        };
-    
-        const moverCarrusel = (direccion) => {
-            const totalProductos = productos.length;
-            currentIndex += direccion * productosPorVista;
-    
-            if (currentIndex < 0) {
-                currentIndex = totalProductos - productosPorVista;
-            } else if (currentIndex >= totalProductos) {
-                currentIndex = 0;
-            }
-    
-            actualizarCarrusel();
-        };
-    
-        // Configurar botones de navegación
-        prevButton.addEventListener('click', () => moverCarrusel(-1));
-        nextButton.addEventListener('click', () => moverCarrusel(1));
-    
-        // Automatizar el carrusel
-        setInterval(() => moverCarrusel(1), 5000); // Cambiar cada 5 segundos
-    
-        actualizarCarrusel(); // Inicializar el carrusel
     };
     
     // Llamar a la función para cargar los productos recomendados al cargar la página
@@ -802,8 +892,8 @@ function openCRUD() {
     });
 
     document.getElementById('btnPreferencias').addEventListener('click', () => {
-
         showModal(formPreferenciasContainer, modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer);
+        CargarPreferencias();
     });
 
     // Función para guardar las preferencias del usuario
