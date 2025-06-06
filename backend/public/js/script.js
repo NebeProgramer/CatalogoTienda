@@ -27,8 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sesion: document.getElementById('formSesion'),
         olvido: document.getElementById('formOlvidoContainer'),
         preferencias: document.getElementById('formPreferencias')
-        }
-    });
+    }; 
     const terminos = document.getElementById('terminos');
     const privacidad = document.getElementById('privacidad');
     const imputTerminos = document.getElementById('imputTerminos');
@@ -1083,4 +1082,5 @@ function openCRUD() {
             const correoRecuperar = document.getElementById('emailOlvido').value.trim();
             await recuperarContraseña(correoRecuperar, Swal, () => hideModal(modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer));
         });
-    }
+    };
+});
