@@ -214,7 +214,7 @@ const reqEspecial = document.getElementById('req-especial');
             // Crear y mostrar el mensaje de bienvenida
             const bienvenida = document.createElement('h3');
             bienvenida.classList.add('bienvenida');
-            bienvenida.textContent = `Bienvenido Invitadoa nuestra tienda!`;
+            bienvenida.textContent = `Bienvenido Invitado a nuestra tienda!`;
             bienvenida.style.textAlign = 'center';
             bienvenida.style.marginBottom = '20px';
             crudSection.insertAdjacentElement('beforebegin', bienvenida);
