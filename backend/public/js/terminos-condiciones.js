@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     olvidoContainerbtn.addEventListener('click', function (e) {
         e.preventDefault();
         formSesionContainer.style.display = 'none';
-        showModal(olvidoContainer, modal, formSesionContainer, olvidoContainer);
+        showModal(olvidoContainer, modal, formSesionContainer, olvidoContainer, null, null);
     });
 
     iniciarSesionBtn.addEventListener('click', function (e) {
@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupLoginForm({
             opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
         });
-        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
-        
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer, null, null);
+
     });
 
     crearCuentaBtn.addEventListener('click', function (e) {
@@ -63,15 +63,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupRegisterForm({
             opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
         });
-        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
-        
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer, null, null);
+
     });
 
-    closeModal.addEventListener('click', () => hideModal(modal, formSesionContainer, olvidoContainer));
+    closeModal.addEventListener('click', () => hideModal(modal, formSesionContainer, olvidoContainer, null, null));
 
     window.addEventListener('click', function (event) {
         if (event.target === modal) {
-            hideModal(modal, formSesionContainer, olvidoContainer);
+            hideModal(modal, formSesionContainer, olvidoContainer, null, null);
         }
     });
 
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         formOlvido.addEventListener('submit', async (e) => {
             e.preventDefault();
             const correoRecuperar = document.getElementById('emailOlvido').value.trim();
-            await recuperarContraseña(correoRecuperar, Swal, () => hideModal(modal, formSesionContainer, olvidoContainer));
+            await recuperarContraseña(correoRecuperar, Swal, () => hideModal(modal, formSesionContainer, olvidoContainer, null, null));
         });
     }
 
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 Swal,
                 iniciarSesionBtn,
                 crearCuentaBtn,
-                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer),
+                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer, null, null),
                 formSesion: form.sesion,
                 btnSesion,
                 mostrarPerfil,
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 Swal,
                 iniciarSesionBtn,
                 crearCuentaBtn,
-                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer),
+                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer, null, null),
                 formSesion: form.sesion,
                 btnSesion,
                 mostrarPerfil,

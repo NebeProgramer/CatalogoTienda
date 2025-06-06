@@ -27,7 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         sesion: document.getElementById('formSesion'),
         olvido: document.getElementById('formOlvidoContainer'),
         preferencias: document.getElementById('formPreferencias')
-    }
+        }
+    });
     const terminos = document.getElementById('terminos');
     const privacidad = document.getElementById('privacidad');
     const imputTerminos = document.getElementById('imputTerminos');
@@ -137,16 +138,16 @@ const reqEspecial = document.getElementById('req-especial');
                     btnMasInfo.addEventListener('click', () => {
                         window.location.href = `producto.html?id=${producto.id}`;
                     });
-    
+
                     const btnCarrito = divProducto.querySelector('.btnCarrito');
                     if (producto.stock > 0) {
                         btnCarrito.addEventListener('click', async () => {
                             agregarAlCarrito(producto.id);
                         });
                     }
-    
+
                     carruselItems.appendChild(divProducto);
-                };
+                }
                 }
             }
         } catch (error) {
@@ -172,7 +173,7 @@ const reqEspecial = document.getElementById('req-especial');
             // Crear y mostrar el mensaje de bienvenida
             const bienvenida = document.createElement('h3');
             bienvenida.classList.add('bienvenida');
-            bienvenida.textContent = `Bienvenido ${usuarioSesion.nombre} a nuestra tienda!`;
+            bienvenida.textContent = `Bienvenido Invitadoa nuestra tienda!`;
             bienvenida.style.textAlign = 'center';
             bienvenida.style.marginBottom = '20px';
             crudSection.insertAdjacentElement('beforebegin', bienvenida);
@@ -181,518 +182,108 @@ const reqEspecial = document.getElementById('req-especial');
     }
     perfiles();
     cargarProductos();
-
-    function showModal(container) {
-        modal.style.display = 'block';
-
-        formSesionContainer.style.display = 'none';
-        olvidoContainer.style.display = 'none';
-        formPreferenciasContainer.style.display = 'none';
-        formPagoContainer.style.display = 'none';
-        container.style.display = 'block';
-    }
-
-    function hideModal() {
-        modal.style.display = 'none';
-        formSesionContainer.style.display = 'none';
-      
-        olvidoContainer.style.display = 'none';
-        formPreferenciasContainer.style.display = 'none';
-        formPagoContainer.style.display = 'none';
-        document.getElementById('información-del-pago').innerHTML = '';
-        document.getElementById('tarjetaCredito').innerHTML = '';
-        document.getElementById('tarjetaCredito').value = '';
-        document.getElementById('emailSesion').value = '';
-        document.getElementById('passwordSesion').value = '';
-        document.getElementById('emailSesionC').value = '';
-        document.getElementById('passwordSesionC').value = '';
-
-    }
-
-    function setupLoginForm() {
-        opcionTitulo.textContent = 'Iniciar Sesión';
-        tco.style.display = 'none';
-        tca.style.display = 'none';
-        emailSesionC.style.display = 'none';
-        passwordSesionC.style.display = 'none';
-        emailSesionC.required = false;
-        passwordSesionC.required = false;
-        btnSesion.textContent = 'Iniciar Sesión';
-        olvidoContainer.style.display = 'none';
-        terminos.style.display = 'none';
-        privacidad.style.display = 'none';
-        imputTerminos.style.display = 'none';
-        imputPrivacidad.style.display = 'none';
-        imputPrivacidad.required = false;
-        imputTerminos.required = false;
-        reqLength.style.display = 'none';
-        reqMayus.style.display = 'none';
-        reqMinus.style.display = 'none';
-        reqNum.style.display = 'none';
-        reqEspecial.style.display = 'none';
-
-
-    }
-
-    function setupRegisterForm() {
-        opcionTitulo.textContent = 'Crear Cuenta';
-        tco.style.display = 'block';
-        tca.style.display = 'block';
-        emailSesionC.style.display = 'block';
-        passwordSesionC.style.display = 'block';
-        emailSesionC.required = true;
-        passwordSesionC.required = true;
-        btnSesion.textContent = 'Crear Cuenta';
-        olvidoContainer.style.display = 'none';
-        terminos.style.display = 'block';
-        privacidad.style.display = 'block';
-        imputTerminos.style.display = 'block';
-        imputPrivacidad.style.display = 'block';
-        imputPrivacidad.required = true;
-        imputTerminos.required = true;
-        reqLength.style.display = 'block';
-        reqMayus.style.display = 'block';
-        reqMinus.style.display = 'block';
-        reqNum.style.display = 'block';
-        reqEspecial.style.display = 'block';
-    }
-
-    function validarRequisitos(password) {
-    let validos = 0;
-    // Longitud
-    if (password.length >= 8) {
-        reqLength.style.color = 'green'; validos++;
-    } else reqLength.style.color = 'red';
-    // Mayúscula
-    if (/[A-Z]/.test(password)) {
-        reqMayus.style.color = 'green'; validos++;
-    } else reqMayus.style.color = 'red';
-    // Minúscula
-    if (/[a-z]/.test(password)) {
-        reqMinus.style.color = 'green'; validos++;
-    } else reqMinus.style.color = 'red';
-    // Número
-    if (/\d/.test(password)) {
-        reqNum.style.color = 'green'; validos++;
-    } else reqNum.style.color = 'red';
-    // Especial
-    if (/[^A-Za-z0-9]/.test(password)) {
-        reqEspecial.style.color = 'green'; validos++;
-    } else reqEspecial.style.color = 'red';
-    return validos === 5;
-}
-
-passwordSesion.addEventListener('input', () => {
-    validarRequisitos(passwordSesionC.value);
-    validarCoincidencia();
-});
-
-passwordSesionC.addEventListener('input', () => {
-    validarCoincidencia();
-});
-
-function validarCoincidencia() {
-    if (passwordSesionC.value && passwordSesion.value) {
-        if (passwordSesionC.value === passwordSesion.value) {
-            passwordSesion.style.borderColor = 'green';
-            passwordSesionC.style.borderColor = 'green';
-        } else {
-            passwordSesion.style.borderColor = 'red';
-            passwordSesionC.style.borderColor = 'red'; 
-        }
-    } else {
-        passwordSesion.style.borderColor = '';
-    }
-}
-
+    // --- Sesión reutilizable (llamadas a funciones globales) ---
     olvidoContainerbtn.addEventListener('click', function (e) {
         e.preventDefault();
         formSesionContainer.style.display = 'none';
-        showModal(olvidoContainer);
-    })
+        showModal(olvidoContainer, modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer);
+    });
 
     iniciarSesionBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        showModal(formSesionContainer);
-        setupLoginForm();
+        setupLoginForm({
+            opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
+        });
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer);
     });
 
     crearCuentaBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        validarRequisitos('');
-        showModal(formSesionContainer);
-        setupRegisterForm();
+        setupRegisterForm({
+            opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
+        });
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer);
     });
 
-    closeModal.addEventListener('click', hideModal);
+    closeModal.addEventListener('click', () => hideModal(modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer));
 
     window.addEventListener('click', function (event) {
         if (event.target === modal) {
-            hideModal();
+            hideModal(modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer);
         }
     });
 
-        function validarCorreos() {
-        const correo1 = emailSesionC.value.trim();
-        const correo2 = emailSesion.value.trim();
-        const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-        // Validar formato
-        if (!regexCorreo.test(correo1) || !regexCorreo.test(correo2)) {
-            emailSesionC.style.borderColor = 'red';
-            emailSesion.style.borderColor = 'red';
-            return false;
-        }
-    
-        // Validar coincidencia
-        if (correo1 !== correo2) {
-            emailSesionC.style.borderColor = 'red';
-            emailSesion.style.borderColor = 'red';
-            return false;
-        }
-    
-        emailSesionC.style.borderColor = 'green';
-        emailSesion.style.borderColor = 'green';
-        return true;
-    }
-    
-    // Puedes llamar a esta función al hacer submit o al escribir en los campos de correo:
-    emailSesionC.addEventListener('input', validarCorreos);
+    passwordSesion.addEventListener('input', () => {
+        validarRequisitos(passwordSesion.value, reqLength, reqMayus, reqMinus, reqNum, reqEspecial);
+        validarCoincidencias(passwordSesion.value, passwordSesionC.value, passwordSesion, passwordSesionC);
+    });
+    passwordSesionC.addEventListener('input', () => {
+        validarCoincidencias(passwordSesion.value, passwordSesionC.value, passwordSesion, passwordSesionC);
+    });
+    emailSesionC.addEventListener('input', () => {
+        validarCorreos(emailSesion.value, emailSesionC.value, emailSesion, emailSesionC);
+    });
     emailSesion.addEventListener('input', () => {
         if(emailSesionC.style.display !== 'none') {
-            validarCorreos();
+            validarCorreos(emailSesion.value, emailSesionC.value, emailSesion, emailSesionC);
         }
     });
-
-
-
-    // Función para manejar la creación de cuenta
-    const crearCuenta = async () => {
-        const correo = emailSesionC.value;
-        const confirmCo = emailSesion.value;
-        const contrasena = passwordSesionC.value;
-        const confirmCon = passwordSesion.value;
-
-        if (!correo || !contrasena || !confirmCo || !confirmCon) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Campos incompletos',
-                text: 'Por favor, completa todos los campos.',
-                toast: true,
-                position: 'top-end'
-            });
-            return;
-        }
-
-        if (!validarRequisitos(contrasena)) {
-        Swal.fire({ icon: 'error', title: 'Contraseña insegura', text: 'La contraseña no cumple los requisitos.', toast: true, position: 'top-end' });
-        return;
-    }
-    if (contrasena !== confirmCon) {
-        Swal.fire({ icon: 'error', title: 'Contraseñas no coinciden', text: 'Las contraseñas no son iguales.', toast: true, position: 'top-end' });
-        return;
-    }
-
-    if (!validarCorreos()) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Correos no coinciden',
-            text: 'Por favor, verifica que los correos sean iguales.',
-            toast: true,
-            position: 'top-end'
-        });
-        return;
-    }
-
-        try {
-            const respuesta = await fetch('/api/crear-cuenta', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ correo, contrasena })
-            });
-
-            const data = await respuesta.json();
-
-            if (respuesta.ok) {
-                hideModal();
-            } else {
-                
-            }
-        } catch (error) {
-            console.error('Error al crear la cuenta:', error);
-            alert('Hubo un error al crear la cuenta. Intenta nuevamente.');
-        }
-        hideModal();
-        form.sesion.reset();
-    };
-
-    // Función para manejar el inicio de sesión
-    const iniciarSesion = async () => {
-        const correo = emailSesion.value;
-        const contrasena = passwordSesion.value;
-
-        if (!correo || !contrasena) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Campos incompletos',
-                text: 'Por favor, completa todos los campos.',
-                toast: true,
-                position: 'top-end'
-            });
-            return;
-        }
-
-        const ipResponse = await fetch('https://api.ipify.org?format=json');
-            const ipData = await ipResponse.json();
-            const ip = ipData.ip;
-        try {
-            const respuesta = await fetch('/api/iniciar-sesion', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ correo, contrasena, ip })
-            });
-
-            const data = await respuesta.json();
-
-            if (respuesta.ok) {
-                localStorage.setItem('usuario', JSON.stringify(data.user));
-                if (data.user && data.user.rol === 'admin') {
-                    openCRUD();
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Bienvenido, administrador!',
-                        text: 'Has iniciado sesión como administrador.',
-                        toast: true,
-                        position: 'top-end'
-                    });
-                }
-
-                iniciarSesionBtn.style.display = 'none';
-                crearCuentaBtn.style.display = 'none';
-
-                const listaSesion = document.querySelector('.iniciosesion');
-
-                const perfilLi = document.createElement('li');
-                const perfilLink = document.createElement('a');
-                if (data.user && data.user.nombre && data.user.nombre.trim() !== "") {
-                    perfilLink.textContent = data.user.nombre;
-                } else {
-                    perfilLink.textContent = 'Editar Perfil';
-                }
-                perfilLink.id = 'perfilBtn';
-                perfilLink.href = '#';
-                perfilLink.addEventListener('click', () => mostrarPerfil(data.user));
-                perfilLi.appendChild(perfilLink);
-
-                const cerrarSesionLi = document.createElement('li');
-                const cerrarSesionLink = document.createElement('a');
-                cerrarSesionLink.textContent = 'Cerrar Sesión';
-                cerrarSesionLink.id = 'cerrarSesionBtn';
-                cerrarSesionLink.href = '#';
-                cerrarSesionLink.addEventListener('click', cerrarSesion);
-                cerrarSesionLi.appendChild(cerrarSesionLink);
-
-                // Agregar ambos elementos al <ul>
-                listaSesion.appendChild(perfilLi);
-                listaSesion.appendChild(cerrarSesionLi);
-
-                carrito.style.display = 'block';
-                hideModal();
-                
-                
-                form.sesion.reset();
-                perfiles();
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.error,
-                    toast: true,
-                    position: 'top-end'
-                });
-            }
-        } catch (error) {
-            console.error('Error al iniciar sesión:', error);
-            alert('Hubo un error al iniciar sesión. Intenta nuevamente.');
-        }
-    };
-
-    // Función para cerrar sesión
-    const cerrarSesion = () => {
-        localStorage.removeItem('usuario');
-        location.reload();
-    };
-
-    // Función para mostrar el perfil del usuario
-    const mostrarPerfil = async (user) => {
-        try {
-            const respuesta = await fetch(`/api/perfil?correo=${user.correo}`);
-            const perfil = await respuesta.json();
-
-            if (respuesta.ok) {
-                window.location.href = 'datos-perfil.html';
-                localStorage.setItem('usuario', JSON.stringify(perfil));
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: perfil.error,
-                    toast: true,
-                    position: 'top-end'
-                });
-            }
-        } catch (error) {
-            console.error('Error al cargar el perfil:', error);
-            alert('Hubo un error al cargar el perfil. Intenta nuevamente.');
-        }
-    };
-
-    btnSesion.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (btnSesion.textContent === 'Crear Cuenta') {
-            crearCuenta();
-        } else if (btnSesion.textContent === 'Iniciar Sesión') {
-            iniciarSesion();
-        }
-    });
-
-
-
-    crudSection.style.display = "block";
-    btnCrear.style.display = "none";
-
-    function openCRUD() {
+function openCRUD() {
         crudSection.style.display = "block";
         btnCrear.style.display = "block";
     }
 
-    // Arreglo global para almacenar las imágenes seleccionadas
-   
-
-    const cargarMonedas = async () => {
-        try {
-            const respuesta = await fetch('/api/monedas');
-            if (!respuesta.ok) {
-                swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No se pudieron cargar las monedas.',
-                    toast: true,
-                    position: 'top-end'
-                });
-            }
-    
-            const monedas = await respuesta.json();
-            
-
-            const selectorMonedas = document.getElementById('monedaPreferida');
-            selectorMonedas.innerHTML = '<option value="">Seleccione una moneda</option>';
-    
-            monedas.forEach((moneda) => {
-                if (moneda.moneda && moneda.nombre) {
-                    const opcion = document.createElement('option');
-                    opcion.value = moneda.moneda;
-                    opcion.textContent = `${moneda.nombre} <${moneda.moneda}>`;
-                    selectorMonedas.appendChild(opcion);
-                } else {
-                    console.warn('Moneda con datos incompletos:', moneda);
-                }
+    btnSesion.addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (btnSesion.textContent === 'Crear Cuenta') {
+            await crearCuenta({
+                emailSesion,
+                passwordSesion,
+                mostrarLoader,
+                ocultarLoader,
+                Swal,
+                iniciarSesionBtn,
+                crearCuentaBtn,
+                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer),
+                formSesion: form.sesion,
+                btnSesion,
+                mostrarPerfil,
+                cerrarSesion,
+                openCRUD,
+                perfiles,
+                carrito,
+                emailSesionC,
+                passwordSesionC,
+                validarRequisitos,
+                validarCorreos,
+                reqLength,
+                reqMayus,
+                reqMinus,
+                reqNum,
+                reqEspecial
             });
-            //seleccionar la moneda preferida del localStorage
-            const monedaPreferida = localStorage.getItem('monedaPreferida');
-            if (monedaPreferida) {
-                selectorMonedas.value = monedaPreferida;
-            }
-        } catch (error) {
-            console.error('Error al cargar las monedas:', error);
-            alert('Hubo un error al cargar las monedas. Intenta nuevamente.');
+        } else if (btnSesion.textContent === 'Iniciar Sesión') {
+            await iniciarSesion({
+                emailSesion,
+                passwordSesion,
+                mostrarLoader,
+                ocultarLoader,
+                Swal,
+                iniciarSesionBtn,
+                crearCuentaBtn,
+                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer),
+                formSesion: form.sesion,
+                btnSesion,
+                mostrarPerfil,
+                cerrarSesion,
+                openCRUD,
+                perfiles,
+                carrito
+            });
         }
-    };
-    
-    // Llamar a la función para cargar las monedas al iniciar
-    cargarMonedas();
-    
-    // Función para mover el carrusel
-    function moveCarrusel(direction) {
-        const carruselItems = document.querySelector('.carrusel-itemsModal');
-        const items = carruselItems.querySelectorAll('.carrusel-itemModal');
-        const currentTransform = getComputedStyle(carruselItems).transform;
-        const matrixValues = currentTransform !== 'none' ? currentTransform.split(',') : [0];
-        const currentTranslateX = parseFloat(matrixValues[4]) || 0;
-    
-        const itemWidth = carruselItems.offsetWidth;
-        const maxTranslateX = -(itemWidth * (items.length - 1));
-        let newTranslateX = currentTranslateX + direction * itemWidth;
-    
-        if (newTranslateX > 0) newTranslateX = maxTranslateX; // Ir al último
-        if (newTranslateX < maxTranslateX) newTranslateX = 0; // Ir al primero
-    
-        carruselItems.style.transform = `translateX(${newTranslateX}px)`;
-    }
-    
-    const usuario = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
+    });
 
-    if (usuario) {
-        console.log('Sesión activa:', usuario);
-        
-
-        // Mostrar funciones relacionadas con el usuario
-        document.getElementById('crearCuenta').style.display = 'none';
-        document.getElementById('iniciarSesion').style.display = 'none';
-        if(usuario.rol === 'admin'){
-            openCRUD();
-        }
-        
-
-        // Obtener el ul donde se agregarán los elementos
-        const listaSesion = document.querySelector('.iniciosesion');
-
-        // Crear el elemento <li> para "Perfil"
-        const perfilLi = document.createElement('li');
-        const perfilLink = document.createElement('a');
-        if (usuario.nombre && usuario.nombre.trim() !== "") {
-            perfilLink.textContent = usuario.nombre;
-        } else {
-            perfilLink.textContent = 'Editar Perfil';
-        }
-        perfilLink.id = 'perfilBtn';
-        perfilLink.href = '#';
-        perfilLink.addEventListener('click', () => mostrarPerfil(usuario));
-        perfilLi.appendChild(perfilLink);
-
-        // Crear el elemento <li> para "Cerrar Sesión"
-        const cerrarSesionLi = document.createElement('li');
-        const cerrarSesionLink = document.createElement('a');
-        cerrarSesionLink.textContent = 'Cerrar Sesión';
-        cerrarSesionLink.id = 'cerrarSesionBtn';
-        cerrarSesionLink.href = '#';
-        cerrarSesionLink.addEventListener('click', cerrarSesion);
-        cerrarSesionLi.appendChild(cerrarSesionLink);
-
-        // Agregar ambos elementos al <ul>
-        listaSesion.innerHTML = '';
-        listaSesion.appendChild(perfilLi);
-        listaSesion.appendChild(cerrarSesionLi);
-        document.getElementById('carrito').style.display = 'block';
-    } else {
-        console.log('No hay sesión activa.');
-
-        // Ocultar funciones relacionadas con el usuario
-        document.getElementById('crearCuenta').style.display = 'block';
-        document.getElementById('iniciarSesion').style.display = 'block';
-        document.getElementById('carrito').style.display = 'none';
-
-    }
-
-    // Loader functions
-function mostrarLoader() {
-    const loader = document.getElementById('loader');
-    if (loader) loader.style.display = 'flex';
-}
-function ocultarLoader() {
-    const loader = document.getElementById('loader');
-    if (loader) loader.style.display = 'none';
-}
+    usuarioActivo();
 
     document.querySelector('.btn-lupa').addEventListener('click', async (event) => {
         event.preventDefault();
@@ -1162,7 +753,7 @@ function ocultarLoader() {
                     const btnComprar = divProducto.querySelector('.btnComprar');
                     btnComprar.addEventListener('click', () => {
                         cargarFormularioPago([producto], usuario);
-                        showModal(formPagoContainer);
+                        showModal(formPagoContainer, modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer);
                     });
     
                     carruselItems.appendChild(divProducto);
@@ -1173,7 +764,7 @@ function ocultarLoader() {
                 btnComprarTodo.classList.add('btnComprarTodo');
                 btnComprarTodo.addEventListener('click', () => {
                     cargarFormularioPago(productosEnCarrito, usuario);
-                    showModal(formPagoContainer);
+                    showModal(formPagoContainer, modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer);
                 });
     
                 carrusel.appendChild(btnComprarTodo);
@@ -1208,13 +799,9 @@ function ocultarLoader() {
         }
     });
 
-    document.getElementById('Preguntas').addEventListener('click', () => {
-        // Aquí puedes agregar la funcionalidad deseada para "Preguntas y Respuestas"
-        console.log('Preguntas y Respuestas clicado');
-    });
-
     document.getElementById('btnPreferencias').addEventListener('click', () => {
-        showModal(document.getElementById('form-preferencias'));
+
+        showModal(formPreferenciasContainer, modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer);
     });
 
     // Función para guardar las preferencias del usuario
@@ -1396,45 +983,7 @@ function ocultarLoader() {
 
     
     // Función para cargar redes sociales desde el servidor
-    async function cargarRedesSociales() {
-        try {
-            const respuesta = await fetch('/api/redes-sociales');
-            if (!respuesta.ok) {
-                throw new Error('Error al cargar las redes sociales.');
-            }
-
-            const redes = await respuesta.json();
-            const listaRedes = document.querySelector('.redes-sociales');
-            listaRedes.innerHTML = '';
-
-            redes.forEach(red => {
-                const li = document.createElement('li');
-                let enlaceCompleto = red.enlace.trim();
-                // Validar y corregir el enlace
-                if (!/^https?:\/\//i.test(enlaceCompleto)) {
-                    if (!enlaceCompleto.startsWith('www.')) {
-                        enlaceCompleto = `www.${enlaceCompleto}`;
-                    }
-                    enlaceCompleto = `https://${enlaceCompleto}`;
-                } else if (enlaceCompleto.startsWith('www.')) {
-                    enlaceCompleto = `https://${enlaceCompleto}`;
-
-                } else if (!enlaceCompleto.startsWith('http://') && !enlaceCompleto.startsWith('https://')) {
-                    enlaceCompleto = `https://${enlaceCompleto}`; // Corregido para usar https  
-                }
-
-                li.innerHTML = `
-                    <a href="${enlaceCompleto}" target="_blank">
-                    <img src="https://cdn.simpleicons.org/${red.nombre}" alt="${red.nombre}" width="24" height="24">
-                    ${red.nombre}
-                    </a>
-                `;
-                listaRedes.appendChild(li);
-            });
-        } catch (error) {
-            console.error('Error al cargar las redes sociales:', error);
-        }
-    }
+    
 
     cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
 
@@ -1520,30 +1069,8 @@ function ocultarLoader() {
         }
     });
 
-    // Mostrar el minimapa en el footer si existe
-    const footerMapa = document.getElementById('footer-mapa');
-    if (footerMapa) {
-        const mapaHTML = localStorage.getItem('footerMapaURL') || '';
-        footerMapa.innerHTML = mapaHTML;
-    }
-
-    function renderMapaFooter() {
-        const footerMapa = document.getElementById('footer-mapa');
-        if (!footerMapa) return;
-        let mapaHTML = '';
-        fetch('/api/ubicacion-mapa')
-            .then(res => res.ok ? res.json() : Promise.reject())
-            .then(data => {
-                mapaHTML = data.html || '';
-                if (mapaHTML) localStorage.setItem('footerMapaURL', mapaHTML);
-                footerMapa.innerHTML = mapaHTML;
-            })
-            .catch(() => {
-                mapaHTML = localStorage.getItem('footerMapaURL') || '';
-                footerMapa.innerHTML = mapaHTML;
-            });
-    }
-    document.addEventListener('DOMContentLoaded', renderMapaFooter);
+    renderMapaFooter(); // Llamar a la función para renderizar el mapa en el footer
+    ocultarLoader(); // Ocultar loader al finalizar la carga inicial
 
     // Lógica para recuperación de contraseña
     const formOlvido = document.getElementById('formOlvidoContrasena');
@@ -1551,52 +1078,6 @@ function ocultarLoader() {
         formOlvido.addEventListener('submit', async (e) => {
             e.preventDefault();
             const correoRecuperar = document.getElementById('emailOlvido').value.trim();
-            if (!correoRecuperar) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Campo requerido',
-                    text: 'Por favor, ingresa tu correo.',
-                    toast: true,
-                    position: 'top-end'
-                });
-                return;
-            }
-            try {
-                const resp = await fetch('/api/recuperar-contrasena', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ correo: correoRecuperar })
-                });
-                const data = await resp.json();
-                if (resp.ok) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Revisa tu correo',
-                        text: data.message,
-                        toast: true,
-                        position: 'top-end'
-                    });
-                    hideModal();
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: data.error || 'No se pudo enviar el correo de recuperación.',
-                        toast: true,
-                        position: 'top-end'
-                    });
-                }
-            } catch (err) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error de red',
-                    text: 'No se pudo conectar con el servidor.',
-                    toast: true,
-                    position: 'top-end'
-                });
-            }
+            await recuperarContraseña(correoRecuperar, Swal, () => hideModal(modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer));
         });
     }
-});
-
-

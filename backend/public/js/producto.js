@@ -2,6 +2,8 @@ let imagenesSeleccionadas = []; // Arreglo para almacenar las imágenes seleccio
 document.addEventListener('DOMContentLoaded', async () => {
     
     mostrarLoader();
+    cargarRedesSociales();
+    renderMapaFooter();
     const params = new URLSearchParams(window.location.search);
     const productoId = parseInt(params.get('id'), 10); // Obtener el ID del producto de la URL
     const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -323,14 +325,14 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
     const reqEspecial = document.getElementById('req-especial');
     const olvidoContainerbtn = document.getElementById('olvidoContrasena');
     const olvidoContainer = document.getElementById('formOlvidoContainer');
-    
+
 
     
     // --- Sesión reutilizable ---
     olvidoContainerbtn.addEventListener('click', function (e) {
         e.preventDefault();
         formSesionContainer.style.display = 'none';
-        showModal(olvidoContainer, modal, formSesionContainer, olvidoContainer);
+        showModal(olvidoContainer, modal, formSesionContainer, olvidoContainer, null, null);
     });
 
     iniciarSesionBtn.addEventListener('click', function (e) {
@@ -338,7 +340,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
         setupLoginForm({
             opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
         });
-        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer, null, null);
     });
 
     crearCuentaBtn.addEventListener('click', function (e) {
@@ -346,14 +348,14 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
         setupRegisterForm({
             opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
         });
-        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer, null, null);
     });
 
-    closeModal.addEventListener('click', () => hideModal(modal, formSesionContainer, olvidoContainer));
+    closeModal.addEventListener('click', () => hideModal(modal, formSesionContainer, olvidoContainer, null, null));
 
     window.addEventListener('click', function (event) {
         if (event.target === modal) {
-            hideModal(modal, formSesionContainer, olvidoContainer);
+            hideModal(modal, formSesionContainer, olvidoContainer, null, null);
         }
     });
 
@@ -380,7 +382,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
         formOlvido.addEventListener('submit', async (e) => {
             e.preventDefault();
             const correoRecuperar = document.getElementById('emailOlvido').value.trim();
-            await recuperarContraseña(correoRecuperar, Swal, () => hideModal(modal, formSesionContainer, olvidoContainer));
+            await recuperarContraseña(correoRecuperar, Swal, () => hideModal(modal, formSesionContainer, olvidoContainer, null, null));
         });
     }
 
@@ -395,7 +397,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 Swal,
                 iniciarSesionBtn,
                 crearCuentaBtn,
-                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer),
+                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer, null, null),
                 formSesion: form.sesion,
                 btnSesion,
                 mostrarPerfil,
@@ -422,7 +424,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 Swal,
                 iniciarSesionBtn,
                 crearCuentaBtn,
-                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer),
+                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer, null, null),
                 formSesion: form.sesion,
                 btnSesion,
                 mostrarPerfil,
@@ -437,5 +439,5 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
 ocultarLoader();
 }
 cargarProducto(productoId);
-document.addEventListener('DOMContentLoaded', renderMapaFooter);
+
 });

@@ -45,12 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
     olvidoContainerbtn.addEventListener('click', function (e) {
         e.preventDefault();
         formSesionContainer.style.display = 'none';
-        showModal(olvidoContainer, modal, formSesionContainer, olvidoContainer);
+        showModal(olvidoContainer, modal, formSesionContainer, olvidoContainer,null,null);
     })
 
     iniciarSesionBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer,null,null);
         setupLoginForm({
             opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
         });
@@ -58,17 +58,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     crearCuentaBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer);
+        showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer,null,null);
         setupRegisterForm({
             opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
         });
     });
 
-    closeModal.addEventListener('click', hideModal);
+    closeModal.addEventListener('click', () => hideModal(modal, formSesionContainer, olvidoContainer,null,null));
 
     window.addEventListener('click', function (event) {
         if (event.target === modal) {
-            hideModal();
+            hideModal(modal, formSesionContainer, olvidoContainer,null);
         }
     });
 
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formOlvido.addEventListener('submit', async (e) => {
             e.preventDefault();
             const correoRecuperar = document.getElementById('emailOlvido').value.trim();
-            await recuperarContraseña(correoRecuperar, Swal, () => hideModal(modal, formSesionContainer, olvidoContainer));
+            await recuperarContraseña(correoRecuperar, Swal, () => hideModal(modal, formSesionContainer, olvidoContainer,null,null));
         });
     }
 
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 Swal,
                 iniciarSesionBtn,
                 crearCuentaBtn,
-                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer),
+                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer,null,null),
                 formSesion: form.sesion,
                 btnSesion,
                 mostrarPerfil,
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 Swal,
                 iniciarSesionBtn,
                 crearCuentaBtn,
-                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer),
+                hideModal: () => hideModal(modal, formSesionContainer, olvidoContainer,null,null),
                 formSesion: form.sesion,
                 btnSesion,
                 mostrarPerfil,

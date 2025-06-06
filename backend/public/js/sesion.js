@@ -1,15 +1,21 @@
 // Funciones de sesión reutilizables
-function showModal(container, modal, formSesionContainer, olvidoContainer) {
+function showModal(container, modal, formSesionContainer, olvidoContainer, formPreferenciasContainer) {
     modal.style.display = 'block';
     formSesionContainer.style.display = 'none';
     olvidoContainer.style.display = 'none';
+    if (formPreferenciasContainer) {
+    formPreferenciasContainer.style.display = 'none';
+    }
     container.style.display = 'block';
 }
 
-function hideModal(modal, formSesionContainer, olvidoContainer) {
+function hideModal(modal, formSesionContainer, olvidoContainer, formPreferenciasContainer) {
     modal.style.display = 'none';
     formSesionContainer.style.display = 'none';
     olvidoContainer.style.display = 'none';
+    if (formPreferenciasContainer) {
+        formPreferenciasContainer.style.display = 'none';
+    }
     document.getElementById('emailSesion').value = '';
     document.getElementById('passwordSesion').value = '';
     document.getElementById('emailSesionC').value = '';
