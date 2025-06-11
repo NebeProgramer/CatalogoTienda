@@ -329,11 +329,33 @@ function openCRUD() {
                 perfiles,
                 carrito
             });
+            const usuarioLS = localStorage.getItem('usuario');
+            if (usuarioLS) {
+                const usuario = JSON.parse(usuarioLS);
+                if (usuario.rol === 'admin') {
+                    openCRUD();
+                } else {
+                    closeCRUD();
+                }
+            } else {
+                closeCRUD();
+            }
         }
     });
 
     usuarioActivo(Swal, mostrarLoader, ocultarLoader);
-    localStorage.getItem('usuario') ? openCRUD() : closeCRUD();
+    // Mostrar u ocultar CRUD solo si el usuario es admin
+    const usuarioLS = localStorage.getItem('usuario');
+    if (usuarioLS) {
+        const usuario = JSON.parse(usuarioLS);
+        if (usuario.rol === 'admin') {
+            openCRUD();
+        } else {
+            closeCRUD();
+        }
+    } else {
+        closeCRUD();
+    }
 
     document.querySelector('.btn-lupa').addEventListener('click', async (event) => {
         event.preventDefault();

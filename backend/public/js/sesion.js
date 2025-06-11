@@ -383,7 +383,6 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
 
 function cerrarSesion() {
     localStorage.removeItem('usuario');
-    closeCRUD();
     location.reload();
 }
 
