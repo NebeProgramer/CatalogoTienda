@@ -1306,8 +1306,7 @@ async function enviarCorreoRecuperacion(destinatario, token, req) {
 
     // Usar BASE_URL de entorno o derivar del request
     const baseUrl = process.env.BASE_URL || (req ? `${req.protocol}://${req.get('host')}` : '');
-    // Usar ruta amigable con token como parámetro
-    const enlace = `${baseUrl}/restablecer-contrasena/${token}`;
+    const enlace = `${baseUrl}/restablecer-contrasena.html?token=${token}`;
     let mailOptions = {
         from: process.env.EMAIL_USER,
         to: destinatario,
