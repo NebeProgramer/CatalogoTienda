@@ -1041,7 +1041,6 @@ app.delete('/api/categorias/:id', async (req, res) => {
 // Endpoint para procesar el pago
 app.post('/api/pagar', async (req, res) => {
     const { correo, carrito, direccion, tarjeta } = req.body;
-console.log('Datos de pago recibidos:', req.body); // Log para depuración
     if (!correo || !carrito || carrito.length === 0 || !direccion || !tarjeta) {
         return res.status(400).json({ error: 'Correo, carrito, dirección y método de pago son obligatorios.' });
     }
@@ -1307,7 +1306,8 @@ async function enviarCorreoRecuperacion(destinatario, token, req) {
 
     // Usar BASE_URL de entorno o derivar del request
     const baseUrl = process.env.BASE_URL || (req ? `${req.protocol}://${req.get('host')}` : '');
-    const enlace = `${baseUrl}/restablecer-contrasena.html?token=${token}`;
+    // Usar ruta amigable con token como parámetro
+    const enlace = `${baseUrl}/restablecer-contrasena/${token}`;
     let mailOptions = {
         from: process.env.EMAIL_USER,
         to: destinatario,
@@ -1449,4 +1449,51 @@ app.get('/api/usuarios/token/:token', async (req, res) => {
         console.error('Error al buscar el token:', error);
         res.status(500).json({ error: 'Error al buscar el token.' });
     }
+});
+
+// Rutas amigables para páginas principales y de administración
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'indexAdmin.html'));
+});
+app.get('/contacto', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'contacto.html'));
+});
+app.get('/sobre-nosotros', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'sobre-nosotros.html'));
+});
+app.get('/admin/sobre-nosotros', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'sobre-nosotrosAdmin.html'));
+});
+app.get('/terminos-condiciones', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'terminos-condiciones.html'));
+});
+app.get('/admin/terminos-condiciones', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'terminos-condicionesAdmin.html'));
+});
+app.get('/preguntas-respuestas', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'preguntas-respuestas.html'));
+});
+app.get('/admin/preguntas-respuestas', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'preguntas-respuestasAdmin.html'));
+});
+app.get('/producto/:id?', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'producto.html'));
+});
+app.get('/admin/producto/:id?', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'productoAdmin.html'));
+});
+app.get('/perfil', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'datos-perfil.html'));
+});
+app.get('/admin/perfil', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'datos-perfilAdmin.html'));
+});
+app.get('/restablecer-contrasena/:token?', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'restablecer-contrasena.html'));
+});
+app.get('/factura/:factura?', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'confirmacion.html'));
 });
