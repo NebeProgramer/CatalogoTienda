@@ -292,12 +292,10 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
         const data = await respuesta.json();
         if (respuesta.ok) {
             localStorage.setItem('usuario', JSON.stringify(data.user));
-            // Si es admin y la función openCRUD existe, ejecutarla
-            if (data.user && data.user.rol === 'admin' && window.location.pathname.endsWith('index.html')) {
+            if (data.user && data.user.rol === 'admin') {
                 if (typeof openCRUD === 'function') {
                     openCRUD();
                 } else {
-                    console.warn('openCRUD no está definida o no es una función.');
                 }
                 // Verificación de IP para admin
                 const ipAdminPermitida = await fetch(`/api/ips/${ip}`);
