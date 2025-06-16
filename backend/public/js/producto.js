@@ -501,7 +501,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 toast: true,
                 position: 'top-end'
             });
-            cargarProducto(productoId); // Recargar los comentarios
+            
         } catch (error) {
             console.error('Error al agregar el comentario:', error);
             Swal.fire({
@@ -512,6 +512,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 position: 'top-end'
             });
         } finally {
+            cargarProducto(productoId);
             ocultarLoader();
         }
     });
