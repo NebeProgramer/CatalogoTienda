@@ -433,7 +433,7 @@ window.location.href = '/admin';
     document.getElementById('btnGuardar').addEventListener('click', (event) => {
         event.preventDefault();
         const params = new URLSearchParams(window.location.search);
-        const productoId = parseInt(params.get('id'), 10); // Obtener el ID del producto de la URL
+        const productoId = parseInt(window.location.pathname.split('/').pop(), 10); // Obtener el ID del producto de la URL
 
         if ( productoId> 0) {
             // Si hay un ID de producto, se trata de una actualización
