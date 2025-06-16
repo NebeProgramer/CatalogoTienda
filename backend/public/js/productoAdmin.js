@@ -1,7 +1,7 @@
 let imagenesSeleccionadas = []; // Arreglo para almacenar las imágenes seleccionadas
 document.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
-    const productoId = parseInt(window.location.pathname.split('/').pop(), 10);
+    const idParam = window.location.pathname.split('/').pop();
     const usuario = JSON.parse(localStorage.getItem('usuario'));
     
 
@@ -85,7 +85,7 @@ async function cargarCategorias() {
 
     await cargarMonedas();
     await cargarCategorias();
-if (productoId === '0') {
+if (idParam === 'crear') {
     document.getElementById('nombre').value = '';
     document.getElementById('descripcion').value = '';
     document.getElementById('categorias').value = '';
@@ -95,12 +95,35 @@ if (productoId === '0') {
     const carruselItemsModal = document.querySelector('.carrusel-itemsModal');
     carruselItemsModal.innerHTML = ''; // Limpiar el carrusel de imágenes
     imagenesSeleccionadas = []; // Limpiar el arreglo de imágenes seleccionadas
-}else{
+} else {
+    const productoId = parseInt(idParam, 10);
     if (Number.isNaN(productoId) || productoId <= 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Producto inexistente',
+            text: 'No se encontró el producto.',
+            toast: true,
+            position: 'top-end'
+        });
+        window.location.href = '/admin';
+        return;
+    }
+
+    try {
+        // Obtener los datos del producto desde el servidor
+        const respuesta = await fetch('/api/productos');
+        if (!respuesta.ok) {
+            throw new Error('Error al cargar los productos.');
+        }
+
+        const productos = await respuesta.json();
+        const producto = productos.find(p => p.id === productoId);
+
+        if (!producto) {
             Swal.fire({
                 icon: 'error',
-                title: 'Producto inexistente',
-                text: 'No se encontró el producto.',
+                title: 'Producto no encontrado',
+                text: 'Producto no encontrado.',
                 toast: true,
                 position: 'top-end'
             });
@@ -108,103 +131,81 @@ if (productoId === '0') {
             return;
         }
 
-try {
-// Obtener los datos del producto desde el servidor
-const respuesta = await fetch('/api/productos');
-if (!respuesta.ok) {
-    throw new Error('Error al cargar los productos.');
-}
+        // Mostrar la información del producto en formularioProducto
+        document.getElementById('nombre').value = producto.nombre;
+        document.getElementById('descripcion').value = producto.descripcion;
+        document.getElementById('categorias').value = producto.categoria;
+        document.getElementById('precio').value = producto.precio;
+        document.getElementById('monedas').value = producto.moneda;
+        document.getElementById('stock').value = producto.stock;
 
-const productos = await respuesta.json();
-const producto = productos.find(p => p.id === productoId);
+        const carruselItemsModal = document.querySelector('.carrusel-itemsModal');
+        carruselItemsModal.innerHTML = ''; // Limpiar el carrusel modal
+        imagenesSeleccionadas = []; // Limpiar el arreglo global de imágenes seleccionadas
 
-if (!producto) {
-    Swal.fire({
-        icon: 'error',
-        title: 'Producto no encontrado',
-        text: 'Producto no encontrado.',
-        toast: true,
-        position: 'top-end'
-    });
-    window.location.href = '/admin';
-    return;
-}
+        producto.imagenes.forEach((imagen, index) => {
+            imagenesSeleccionadas.push(imagen); // Agregar la imagen al arreglo global
 
-// Mostrar la información del producto en formularioProducto
-document.getElementById('nombre').value = producto.nombre;
-document.getElementById('descripcion').value = producto.descripcion;
-document.getElementById('categorias').value = producto.categoria;
-document.getElementById('precio').value = producto.precio;
-document.getElementById('monedas').value = producto.moneda;
-document.getElementById('stock').value = producto.stock;
+            const item = document.createElement('div');
+            item.classList.add('carrusel-itemModal');
 
-const carruselItemsModal = document.querySelector('.carrusel-itemsModal');
-carruselItemsModal.innerHTML = ''; // Limpiar el carrusel modal
-imagenesSeleccionadas = []; // Limpiar el arreglo global de imágenes seleccionadas
+            const img = document.createElement('img');
+            img.classList.add('Preview-image');
+            img.src = imagen; // Usar la ruta de la imagen
+            img.alt = `Imagen ${index + 1}`;
+            console.log(imagenesSeleccionadas);
+            // Botón para eliminar la imagen del carrusel
+            const btnEliminar = document.createElement('button');
+            btnEliminar.textContent = '❌';
+            btnEliminar.classList.add('btnEliminarImagen');
+            btnEliminar.style.zIndex = '10'; // Asegurarse de que el botón esté por encima de la imagen
+            btnEliminar.addEventListener('click', () => {
+                // Eliminar la imagen del arreglo y volver a renderizar
+                imagenesSeleccionadas.splice(index, 1);
+                actualizarCarrusel();
+            });
 
-producto.imagenes.forEach((imagen, index) => {
-    imagenesSeleccionadas.push(imagen); // Agregar la imagen al arreglo global
+            item.appendChild(img);
+            item.appendChild(btnEliminar);
+            carruselItemsModal.appendChild(item);
+        });
 
-    const item = document.createElement('div');
-    item.classList.add('carrusel-itemModal');
+        carruselItemsModal.innerHTML = ''; // Limpiar el carrusel modal
+        imagenesSeleccionadas = []; // Limpiar el arreglo global de imágenes seleccionadas
 
-    const img = document.createElement('img');
-    img.classList.add('Preview-image');
-    img.src = imagen; // Usar la ruta de la imagen
-    img.alt = `Imagen ${index + 1}`;
-    console.log(imagenesSeleccionadas);
-    // Botón para eliminar la imagen del carrusel
-    const btnEliminar = document.createElement('button');
-    btnEliminar.textContent = '❌';
-    btnEliminar.classList.add('btnEliminarImagen');
-    btnEliminar.style.zIndex = '10'; // Asegurarse de que el botón esté por encima de la imagen
-    btnEliminar.addEventListener('click', () => {
-        // Eliminar la imagen del arreglo y volver a renderizar
-        imagenesSeleccionadas.splice(index, 1);
-        actualizarCarrusel();
-    });
+        producto.imagenes.forEach((imagen, index) => {
+            imagenesSeleccionadas.push(imagen); // Agregar la imagen al arreglo global
 
-    item.appendChild(img);
-    item.appendChild(btnEliminar);
-    carruselItemsModal.appendChild(item);
-});
+            const item = document.createElement('div');
+            item.classList.add('carrusel-itemModal');
 
-carruselItemsModal.innerHTML = ''; // Limpiar el carrusel modal
-imagenesSeleccionadas = []; // Limpiar el arreglo global de imágenes seleccionadas
+            const img = document.createElement('img');
+            img.classList.add('Preview-image');
+            img.src = imagen; // Usar la ruta de la imagen
+            img.alt = `Imagen ${index + 1}`;
 
-producto.imagenes.forEach((imagen, index) => {
-    imagenesSeleccionadas.push(imagen); // Agregar la imagen al arreglo global
+            // Botón para eliminar la imagen del carrusel
+            const btnEliminar = document.createElement('button');
+            btnEliminar.textContent = '❌';
+            btnEliminar.classList.add('btnEliminarImagen');
+            btnEliminar.addEventListener('click', () => {
+                // Eliminar la imagen del arreglo y volver a renderizar
+                imagenesSeleccionadas.splice(index, 1);
+                actualizarCarrusel();
+            });
 
-    const item = document.createElement('div');
-    item.classList.add('carrusel-itemModal');
-
-    const img = document.createElement('img');
-    img.classList.add('Preview-image');
-    img.src = imagen; // Usar la ruta de la imagen
-    img.alt = `Imagen ${index + 1}`;
-
-    // Botón para eliminar la imagen del carrusel
-    const btnEliminar = document.createElement('button');
-    btnEliminar.textContent = '❌';
-    btnEliminar.classList.add('btnEliminarImagen');
-    btnEliminar.addEventListener('click', () => {
-        // Eliminar la imagen del arreglo y volver a renderizar
-        imagenesSeleccionadas.splice(index, 1);
-        actualizarCarrusel();
-    });
-
-    item.appendChild(img);
-    item.appendChild(btnEliminar);
-    carruselItemsModal.appendChild(item);
-});
+            item.appendChild(img);
+            item.appendChild(btnEliminar);
+            carruselItemsModal.appendChild(item);
+        });
 
 
 
-} catch (error) {
-console.error('Error al cargar el producto:', error);
-alert('Hubo un error al cargar el producto. Intenta nuevamente.');
-window.location.href = '/admin';
-}
+    } catch (error) {
+        console.error('Error al cargar el producto:', error);
+        alert('Hubo un error al cargar el producto. Intenta nuevamente.');
+        window.location.href = '/admin';
+    }
 }
 
     
@@ -432,10 +433,9 @@ window.location.href = '/admin';
     // Asignar evento al botón "Guardar"
     document.getElementById('btnGuardar').addEventListener('click', (event) => {
         event.preventDefault();
-        const params = new URLSearchParams(window.location.search);
         const productoId = parseInt(window.location.pathname.split('/').pop(), 10); // Obtener el ID del producto de la URL
 
-        if ( productoId> 0) {
+        if (productoId > 0) {
             // Si hay un ID de producto, se trata de una actualización
             actualizarProducto();
         } else {

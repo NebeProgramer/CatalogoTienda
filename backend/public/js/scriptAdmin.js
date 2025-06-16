@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     btnCrear.addEventListener('click', () => {
-        window.location.href = '/admin/producto/0';
+        window.location.href = '/admin/producto/crear';
     });
 
     btnAgregarFiltro.addEventListener('click', () => {
