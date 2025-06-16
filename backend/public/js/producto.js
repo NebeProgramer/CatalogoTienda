@@ -390,6 +390,12 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
     }
 
     btnSesion.addEventListener('click', async (e) => {
+        const form = {
+        imagen: document.getElementById('formImagen'),
+        sesion: document.getElementById('formSesion'),
+        olvido: document.getElementById('formOlvidoContainer'),
+        preferencias: document.getElementById('formPreferencias')
+    }
         e.preventDefault();
         if (btnSesion.textContent === 'Crear Cuenta') {
             await crearCuenta({
