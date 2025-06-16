@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     
     const params = new URLSearchParams(window.location.search);
-    const productoId = parseInt(params.get('id'), 10); // Obtener el ID del producto de la URL
+    const productoId = parseInt(window.location.pathname.split('/').pop(), 10);
     const usuario = JSON.parse(localStorage.getItem('usuario'));
     
 const id = params.get('id');
