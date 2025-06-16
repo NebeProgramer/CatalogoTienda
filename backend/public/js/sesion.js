@@ -445,6 +445,10 @@ function usuarioActivo(Swal, mostrarLoader, ocultarLoader) {
         listaSesion.innerHTML = '';
         listaSesion.appendChild(perfilLi);
         listaSesion.appendChild(cerrarSesionLi);
+        const carrito = document.getElementById('carrito');
+        if (carrito) {
+            carrito.style.display = 'block';
+        }
     } else {
         console.log('No hay sesión activa.');
     }
