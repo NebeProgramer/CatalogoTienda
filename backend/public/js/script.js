@@ -176,7 +176,7 @@ const reqEspecial = document.getElementById('req-especial');
                     // Agregar eventos a los botones
                     const btnMasInfo = divProducto.querySelector('.btnMasInfo');
                     btnMasInfo.addEventListener('click', () => {
-                        window.location.href = `producto.html?id=${producto.id}`;
+                        window.location.href = `/producto/${producto.id}`;
                     });
 
                     const btnCarrito = divProducto.querySelector('.btnCarrito');
@@ -414,7 +414,7 @@ function openCRUD() {
                             // Agregar eventos a los botones
                             const btnMasInfo = divProducto.querySelector('.btnMasInfo');
                             btnMasInfo.addEventListener('click', () => {
-                                window.location.href = `producto.html?id=${producto.id}`;
+                                window.location.href = `/producto/${producto.id}`;
                             });
         
                             const btnCarrito = divProducto.querySelector('.btnCarrito');
@@ -572,7 +572,7 @@ function openCRUD() {
                 `;
                 divProducto.querySelector('.btnVerMas').addEventListener('click', (e) => {
                     e.stopPropagation();
-                    window.location.href = `producto.html?id=${producto.id}`;
+                    window.location.href = `/producto/${producto.id}`;
                 });
                 divProducto.querySelector('.btnCarrito').addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -726,10 +726,7 @@ function openCRUD() {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Hubo un error al actualizar el carrito. Intenta nuevamente.',
-                toast: true,
-                position: 'top-end'
-            });
+                text: 'Hubo un error al actualizar el carrito. Intenta nuevamente.');
         }
     };
     
@@ -977,8 +974,7 @@ function openCRUD() {
     });
 
     btnCrear.addEventListener('click', () => {
-
-        window.location.href = 'indexAdmin.html';
+        window.location.href = '/admin';
     });
 
     // Cargar categorías dinámicamente
@@ -1080,7 +1076,7 @@ function openCRUD() {
                 toast: true,
                 position: 'top-end'
             });
-            window.location.href = `confirmacion.html?factura=${resultado.factura}`; // Redirigir con el código de factura
+            window.location.href = `/factura/${resultado.factura}`; // Redirigir con el código de factura
         } catch (error) {
             console.error('Error al procesar el pago:', error);
             Swal.fire({

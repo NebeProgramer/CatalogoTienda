@@ -402,7 +402,7 @@ async function mostrarPerfil(user, Swal, mostrarLoader, ocultarLoader) {
         const respuesta = await fetch(`/api/perfil?correo=${user.correo}`);
         const perfil = await respuesta.json();
         if (respuesta.ok) {
-            window.location.href = 'datos-perfil.html';
+            window.location.href = '/perfil';
             localStorage.setItem('usuario', JSON.stringify(perfil));
         } else {
             Swal.fire({

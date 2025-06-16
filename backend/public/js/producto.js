@@ -25,7 +25,7 @@ const id = params.get('id');
             title: 'Producto inexistente',
             text: 'No se encontró el producto.'
         });
-        window.location.href = 'index.html';
+        window.location.href = '/';
         return;
     }
 async function cargarProducto(productoId) {
@@ -47,7 +47,7 @@ if (!producto) {
         title: 'Producto no encontrado',
         text: 'Producto no encontrado.'
     });
-    window.location.href = 'index.html';
+    window.location.href = '/';
     return;
 }
 

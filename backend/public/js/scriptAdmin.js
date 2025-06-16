@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Agregar eventos a los botones
                     const btnEditar = divProducto.querySelector('.btnEditar');
                     btnEditar.addEventListener('click', () => {
-                        window.location.href = `productoAdmin.html?id=${producto.id}`;
+                        window.location.href = `/admin/producto/${producto.id}`;
                     });
 
                     const btnCarrito = divProducto.querySelector('.btnEliminar');
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarProductos();
 
     document.getElementById('btnvolver').addEventListener('click', () => {
-        window.location.href = 'index.html';
+        window.location.href = '/';
     });
 
     const usuario = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Agregar eventos a los botones
                         const btnEditar = divProducto.querySelector('.btnEditar');
                         btnEditar.addEventListener('click', () => {
-                            window.location.href = `productoAdmin.html?id=${producto.id}`;
+                            window.location.href = `/admin/producto/${producto.id}`;
                         });
 
                         const btnCarrito = divProducto.querySelector('.btnEliminar');
@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     btnCrear.addEventListener('click', () => {
-        window.location.href = 'productoAdmin.html?id=0';
+        window.location.href = '/admin/producto/0';
     });
 
     btnAgregarFiltro.addEventListener('click', () => {
@@ -821,7 +821,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Manejar el botón para agregar red social
     document.getElementById('btn-agregar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes-sociales');
+        const contenedor = document.querySelector('.redes_sociales');
         contenedor.innerHTML = ''; // Limpiar el contenedor para preparar la edición
         contenedor.style.flexDirection = 'column'; // Cambia a columna en modo edición
 
@@ -896,7 +896,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-guardar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes-sociales');
+        const contenedor = document.querySelector('.redes_sociales');
         contenedor.style.flexDirection = 'row'; // Vuelve a fila al guardar
         const items = contenedor.querySelectorAll('li');
 
@@ -971,7 +971,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarRedesSociales(); // Recargar las redes sociales
         document.getElementById('btn-guardar-red').style.display = 'none'; // Ocultar el botón de guardar
         document.getElementById('Cancelar').style.display = 'none';
-        const contenedor = document.querySelector('.redes-sociales');
+        const contenedor = document.querySelector('.redes_sociales');
         contenedor.style.flexDirection = 'row'; // Vuelve a fila al cancelar
     });
 

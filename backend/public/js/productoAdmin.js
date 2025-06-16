@@ -104,7 +104,7 @@ if (id === '0') {
                 toast: true,
                 position: 'top-end'
             });
-            window.location.href = 'indexAdmin.html';
+            window.location.href = '/admin';
             return;
         }
 
@@ -126,7 +126,7 @@ if (!producto) {
         toast: true,
         position: 'top-end'
     });
-    window.location.href = 'indexAdmin.html';
+    window.location.href = '/admin';
     return;
 }
 
@@ -203,7 +203,7 @@ producto.imagenes.forEach((imagen, index) => {
 } catch (error) {
 console.error('Error al cargar el producto:', error);
 alert('Hubo un error al cargar el producto. Intenta nuevamente.');
-window.location.href = 'indexAdmin.html';
+window.location.href = '/admin';
 }
 }
 
@@ -303,7 +303,7 @@ window.location.href = 'indexAdmin.html';
                 });
                 console.log(data);
                 imagenesSeleccionadas = [];
-                window.location.href = 'indexAdmin.html';
+                window.location.href = '/admin';
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -405,7 +405,7 @@ window.location.href = 'indexAdmin.html';
                     position: 'top-end'
                 });
                 imagenesSeleccionadas = [];
-                window.location.href = 'indexAdmin.html'; // Redirigir a la página principal
+                window.location.href = '/admin'; // Redirigir a la página principal
             } else {
                 Swal.fire({
                     icon: 'error',

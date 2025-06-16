@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', async () => {
     const usuario = JSON.parse(localStorage.getItem('usuario')) || {
         nombre: '',
@@ -30,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnEditarPerfil = document.getElementById('iniciarSesion');
     if (!usuario.correo) {
         alert('No hay datos de sesión. Por favor, inicia sesión.');
-        window.location.href = 'indexAdmin.html';
+        window.location.href = '/admin';
         return;
     }
     if (usuario && usuario.correo) {
@@ -72,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!usuarioSesion) {
         alert('No hay una sesión activa. Por favor, inicia sesión.');
-        window.location.href = 'indexAdmin.html';
+        window.location.href = '/admin';
         return;
     }
 

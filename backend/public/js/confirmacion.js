@@ -113,7 +113,7 @@ const cargarDatosCompra = async () => {
 
 // Botón para regresar al inicio
 document.getElementById('btn-regresar').addEventListener('click', () => {
-    window.location.href = 'index.html';
+    window.location.href = '/';
 });
 
 // Cargar los datos de la compra al cargar la página

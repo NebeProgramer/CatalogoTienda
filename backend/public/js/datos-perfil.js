@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             toast: true,
             position: 'top-end'
         });
-        window.location.href = 'index.html';
+        window.location.href = '/';
         return;
     }
     const btnEditarPerfil = document.getElementById('iniciarSesion'); // Botón "Editar perfil"
@@ -55,13 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 text: 'Has cerrado sesión correctamente.',
             }).then(() => {
                 localStorage.removeItem('usuario'); // Limpiar el localStorage
-                window.location.href = 'index.html'; // Redirigir al index
+                window.location.href = '/'; // Redirigir al index
             });
         });
     } else {
         // Si no hay una cuenta iniciada, redirigir a la página de inicio de sesión
         btnEditarPerfil.textContent = 'Iniciar Sesión';
-        btnEditarPerfil.href = 'index.html'; // Redirigir al index para iniciar sesión
+        btnEditarPerfil.href = '/'; // Redirigir al index para iniciar sesión
 
         btnCerrarSesion.style.display = 'none'; // Ocultar el botón "Cerrar sesión"
         Swal.fire({
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             text: 'Por favor, inicia sesión para acceder a tu perfil.',
             
         }).then(() => {
-            window.location.href = 'index.html'; // Redirigir al index
+            window.location.href = '/'; // Redirigir al index
         });
     }
 
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('inicio').addEventListener('click', () => {
-        window.location.href = 'index.html'; // Redirigir a la página de inicio
+        window.location.href = '/'; // Redirigir a la página de inicio
     });
         
 
@@ -690,7 +690,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     localStorage.removeItem('usuario'); // Limpiar el localStorage
-                    window.location.href = 'index.html'; // Redirigir al index
+                    window.location.href = '/'; // Redirigir al index
                 });
             } catch (error) {
                 console.error('Error al eliminar la cuenta:', error);
