@@ -619,6 +619,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 reqNum,
                 reqEspecial
             });
+            const perfil = JSON.parse(localStorage.getItem('usuario'));
             if (perfil) {
         formComentario.style.display = 'block'; 
         cantidadProducto.style.display = 'block';
@@ -647,6 +648,8 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 carrito: null
             });
         }
+
+        const perfil = JSON.parse(localStorage.getItem('usuario'));
         if (perfil) {
         formComentario.style.display = 'block'; 
         cantidadProducto.style.display = 'block';
