@@ -96,7 +96,7 @@ if (productoId === '0') {
     carruselItemsModal.innerHTML = ''; // Limpiar el carrusel de imágenes
     imagenesSeleccionadas = []; // Limpiar el arreglo de imágenes seleccionadas
 }else{
-    if (!productoId) {
+    if (Number.isNaN(productoId) || productoId <= 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Producto inexistente',
@@ -346,7 +346,7 @@ window.location.href = '/admin';
         const params = new URLSearchParams(window.location.search);
         const productoId = parseInt(params.get('id'), 10);
 
-        if (!productoId) {
+        if (Number.isNaN(productoId) || productoId <= 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Producto inexistente',
