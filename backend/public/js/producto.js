@@ -438,6 +438,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 toast: true,
                 position: 'top-end'
             });
+            ocultarLoader();
             return;
         }
 
@@ -449,10 +450,26 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 toast: true,
                 position: 'top-end'
             });
+            ocultarLoader();
             return;
         }
 
         try {
+            // Verificar si el usuario ya comentó este producto
+            const resProd = await fetch(`/api/productos/${productoId}`);
+            const prodData = await resProd.json();
+            const yaComento = prodData.comentarios && prodData.comentarios.some(c => c.correo === perfil.correo);
+            if (yaComento) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Solo puedes comentar una vez por producto.',
+                    toast: true,
+                    position: 'top-end'
+                });
+                ocultarLoader();
+                return;
+            }
+
             const respuesta = await fetch(`/api/productos/${productoId}/comentarios`, {
                 method: 'POST',
                 headers: {
@@ -460,7 +477,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 },
                 body: JSON.stringify({
                     usuario: perfil.nombre || 'Usuario Anónimo',
-                    correo: perfil.correo, // Aseguramos que el correo del perfil se suba
+                    correo: perfil.correo,
                     comentario: comentarioTexto,
                     calificacion,
                 }),
@@ -484,7 +501,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 toast: true,
                 position: 'top-end'
             });
-            CargarComentarios(); // Recargar la página para mostrar el nuevo comentario
+            cargarProducto(productoId); // Recargar los comentarios
         } catch (error) {
             console.error('Error al agregar el comentario:', error);
             Swal.fire({
