@@ -722,11 +722,13 @@ function openCRUD() {
                 cargarCarrito(); // Recargar el carrito
             }
         } catch (error) {
-            console.error('Error al actualizar el carrito:', error);
-            Swal.fire({
+            swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Hubo un error al actualizar el carrito. Intenta nuevamente.');
+                text: 'Hubo un error al eliminar el producto del carrito. Intenta nuevamente.',
+                toast: true,
+                position: 'top-end'
+            });
         }
     };
     
