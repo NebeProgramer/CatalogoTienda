@@ -297,73 +297,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
         formComentario.style.display = 'block'; 
         cantidadProducto.style.display = 'block';
         btnCarrito.style.display = 'block';
-    }else {
-        formComentario.style.display = 'none';
-        cantidadProducto.style.display = 'none';
-        btnCarrito.style.display = 'none';
     }
-
-    btnCarrito.addEventListener('click', async (e) => {
-        const usuario = JSON.parse(localStorage.getItem('usuario'));
-        if (!usuario || !usuario.correo) {
-            Swal.fire({ icon: 'info', title: 'Inicia sesión para agregar al carrito',
-                text: 'Por favor, inicia sesión para agregar productos al carrito.',
-                toast: true,
-                position: 'top-end'
-            });
-            return;
-        }
-        // Obtener cantidad (si tienes un input para cantidad)
-        let cantidad = 1;
-        const inputCantidad = document.getElementById('cantidad-producto');
-        if (inputCantidad && !isNaN(parseInt(inputCantidad.value))) {
-            cantidad = parseInt(inputCantidad.value);
-        }
-        // Obtener el producto actual (debes tener la variable producto disponible)
-        // Si no, obtén los datos del producto de la página
-        // Ejemplo:
-        // const producto = { id: ..., nombre: ..., ... };
-        // Aquí asumo que tienes una variable producto con el id
-        if (!window.producto || !producto.id) {
-            Swal.fire({ icon: 'error', 
-                title: 'Error', 
-                text: 'No se pudo identificar el producto.',
-                toast: true,
-                position: 'top-end'
-             });
-            return;
-        }
-        // Obtener el carrito actual
-        const resCarrito = await fetch(`/api/usuarios/${usuario.correo}/carrito`);
-        let carrito = await resCarrito.json();
-        if (!Array.isArray(carrito)) carrito = [];
-        // Buscar si el producto ya está en el carrito
-        const idx = carrito.findIndex(item => item.id === productoId);
-        if (idx !== -1) {
-            carrito[idx].cantidad += cantidad;
-        } else {
-            carrito.push({ id: productoId, cantidad });
-        }
-        // Actualizar el carrito en el backend
-        const respuesta = await fetch(`/api/usuarios/${usuario.correo}/carrito`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ carrito })
-        });
-        if (respuesta.ok) {
-            Swal.fire({ icon: 'success', title: 'Producto agregado al carrito',
-                toast: true,
-                position: 'top-end'
-            });
-        } else {
-            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo agregar al carrito.',
-                toast: true,
-                position: 'top-end'
-            });
-        }
-    });
-        
-        
 
     const modal = document.getElementById('modal');
     const formSesionContainer = document.getElementById('formSesionContainer');
@@ -390,7 +324,180 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
     const olvidoContainer = document.getElementById('formOlvidoContainer');
     const opcionTitulo = document.getElementById('opcion');
 
+    const agregarAlCarrito = async (idProducto, cantidad) => {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sesión requerida',
+                text: 'Por favor, inicia sesión para agregar productos al carrito.',
+                toast: true,
+                position: 'top-end'
+            });
+            return;
+        }
+    
+        try {
+            const respuesta = await fetch(`/api/productos/${idProducto}`);
+            if (!respuesta.ok) {
+                throw new Error('Error al obtener los datos del producto.');
+            }
+    
+            const producto = await respuesta.json();
+    
+            // Verificar el stock del producto
+            const productoEnCarrito = usuario.carrito.find(item => item.id === idProducto);
+            const cantidadEnCarrito = productoEnCarrito ? productoEnCarrito.cantidad : 0;
+    
+            if (cantidadEnCarrito + cantidad > producto.stock) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Stock insuficiente',
+                    text: 'No hay suficiente stock disponible para este producto.',
+                    toast: true,
+                    position: 'top-end'
+                });
+                return;
+            }
+    
+            // Si el producto ya está en el carrito, incrementar la cantidad
+            if (productoEnCarrito) {
+                productoEnCarrito.cantidad += cantidad;
+            } else {
+                // Si no está en el carrito, agregarlo con la cantidad especificada
+                usuario.carrito.push({ id: idProducto, cantidad });
+            }
+    
+            // Enviar los cambios al servidor
+            const respuestaCarrito = await fetch(`/api/usuarios/${usuario.correo}/carrito`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ carrito: usuario.carrito }),
+            });
+    
+            if (!respuestaCarrito.ok) {
+                throw new Error('Error al actualizar el carrito en el servidor.');
+            }
+    
+            // Actualizar el carrito en el localStorage
+            localStorage.setItem('usuario', JSON.stringify(usuario));
+    
+            Swal.fire({
+                icon: 'success',
+                title: 'Producto agregado',
+                text: 'Producto agregado al carrito.',
+                toast: true,
+                position: 'top-end'
+            });
+        } catch (error) {
+            console.error('Error al actualizar el carrito:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al actualizar el carrito. Intenta nuevamente.',
+                toast: true,
+                position: 'top-end'
+            });
+        }
+    };
+    
+    // Función para agregar un producto al carrito
+    document.getElementById('btnCarrito').addEventListener('click', () => {
+        const productoId = parseInt(new URLSearchParams(window.location.search).get('id'), 10);
+        const cantidad = parseInt(document.getElementById('cantidadProducto').value, 10);
+    
+        if (!productoId || isNaN(cantidad) || cantidad <= 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Cantidad inválida',
+                text: 'Por favor, selecciona una cantidad válida.',
+                toast: true,
+                position: 'top-end'
+            });
+            return;
+        }
+    
+        agregarAlCarrito(productoId, cantidad);
+    });
 
+    document.getElementById('btnAgregarComentario').addEventListener('click', async (event) => {
+        event.preventDefault();
+        mostrarLoader();
+        const comentarioTexto = document.getElementById('comentarioTexto').value.trim();
+        const calificacion = parseFloat(document.getElementById('calificacion').value);
+        const productoId = parseInt(new URLSearchParams(window.location.search).get('id'), 10);
+        const perfil = JSON.parse(localStorage.getItem('usuario'));
+
+        if (!perfil || !perfil.correo) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sesión requerida',
+                text: 'Por favor, inicia sesión para agregar un comentario.',
+                toast: true,
+                position: 'top-end'
+            });
+            return;
+        }
+
+        if (!comentarioTexto || isNaN(calificacion) || calificacion < 0 || calificacion > 5) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Datos inválidos',
+                text: 'Por favor, completa todos los campos con valores válidos.',
+                toast: true,
+                position: 'top-end'
+            });
+            return;
+        }
+
+        try {
+            const respuesta = await fetch(`/api/productos/${productoId}/comentarios`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    usuario: perfil.nombre || 'Usuario Anónimo',
+                    correo: perfil.correo, // Aseguramos que el correo del perfil se suba
+                    comentario: comentarioTexto,
+                    calificacion,
+                }),
+            });
+
+            if (!respuesta.ok) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al agregar el comentario.',
+                    toast: true,
+                    position: 'top-end'
+                });
+                throw new Error('Error al agregar el comentario.');
+            }
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Comentario agregado',
+                text: 'Comentario agregado exitosamente.',
+                toast: true,
+                position: 'top-end'
+            });
+            CargarComentarios(); // Recargar la página para mostrar el nuevo comentario
+        } catch (error) {
+            console.error('Error al agregar el comentario:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al agregar el comentario.',
+                toast: true,
+                position: 'top-end'
+            });
+        } finally {
+            ocultarLoader();
+        }
+    });
     
     // --- Sesión reutilizable ---
     olvidoContainerbtn.addEventListener('click', function (e) {
