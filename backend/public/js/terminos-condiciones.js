@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 cerrarSesion,
                 openCRUD: null,
                 perfiles: null,
-                carrito,
+                carrito: null,
                 emailSesionC,
                 passwordSesionC,
                 validarRequisitos,
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 cerrarSesion,
                 openCRUD: null,
                 perfiles: null,
-                carrito
+                carrito: null
             });
         }
     });

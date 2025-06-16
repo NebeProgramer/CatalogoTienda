@@ -413,7 +413,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 cerrarSesion,
                 openCRUD: null,
                 perfiles: null,
-                carrito,
+                carrito: null,
                 emailSesionC,
                 passwordSesionC,
                 validarRequisitos,
@@ -440,7 +440,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 cerrarSesion,
                 openCRUD: null,
                 perfiles: null,
-                carrito
+                carrito: null
             });
         }
     });
