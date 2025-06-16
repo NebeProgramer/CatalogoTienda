@@ -1368,11 +1368,15 @@ app.post('/api/restablecer-contrasena', async (req, res) => {
 
 // --- API para gestionar IPs permitidas ---
 // Obtener todas las IPs permitidas
-app.get('/api/:ip', async (req, res) => {
+app.get('/api/ips/:ip', async (req, res) => {
     try {
         const { ip } = req.params;
-        const ips = await IPPermitida.find({ direccionIP: ip });
-        res.status(200).json(ips);
+        const ips = await IPPermitida.findOne({ direccionIP: ip });
+        if (!ips) {
+            return res.status(404).json({ error: 'IP no encontrada.' });
+        }else{
+            res.status(200).json(ips);
+        }
     } catch (error) {
         console.error('Error al obtener las IPs permitidas:', error);
         res.status(500).json({ error: 'Error al obtener las IPs permitidas.' });

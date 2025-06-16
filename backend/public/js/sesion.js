@@ -299,16 +299,29 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                 } else {
                     console.warn('openCRUD no está definida o no es una función.');
                 }
-                // Verificación de IP para admin (puedes personalizar la IP permitida)
-                const ipAdminPermitida = await fetch(`/api/${ip}`);
-                if (ip === ipAdminPermitida && data.user.rol === 'admin') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Bienvenido, administrador!',
-                        text: 'Has iniciado sesión como administrador.',
-                        toast: true,
-                        position: 'top-end'
-                    });
+                // Verificación de IP para admin
+                const ipAdminPermitida = await fetch(`/api/ips/${ip}`);
+                if (ipAdminPermitida.ok) {
+                    const ipPermitidaData = await ipAdminPermitida.json();
+                    if (ipPermitidaData && !ipPermitidaData.error) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Bienvenido, administrador!',
+                            text: 'Has iniciado sesión como administrador.',
+                            toast: true,
+                            position: 'top-end'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Acceso restringido',
+                            text: 'No tienes permiso para iniciar sesión como administrador desde esta IP.',
+                            toast: true,
+                            position: 'top-end'
+                        });
+                        ocultarLoader();
+                        return;
+                    }
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -320,7 +333,6 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                     ocultarLoader();
                     return;
                 }
-                
             }
             if(data.user.rol === 'usuario') {
                     Swal.fire({
