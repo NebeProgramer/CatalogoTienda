@@ -297,6 +297,10 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
         formComentario.style.display = 'block'; 
         cantidadProducto.style.display = 'block';
         btnCarrito.style.display = 'block';
+    }else{
+        formComentario.style.display = 'none'; 
+        cantidadProducto.style.display = 'none';
+        btnCarrito.style.display = 'none';
     }
 
     const modal = document.getElementById('modal');
@@ -615,6 +619,15 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 reqNum,
                 reqEspecial
             });
+            if (perfil) {
+        formComentario.style.display = 'block'; 
+        cantidadProducto.style.display = 'block';
+        btnCarrito.style.display = 'block';
+    }else{
+        formComentario.style.display = 'none'; 
+        cantidadProducto.style.display = 'none';
+        btnCarrito.style.display = 'none';
+    }
         } else if (btnSesion.textContent === 'Iniciar Sesión') {
             await iniciarSesion({
                 emailSesion,
@@ -634,6 +647,15 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                 carrito: null
             });
         }
+        if (perfil) {
+        formComentario.style.display = 'block'; 
+        cantidadProducto.style.display = 'block';
+        btnCarrito.style.display = 'block';
+    }else{
+        formComentario.style.display = 'none'; 
+        cantidadProducto.style.display = 'none';
+        btnCarrito.style.display = 'none';
+    }
     });
     CargarComentarios();
 ocultarLoader();

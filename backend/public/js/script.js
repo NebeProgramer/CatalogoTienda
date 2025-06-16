@@ -191,8 +191,7 @@ const reqEspecial = document.getElementById('req-especial');
                 }
             }
         } catch (error) {
-            console.error('Error al cargar los productos:', error);
-            alert('Hubo un error al cargar los productos.');
+            
         } finally {
             ocultarLoader();
         }
