@@ -297,7 +297,73 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
         formComentario.style.display = 'block'; 
         cantidadProducto.style.display = 'block';
         btnCarrito.style.display = 'block';
+    }else {
+        formComentario.style.display = 'none';
+        cantidadProducto.style.display = 'none';
+        btnCarrito.style.display = 'none';
     }
+
+    btnCarrito.addEventListener('click', async (e) => {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario || !usuario.correo) {
+            Swal.fire({ icon: 'info', title: 'Inicia sesión para agregar al carrito',
+                text: 'Por favor, inicia sesión para agregar productos al carrito.',
+                toast: true,
+                position: 'top-end'
+            });
+            return;
+        }
+        // Obtener cantidad (si tienes un input para cantidad)
+        let cantidad = 1;
+        const inputCantidad = document.getElementById('cantidad-producto');
+        if (inputCantidad && !isNaN(parseInt(inputCantidad.value))) {
+            cantidad = parseInt(inputCantidad.value);
+        }
+        // Obtener el producto actual (debes tener la variable producto disponible)
+        // Si no, obtén los datos del producto de la página
+        // Ejemplo:
+        // const producto = { id: ..., nombre: ..., ... };
+        // Aquí asumo que tienes una variable producto con el id
+        if (!window.producto || !producto.id) {
+            Swal.fire({ icon: 'error', 
+                title: 'Error', 
+                text: 'No se pudo identificar el producto.',
+                toast: true,
+                position: 'top-end'
+             });
+            return;
+        }
+        // Obtener el carrito actual
+        const resCarrito = await fetch(`/api/usuarios/${usuario.correo}/carrito`);
+        let carrito = await resCarrito.json();
+        if (!Array.isArray(carrito)) carrito = [];
+        // Buscar si el producto ya está en el carrito
+        const idx = carrito.findIndex(item => item.id === productoId);
+        if (idx !== -1) {
+            carrito[idx].cantidad += cantidad;
+        } else {
+            carrito.push({ id: productoId, cantidad });
+        }
+        // Actualizar el carrito en el backend
+        const respuesta = await fetch(`/api/usuarios/${usuario.correo}/carrito`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ carrito })
+        });
+        if (respuesta.ok) {
+            Swal.fire({ icon: 'success', title: 'Producto agregado al carrito',
+                toast: true,
+                position: 'top-end'
+            });
+        } else {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo agregar al carrito.',
+                toast: true,
+                position: 'top-end'
+            });
+        }
+    });
+        
+        
 
     const modal = document.getElementById('modal');
     const formSesionContainer = document.getElementById('formSesionContainer');
