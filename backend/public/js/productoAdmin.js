@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const productoId = parseInt(window.location.pathname.split('/').pop(), 10);
     const usuario = JSON.parse(localStorage.getItem('usuario'));
     
-const id = params.get('id');
+
 
 const formularioProducto = document.getElementById('formularioProducto');
         formularioProducto.style.display = 'block';
@@ -85,7 +85,7 @@ async function cargarCategorias() {
 
     await cargarMonedas();
     await cargarCategorias();
-if (id === '0') {
+if (productoId === '0') {
     document.getElementById('nombre').value = '';
     document.getElementById('descripcion').value = '';
     document.getElementById('categorias').value = '';
