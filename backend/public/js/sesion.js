@@ -300,7 +300,7 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                     console.warn('openCRUD no está definida o no es una función.');
                 }
                 // Verificación de IP para admin (puedes personalizar la IP permitida)
-                const ipAdminPermitida = await fetch('/api/ips'); // Cambia esto por la IP real permitida
+                const ipAdminPermitida = await fetch(`/api/${ip}`);
                 if (ip === ipAdminPermitida && data.user.rol === 'admin') {
                     Swal.fire({
                         icon: 'success',
