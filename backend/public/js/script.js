@@ -900,13 +900,15 @@ function openCRUD() {
     const btnCarrito = document.getElementById('carrito');
     const carruselRecomendados = document.querySelector('.carrusel-recomendados');
     let mostrandoCarrito = false;
-
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
     btnCarrito.addEventListener('click', () => {
         if (!mostrandoCarrito) {
             mostrarLoader();
             cargarCarrito();
-            if (carruselRecomendados) carruselRecomendados.style.display = 'none';
-            btnCarrito.innerHTML = '<a href="">Todos</a>';
+            if (carruselRecomendados && usuario.carrito.length > 0) carruselRecomendados.style.display = 'none';
+            if (usuario.carrito && usuario.carrito.length > 0) {
+                btnCarrito.innerHTML = '<a href="">Todos</a>';
+            }
             mostrandoCarrito = true;
             ocultarLoader();
         } else {
