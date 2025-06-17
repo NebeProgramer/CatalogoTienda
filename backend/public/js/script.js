@@ -544,7 +544,7 @@ function openCRUD() {
             }
             const productos = await respuesta.json();
             const productosRecomendados = productos
-                .filter(producto => producto.calificacion >= 4.0)
+                .filter(producto => producto.calificacion >= 4.0 && producto.estado === 'disponible' && producto.stock > 0)
                 .sort((a, b) => b.calificacion - a.calificacion);
             const monedaPreferida = localStorage.getItem('monedaPreferida') || 'USD';
             const carruselItemsRecomendados = document.querySelector('.carrusel-items-recomendados');
