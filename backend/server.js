@@ -1085,7 +1085,9 @@ app.post('/api/pagar', async (req, res) => {
 
         // Actualizar el registro de compras del usuario
         usuario.registroCompra = registroCompra;
-        usuario.carrito = []; // Vaciar el carrito después de la compra
+        // Eliminar solo los productos comprados del carrito
+        const idsComprados = carrito.map(item => item.id);
+        usuario.carrito = usuario.carrito.filter(item => !idsComprados.includes(item.id));
         await usuario.save();
 
         res.status(200).json({ message: 'Pago procesado con éxito.', factura: codigoFactura });
