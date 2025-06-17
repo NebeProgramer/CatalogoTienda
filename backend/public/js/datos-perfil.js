@@ -600,11 +600,12 @@ document.addEventListener('DOMContentLoaded', () => {
     btnBorrarTarjeta.addEventListener('click', borrarTarjeta);
     btnGuardarDireccion.addEventListener('click', guardarDireccion);
     btnGuardarTarjeta.addEventListener('click', guardarTarjeta);
-    closeModal.addEventListener('click', hideModal);
+    closeModal.addEventListener('click', ocultarModalUnico);
 
-    window.addEventListener('click', (event) => {
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('modal');
         if (event.target === modal) {
-            hideModal();
+            ocultarModalUnico();
         }
     });
 
@@ -726,5 +727,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Muestra el modal
         modal.style.display = 'block';
+    }
+
+    function ocultarModalUnico() {
+        const modal = document.getElementById('modal');
+        const formTarjetaContainer = document.getElementById('formTarjetaContainer');
+        const formDireccionContainer = document.getElementById('formDireccionContainer');
+        modal.style.display = 'none';
+        formTarjetaContainer.style.display = 'none';
+        formDireccionContainer.style.display = 'none';
     }
 });
