@@ -594,9 +594,9 @@ document.addEventListener('DOMContentLoaded', () => {
     btnGuardarCambios.addEventListener('click', () => {
         subirPerfilAlServidor();
     });
-    btnAgregarDireccion.addEventListener('click', () => showModal(formDireccionContainer));
+    btnAgregarDireccion.addEventListener('click', () => mostrarModalUnico(formDireccionContainer));
     btnBorrarDireccion.addEventListener('click', borrarDireccion);
-    btnAgregarTarjeta.addEventListener('click', () => showModal(formTarjetaContainer));
+    btnAgregarTarjeta.addEventListener('click', () => mostrarModalUnico(formTarjetaContainer));
     btnBorrarTarjeta.addEventListener('click', borrarTarjeta);
     btnGuardarDireccion.addEventListener('click', guardarDireccion);
     btnGuardarTarjeta.addEventListener('click', guardarTarjeta);
@@ -709,4 +709,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // Llamadas a funciones globales de loader, redes y mapa
     cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
     renderMapaFooter(); // Llamar a la función para renderizar el mapa en el footer
+
+    function mostrarModalUnico(formularioAMostrar) {
+        const modal = document.getElementById('modal');
+        const formTarjetaContainer = document.getElementById('formTarjetaContainer');
+        const formDireccionContainer = document.getElementById('formDireccionContainer');
+
+        // Oculta ambos formularios
+        formTarjetaContainer.style.display = 'none';
+        formDireccionContainer.style.display = 'none';
+
+        // Muestra solo el formulario recibido
+        if (formularioAMostrar) {
+            formularioAMostrar.style.display = 'block';
+        }
+
+        // Muestra el modal
+        modal.style.display = 'block';
+    }
 });
