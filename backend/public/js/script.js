@@ -747,6 +747,7 @@ function openCRUD() {
             const divProducto = document.createElement('div');
             divProducto.classList.add('producto-pago');
             divProducto.innerHTML = `
+                <input type="hidden" name="productoId" value="${producto.id}">
                 <img src="${producto.imagenes[0] || '/placeholder.jpg'}" alt="${producto.nombre}" class="producto-imagen">
                 <h3 class="producto-nombre">${producto.nombre}</h3>
                 <p class="producto-precio">💰 ${producto.moneda} ${producto.precio}</p>
@@ -1036,7 +1037,12 @@ function openCRUD() {
             const tarjeta = tarjetaSeleccionada.closest('tr').cells[0].textContent;
             const direccion = direccionSeleccionada.closest('tr').cells[0].textContent;
 
-            if (!usuario || !usuario.carrito || usuario.carrito.length === 0) {
+            // Obtener los ids de los productos a comprar del formulario de pago
+            const ids = Array.from(document.querySelectorAll('input[name="productoId"]')).map(input => input.value);
+            // Filtrar el carrito del usuario para solo incluir los productos seleccionados
+            const carritoFiltrado = usuario.carrito.filter(item => ids.includes(String(item.id)));
+
+            if (!usuario || !carritoFiltrado || carritoFiltrado.length === 0) {
                 Swal.fire({
                     icon: 'info',
                     title: 'Carrito vacío',
@@ -1050,7 +1056,7 @@ function openCRUD() {
             const respuesta = await fetch('/api/pagar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ correo: usuario.correo, carrito: usuario.carrito, tarjeta, direccion}),
+                body: JSON.stringify({ correo: usuario.correo, carrito: carritoFiltrado, tarjeta, direccion}),
             });
 
             const resultado = await respuesta.json();
