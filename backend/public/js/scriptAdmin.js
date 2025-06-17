@@ -1206,13 +1206,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const ipResponse = await fetch('https://api.ipify.org?format=json');
             const ipData = await ipResponse.json();
             const ip = ipData.ip;
+            const usuario = JSON.parse(localStorage.getItem('usuario'));
             let ipExistente = false;
             ips.forEach(ip => {
                 if (ip.direccionIP === ipData.ip) {
                     ipExistente = true;
                 };
             });
-            if (!ipExistente) {
+            if (!ipExistente ) {
                 document.getElementById('overlay-bloqueo').style.display = 'block';
                 const result = await Swal.fire({
                     icon: 'warning',
@@ -1228,7 +1229,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
             }
-
+            if (!usuario || usuario.rol !== 'admin') {
+                document.getElementById('overlay-bloqueo').style.display = 'block';
+                const result = await Swal.fire({
+                    icon: 'warning',
+                    title: 'Acceso denegado',
+                    text: 'No tienes permisos para acceder a esta sección.',
+                    allowOutsideClick: false, // No permite cerrar haciendo click fuera
+                    allowEscapeKey: false,    // No permite cerrar con escape
+                    toast: true,
+                    position: 'top-end'
+                });
+                if (result.isConfirmed || result.isDismissed) {
+                    window.location.href = '/';
+                    return;
+                }
+            }
             infoip.textContent = `Tu dirección IP es: ${ip}`;
             listaIps.innerHTML = '';
             ips.forEach(ip => {
