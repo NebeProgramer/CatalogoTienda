@@ -399,7 +399,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Crear el elemento de la lista
                 const li = document.createElement('li');
-                li.textContent = nuevaCategoria.nombre;
+                const a = document.createElement('a');
+                a.textContent = nuevaCategoria.nombre;
+                a.style.cursor = 'pointer';
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    cargarProductos(nuevaCategoria.nombre);
+                    history.pushState(null, '', `?categoria=${encodeURIComponent(nuevaCategoria.nombre)}`);
+                });
+                li.appendChild(a);
 
                 // Crear botón de eliminar
                 const btnEliminar = document.createElement('button');
@@ -407,17 +415,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnEliminar.classList.add('btn-eliminar');
                 btnEliminar.style.display = 'none';
 
-                // Mostrar el botón al pasar el mouse
                 li.addEventListener('mouseenter', () => {
                     btnEliminar.style.display = 'inline';
                 });
-
-                // Ocultar el botón al salir del mouse
                 li.addEventListener('mouseleave', () => {
                     btnEliminar.style.display = 'none';
                 });
 
-                // Eliminar el filtro al hacer clic en el botón
                 btnEliminar.addEventListener('click', async () => {
                     const confirmar = await Swal.fire({
                         title: `¿Estás seguro de que deseas eliminar la categoría "${nuevaCategoria.nombre}"?`,
@@ -440,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     toast: true,
                                     position: 'top-end'
                                 });
-                                cargarFiltros(); // Recargar los filtros después de eliminar
+                                cargarFiltros();
                             } else {
                                 Swal.fire({
                                     icon: 'error',
@@ -469,9 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Limpiar el input y ocultar el contenedor
                 nuevoFiltroInput.value = '';
                 agregarFiltroContainer.style.display = 'none';
-                btnAgregarFiltro.style.display = 'block'; // Volver a mostrar el botón "Agregar Filtro"
-
-
+                btnAgregarFiltro.style.display = 'block';
             } catch (error) {
                 console.error('Error al guardar la categoría:', error);
                 alert('Hubo un error al guardar la categoría.');
