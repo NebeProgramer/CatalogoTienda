@@ -1091,7 +1091,12 @@ app.post('/api/pagar', async (req, res) => {
         usuario.registroCompra = registroCompra;
         await usuario.save();
 
-        res.status(200).json({ message: 'Pago procesado con éxito.', factura: codigoFactura});
+        res.status(200).json({
+            message: 'Pago procesado con éxito.',
+            factura: codigoFactura,
+            carrito: usuario.carrito,
+            registroCompras: usuario.registroCompra
+        });
     } catch (error) {
         console.error('Error al procesar el pago:', error);
         res.status(500).json({ error: 'Hubo un error al procesar el pago.' });
