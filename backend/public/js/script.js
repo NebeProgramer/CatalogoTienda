@@ -994,20 +994,28 @@ function openCRUD() {
 
             const categorias = await respuesta.json();
             const filtroLista = document.getElementById('filtro-lista');
-            filtroLista.innerHTML = '<li><a href="#" id="todos">Todos</a></li>'; // Reiniciar lista
+            filtroLista.innerHTML = '<li><a id="todos" style="cursor:pointer;">Todos</a></li>'; // Reiniciar lista
 
             categorias.forEach(categoria => {
                 const li = document.createElement('li');
                 const a = document.createElement('a');
-                a.href = "#";
                 a.textContent = categoria.nombre;
-                a.addEventListener('click', () => cargarProductos(categoria.nombre));
+                a.style.cursor = 'pointer';
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    cargarProductos(categoria.nombre);
+                    history.pushState(null, '', `?categoria=${encodeURIComponent(categoria.nombre)}`);
+                });
                 li.appendChild(a);
                 filtroLista.appendChild(li);
             });
 
             // Asignar evento al filtro "Todos"
-            document.getElementById('todos').addEventListener('click', () => cargarProductos('Todos'));
+            document.getElementById('todos').addEventListener('click', (e) => {
+                e.preventDefault();
+                cargarProductos('Todos');
+                history.pushState(null, '', '/');
+            });
         } catch (error) {
             console.error('Error al cargar las categorías:', error);
         } finally {

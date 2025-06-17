@@ -489,11 +489,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const categorias = await respuesta.json();
-            filtroLista.innerHTML = ''; // Limpiar la lista de filtros
-
+            // Limpiar la lista de filtros antes de agregar los nuevos
+            categorias.innerHTML= '';
+            const filtroLista = document.getElementById('filtro-lista');
+            filtroLista.innerHTML = '<li><a id="todos" style="cursor:pointer;">Todos</a></li>'; // Reiniciar lista
+            
             categorias.forEach(categoria => {
                 const li = document.createElement('li');
-                li.textContent = categoria.nombre;
+                const a = document.createElement('a');
+                a.textContent = categoria.nombre;
+                a.style.cursor = 'pointer';
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    cargarProductos(categoria.nombre);
+                    history.pushState(null, '', `?categoria=${encodeURIComponent(categoria.nombre)}`);
+                });
+                li.appendChild(a);
 
                 // Crear botón de eliminar
                 const btnEliminar = document.createElement('button');
@@ -559,6 +570,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 li.appendChild(btnEliminar);
                 filtroLista.appendChild(li);
+            });
+
+            // Asignar evento al filtro "Todos"
+            document.getElementById('todos').addEventListener('click', (e) => {
+                e.preventDefault();
+                cargarProductos('Todos');
+                history.pushState(null, '', '/admin');
             });
         } catch (error) {
             console.error('Error al cargar las categorías:', error);
@@ -821,7 +839,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Manejar el botón para agregar red social
     document.getElementById('btn-agregar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes-sociales');
+        const contenedor = document.querySelector('.redes_sociales');
         contenedor.innerHTML = ''; // Limpiar el contenedor para preparar la edición
         contenedor.style.flexDirection = 'column'; // Cambia a columna en modo edición
 
@@ -896,7 +914,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-guardar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes-sociales');
+        const contenedor = document.querySelector('.redes_sociales');
         contenedor.style.flexDirection = 'row'; // Vuelve a fila al guardar
         const items = contenedor.querySelectorAll('li');
 
@@ -971,7 +989,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarRedesSociales(); // Recargar las redes sociales
         document.getElementById('btn-guardar-red').style.display = 'none'; // Ocultar el botón de guardar
         document.getElementById('Cancelar').style.display = 'none';
-        const contenedor = document.querySelector('.redes-sociales');
+        const contenedor = document.querySelector('.redes_sociales');
         contenedor.style.flexDirection = 'row'; // Vuelve a fila al cancelar
     });
 
@@ -1285,6 +1303,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Cargar las IPs permitidas al cargar la página
     cargarIpsPermitidas();
+
+    // Al cargar la página, filtrar si hay categoría en la URL
+    const params = new URLSearchParams(window.location.search);
+    const categoriaURL = params.get('categoria');
+    if (categoriaURL) {
+        cargarProductos(categoriaURL);
+    } else {
+        cargarProductos('Todos');
+    }
 });
 
 
