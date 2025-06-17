@@ -1391,6 +1391,17 @@ app.get('/api/ips/:ip', async (req, res) => {
     }
 });
 
+// Obtener todas las IPs permitidas
+app.get('/api/ips', async (req, res) => {
+    try {
+        const ips = await IPPermitida.find();
+        res.status(200).json(ips);
+    } catch (error) {
+        console.error('Error al obtener las IPs permitidas:', error);
+        res.status(500).json({ error: 'Error al obtener las IPs permitidas.' });
+    }
+});
+
 // Agregar una nueva IP permitida
 app.post('/api/ips', async (req, res) => {
     try {
