@@ -3,7 +3,7 @@ const cargarDatosCompra = async () => {
     mostrarLoader();
     try {
         const urlParams = new URLSearchParams(window.location.search);
-        const factura = urlParams.get('factura');
+        const factura = window.location.pathname.split('/').pop()
 
         if (!factura) {
             Swal.fire({
