@@ -1271,7 +1271,7 @@ app.get('/api/ubicacion-mapa', (req, res) => {
 });
 
 // --- API para Historia (Sobre Nosotros) ---
-const historiaPath = path.join(__dirname, 'data', 'historia.json');
+const historiaPath = path.join(__dirname, 'data', 'Historia.json');
 
 // Obtener la historia
 app.get('/api/historia', (req, res) => {
