@@ -1081,16 +1081,17 @@ app.post('/api/pagar', async (req, res) => {
                 direccion,
                 tarjeta
             });
+
+            // Eliminar este producto del carrito del usuario
+            usuario.carrito = usuario.carrito.filter(c => c.id !== item.id);
+            console.log(usuario.carrito);
         }
 
         // Actualizar el registro de compras del usuario
         usuario.registroCompra = registroCompra;
-        // Eliminar solo los productos comprados del carrito
-        const idsComprados = carrito.map(item => item.id);
-        usuario.carrito = usuario.carrito.filter(item => !idsComprados.includes(item.id));
         await usuario.save();
 
-        res.status(200).json({ message: 'Pago procesado con éxito.', factura: codigoFactura });
+        res.status(200).json({ message: 'Pago procesado con éxito.', factura: codigoFactura});
     } catch (error) {
         console.error('Error al procesar el pago:', error);
         res.status(500).json({ error: 'Hubo un error al procesar el pago.' });
