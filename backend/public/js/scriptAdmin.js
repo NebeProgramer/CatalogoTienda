@@ -392,7 +392,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (!respuesta.ok) {
-                    throw new Error('Error al guardar la categoría en el servidor.');
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error al guardar la categoría en el servidor.',
+                        toast: true,
+                        position: 'top-end'
+                    });
+                    return;
                 }
 
                 const nuevaCategoria = await respuesta.json();
@@ -474,9 +481,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 nuevoFiltroInput.value = '';
                 agregarFiltroContainer.style.display = 'none';
                 btnAgregarFiltro.style.display = 'block';
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Categoría guardada',
+                    text: 'La categoría se ha guardado exitosamente.',
+                    toast: true,
+                    position: 'top-end'
+                });
             } catch (error) {
                 console.error('Error al guardar la categoría:', error);
-                alert('Hubo un error al guardar la categoría.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un error al guardar la categoría.',
+                    toast: true,
+                    position: 'top-end'
+                });
             }
         }
     });
