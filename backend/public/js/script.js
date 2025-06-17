@@ -905,7 +905,7 @@ function openCRUD() {
         if (!mostrandoCarrito) {
             mostrarLoader();
             cargarCarrito();
-            if (carruselRecomendados && usuario.carrito.length > 0) carruselRecomendados.style.display = 'none';
+            if (carruselRecomendados) carruselRecomendados.style.display = 'none';
             if (usuario.carrito && usuario.carrito.length > 0) {
                 btnCarrito.innerHTML = '<a href="">Todos</a>';
             }
