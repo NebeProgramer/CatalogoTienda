@@ -900,8 +900,9 @@ function openCRUD() {
     const btnCarrito = document.getElementById('carrito');
     const carruselRecomendados = document.querySelector('.carrusel-recomendados');
     let mostrandoCarrito = false;
-    const usuario = JSON.parse(localStorage.getItem('usuario'));
     btnCarrito.addEventListener('click', () => {
+        
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
         if (!mostrandoCarrito) {
             mostrarLoader();
             cargarCarrito();
