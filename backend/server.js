@@ -1319,13 +1319,45 @@ async function enviarCorreoRecuperacion(destinatario, token, req) {
         from: process.env.EMAIL_USER,
         to: destinatario,
         subject: 'Recuperación de contraseña',
-        html: `<p>Hemos recibido una solicitud de recuperación de contraseña para la cuenta asociada al correo ${destinatario}.</p>
-        <p>Si no has solicitado este cambio, puedes ignorar este mensaje.</p>
-        <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p><a href="${enlace}">${enlace}</a>
-        <p>Este enlace es válido por 1 hora a partir de las ${new Date(Date.now()).toLocaleString()}.</p>`
+        html: `
+<div style="background-color:#fff5e6; font-family:sans-serif; padding:32px; border-radius:12px; max-width:600px; margin:auto; border:1px solid #ffb700;">
+  <div style="background-color:#ffb700; color:#222; padding:20px; border-radius:10px 10px 0 0; text-align:center;">
+    <h2 style="margin:0; font-size:2rem;">Recuperación de Contraseña</h2>
+  </div>
+  <div style="padding:24px;">
+    <p style="font-size:1.1rem; color:#333;">Hola,</p>
+    <p style="font-size:1.1rem; color:#333;">
+      Hemos recibido una solicitud para restablecer la contraseña de la cuenta asociada al correo <strong>${destinatario}</strong>.
+    </p>
+    <p style="font-size:1.1rem; color:#333;">
+      Si no has solicitado este cambio, puedes ignorar este mensaje.
+    </p>
+    <p style="font-size:1.1rem; color:#333;">
+      Para restablecer tu contraseña, haz clic en el siguiente botón:
+    </p>
+    <div style="text-align:center; margin:32px 0;">
+      <a href="${enlace}" style="background-color:#ffb700; color:#222; text-decoration:none; font-weight:bold; padding:14px 32px; border-radius:6px; font-size:1.1rem; display:inline-block; border:2px solid #b88400;">
+        Restablecer Contraseña
+      </a>
+    </div>
+    <p style="font-size:1rem; color:#555;">
+      O copia y pega este enlace en tu navegador:<br>
+      <span style="color:#b88400; word-break:break-all;">${enlace}</span>
+    </p>
+    <p style="font-size:0.95rem; color:#888;">
+      Este enlace es válido por 1 hora a partir de las ${new Date(Date.now()).toLocaleString()}.
+    </p>
+    <hr style="border:none; border-top:1px solid #ffb700; margin:32px 0;">
+    <p style="font-size:0.95rem; color:#b88400; text-align:center;">
+      © 2024 Mi Catálogo de Productos
+    </p>
+  </div>
+</div>
+`
     };
     await transporter.sendMail(mailOptions);
 }
+
 
 // Endpoint para solicitar recuperación de contraseña
 app.post('/api/recuperar-contrasena', async (req, res) => {

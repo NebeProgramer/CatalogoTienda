@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Obtener token de la URL
     const token = window.location.pathname.split('/').pop();
 
-    // Verificar si el token existe en algún usuario
     if (!token) {
         Swal.fire({
             title: 'Error',
@@ -20,13 +19,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
         return;
     }
+
     try {
         const resp = await fetch(`/api/usuarios/token/${token}`);
         const data = await resp.json();
         if (!resp.ok || !data.usuario) {
             Swal.fire({
                 title: 'Error',
-                text: 'El enlace de recuperación no es válido o ya fue utilizado.',
+                text: 'El enlace de recuperación ya fue utilizado o ha expirado.',
                 icon: 'error',
                 confirmButtonText: 'Aceptar'
             }).then(() => {
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
         if (nuevaContrasena !== confirmarContrasena) {
-            swal.fire({
+            Swal.fire({
                 title: 'Error',
                 text: 'Las contraseñas no coinciden.',
                 icon: 'error',
@@ -64,12 +64,15 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
             return;
         }
-        if (!token) {
+        // Validar requisitos antes de enviar
+        if (!validarRequisitos(nuevaContrasena)) {
             Swal.fire({
                 title: 'Error',
-                text: 'Token no válido o no proporcionado.',
+                text: 'La contraseña no cumple con los requisitos de seguridad.',
                 icon: 'error',
                 confirmButtonText: 'Aceptar'
+            }).then(() => {
+                window.location.href = '/';
             });
             return;
         }
@@ -87,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     icon: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
-                    window.location.href = '/login'; // Redirigir al login
+                    window.location.href = '/'; // Redirigir al login
                 });
                 form.reset();
             } else {
