@@ -1314,7 +1314,7 @@ async function enviarCorreoRecuperacion(destinatario, token, req) {
 
     // Usar BASE_URL de entorno o derivar del request
     const baseUrl = process.env.BASE_URL || (req ? `${req.protocol}://${req.get('host')}` : '');
-    const enlace = `${baseUrl}/restablecer-contrasena.html?token=${token}`;
+    const enlace = `${baseUrl}/restablecer-contrasena/${token}`;
     let mailOptions = {
         from: process.env.EMAIL_USER,
         to: destinatario,
@@ -1360,11 +1360,12 @@ app.post('/api/restablecer-contrasena', async (req, res) => {
         }
         // Buscar usuario con ese token
         const usuario = await Usuario.findOne({ token: token });
-        if (!usuario) {
+        if (!usuario || !usuario.tokenExpira || usuario.tokenExpira < Date.now()) {
             return res.status(400).json({ error: 'Token inválido o expirado.' });
         }
         usuario.contrasena = nuevaContrasena;
         usuario.token = undefined; // Eliminar el token para que no se reutilice
+        usuario.tokenExpira = undefined;
         await usuario.save();
         res.status(200).json({ message: 'Contraseña restablecida correctamente.' });
     } catch (error) {

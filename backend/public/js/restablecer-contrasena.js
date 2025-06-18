@@ -6,8 +6,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const form = document.getElementById('formRestablecer');
     const mensaje = document.getElementById('mensaje');
     // Obtener token de la URL
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
+    const token = window.location.pathname.split('/').pop();
 
     // Verificar si el token existe en algún usuario
     if (!token) {
