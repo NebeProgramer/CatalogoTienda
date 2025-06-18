@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         usuario.direccion.push(nuevaDireccion);
         actualizarLocalStorage();
-        hideModal();
+        ocultarModalUnico();
         cargarPerfil();
     };
 
@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         usuario.tarjeta.push(nuevaTarjeta);
         actualizarLocalStorage();
-        hideModal();
+        ocultarModalUnico();
         cargarPerfil();
     };
 
