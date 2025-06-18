@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const pais = document.getElementById('pais').value.trim();
 
         // Validaciones
-        const soloLetrasNumEsp = /^[A-Za-z0-9\s]+$/;
+        const soloLetrasNumEsp = /^[A-Za-z0-9\s#-]+$/;
         if (!calle || !carrera || !casa || !piso || !codigoPostal || !departamento || !ciudad || !pais) {
             Swal.fire({
                 icon: 'warning',
