@@ -1,7 +1,5 @@
 // Script para restablecer contraseña usando el token de la URL
 
-const { default: Swal } = require("sweetalert2");
-
 document.addEventListener('DOMContentLoaded', async function() {
     const form = document.getElementById('formRestablecer');
     const mensaje = document.getElementById('mensaje');
