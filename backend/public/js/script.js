@@ -953,7 +953,7 @@ function openCRUD() {
                 toast: true,
                 position: 'top-end' 
             });
-            hideModal();
+            hideModal(modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer);
             cargarProductos(); // Recargar los productos con la moneda seleccionada
             cargarProductosRecomendados(); // Recargar los productos recomendados
         } finally {
