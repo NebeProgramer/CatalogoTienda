@@ -861,7 +861,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Manejar el botón para agregar red social
     document.getElementById('btn-agregar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes_sociales');
+        const contenedor = document.querySelector('.redes-sociales');
         contenedor.innerHTML = ''; // Limpiar el contenedor para preparar la edición
         contenedor.style.flexDirection = 'column'; // Cambia a columna en modo edición
 
@@ -936,7 +936,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-guardar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes_sociales');
+        const contenedor = document.querySelector('.redes-sociales');
         contenedor.style.flexDirection = 'row'; // Vuelve a fila al guardar
         const items = contenedor.querySelectorAll('li');
 
@@ -1011,7 +1011,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarRedesSociales(); // Recargar las redes sociales
         document.getElementById('btn-guardar-red').style.display = 'none'; // Ocultar el botón de guardar
         document.getElementById('Cancelar').style.display = 'none';
-        const contenedor = document.querySelector('.redes_sociales');
+        const contenedor = document.querySelector('.redes-sociales');
         contenedor.style.flexDirection = 'row'; // Vuelve a fila al cancelar
     });
 
