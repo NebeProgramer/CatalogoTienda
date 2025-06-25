@@ -293,9 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             })
             .catch(error => console.error('Error al cargar ubicaciones:', error));
-    };
-
-    // Función para guardar una nueva dirección
+    };    // Función para guardar una nueva dirección
     const guardarDireccion = () => {
         // Obtener valores
         const calle = document.getElementById('calle').value.trim();
@@ -320,19 +318,19 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (!soloLetrasNumEsp.test(calle) || calle.length > 50) {
-            Swal.fire({ icon: 'warning', title: 'Calle inválida', text: 'La calle solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
+            Swal.fire({ icon: 'warning', title: 'Tipo de vía inválido', text: 'El tipo de vía solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
             return;
         }
         if (!soloLetrasNumEsp.test(carrera) || carrera.length > 50) {
-            Swal.fire({ icon: 'warning', title: 'Carrera inválida', text: 'La carrera solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
+            Swal.fire({ icon: 'warning', title: 'Número principal inválido', text: 'El número principal solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
             return;
         }
         if (!soloLetrasNumEsp.test(casa) || casa.length > 50) {
-            Swal.fire({ icon: 'warning', title: 'Casa inválida', text: 'La casa solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
+            Swal.fire({ icon: 'warning', title: 'Número secundario inválido', text: 'El número secundario solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
             return;
         }
         if (!soloLetrasNumEsp.test(piso) || piso.length > 50) {
-            Swal.fire({ icon: 'warning', title: 'Piso inválido', text: 'El piso solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
+            Swal.fire({ icon: 'warning', title: 'Complemento inválido', text: 'El complemento solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
             return;
         }
         if (!/^[0-9]{4,10}$/.test(codigoPostal)) {
@@ -385,15 +383,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 position: 'top-end'
             });
             return;
-        }
-
-        // Validar el formato del número de tarjeta (16 dígitos)
+        }        // Validar el formato del número de tarjeta según el tipo
         const numeroTarjetaSinEspacios = numero.replace(/\s+/g, '');
-        if (!/^\d{16}$/.test(numeroTarjetaSinEspacios)) {
+        const tipoTarjeta = detectCardType(numeroTarjetaSinEspacios);
+        
+        let longitudValida = false;
+        let mensajeError = '';
+        
+        switch(tipoTarjeta) {
+            case 'amex':
+                longitudValida = /^\d{15}$/.test(numeroTarjetaSinEspacios);
+                mensajeError = 'El número de tarjeta American Express debe tener 15 dígitos.';
+                break;
+            case 'diners':
+                longitudValida = /^\d{14}$/.test(numeroTarjetaSinEspacios);
+                mensajeError = 'El número de tarjeta Diners Club debe tener 14 dígitos.';
+                break;            case 'visa':
+            case 'mastercard':
+            case 'maestro':
+            case 'discover':
+            case 'jcb':
+                longitudValida = /^\d{16}$/.test(numeroTarjetaSinEspacios);
+                mensajeError = 'El número de tarjeta debe tener 16 dígitos.';
+                break;
+            default:
+                longitudValida = /^\d{13,19}$/.test(numeroTarjetaSinEspacios);
+                mensajeError = 'El número de tarjeta debe tener entre 13 y 19 dígitos.';
+        }
+        
+        if (!longitudValida) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Número de tarjeta inválido',
-                text: 'El número de tarjeta debe tener 16 dígitos.',
+                text: mensajeError,
                 toast: true,
                 position: 'top-end'
             });
@@ -608,19 +630,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });    cargarPerfil();
     cargarUbicaciones(); // Cargar países, ciudades y departamentos
 
-    const inputNumeroTarjeta = document.getElementById('numeroTarjeta');
-
-    inputNumeroTarjeta.addEventListener('input', (event) => {
+    const inputNumeroTarjeta = document.getElementById('numeroTarjeta');    inputNumeroTarjeta.addEventListener('input', (event) => {
         let valor = event.target.value;
 
         // Eliminar todos los espacios existentes
         valor = valor.replace(/\s+/g, '');
 
-        // Limitar a un máximo de 16 dígitos
-        valor = valor.slice(0, 16);
+        // Detectar tipo de tarjeta y actualizar logo
+        const tipoTarjeta = detectCardType(valor);
+        updateCardLogo(tipoTarjeta);
 
-        // Agregar un espacio cada 4 dígitos
-        valor = valor.replace(/(\d{4})(?=\d)/g, '$1 ');
+        // Si no hay valor, ocultar el logo
+        if (!valor) {
+            updateCardLogo('unknown');
+        }
+
+        // Determinar longitud máxima según el tipo de tarjeta
+        let maxLength = 16; // Por defecto 16 dígitos
+        if (tipoTarjeta === 'amex') {
+            maxLength = 15; // American Express usa 15 dígitos
+        } else if (tipoTarjeta === 'diners') {
+            maxLength = 14; // Diners Club usa 14 dígitos
+        }
+
+        // Limitar según la longitud máxima del tipo de tarjeta
+        valor = valor.slice(0, maxLength);
+
+        // Agregar espacios según el tipo de tarjeta
+        if (tipoTarjeta === 'amex') {
+            // Amex: 4-6-5 (XXXX XXXXXX XXXXX)
+            valor = valor.replace(/(\d{4})(\d{1,6})?(\d{1,5})?/, (match, p1, p2, p3) => {
+                let formatted = p1;
+                if (p2) formatted += ' ' + p2;
+                if (p3) formatted += ' ' + p3;
+                return formatted;
+            });
+        } else {
+            // Visa, Mastercard, Discover, etc.: 4-4-4-4 (XXXX XXXX XXXX XXXX)
+            valor = valor.replace(/(\d{4})(?=\d)/g, '$1 ');
+        }
 
         // Actualizar el valor del input
         event.target.value = valor;
@@ -899,4 +947,110 @@ document.addEventListener('DOMContentLoaded', () => {
     // Llamadas a funciones globales de loader, redes y mapa
     cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
     renderMapaFooter(); // Llamar a la función para renderizar el mapa en el footer
+
+    // ===== FUNCIONALIDAD DE DETECCIÓN DE TARJETAS DE CRÉDITO =====
+      /**
+     * Detecta el tipo de tarjeta de crédito basado en el número
+     * @param {string} cardNumber - Número de tarjeta sin espacios
+     * @returns {string} - Tipo de tarjeta (visa, mastercard, amex, etc.)
+     */    function detectCardType(cardNumber) {
+        // Eliminar espacios y caracteres no numéricos
+        const number = cardNumber.replace(/\D/g, '');
+        
+        // Si no hay número o es muy corto, retornar unknown
+        if (!number || number.length < 2) {
+            return 'unknown';
+        }        // Patrones de los diferentes tipos de tarjetas (más precisos)
+        const cardPatterns = {
+            // Visa: empieza con 4, 13-19 dígitos
+            visa: /^4[0-9]{0,18}$/,
+            // Mastercard: 5100-5599, 2221-2720, y rangos adicionales para débito (238x, 239x, etc.)
+            mastercard: /^(5[1-5][0-9]{0,14}|2(22[1-9]|2[3-9][0-9]|[3-6][0-9][0-9]|7[0-1][0-9]|720)[0-9]{0,12}|23[8-9][0-9]{0,13})$/,
+            // American Express: 34xx o 37xx, 15 dígitos
+            amex: /^3[47][0-9]{0,13}$/,
+            // Discover: 6011, 622126-622925, 644-649, 65, 16 dígitos
+            discover: /^(6011|65[0-9]{0,2}|64[4-9][0-9]?|622(12[6-9]|1[3-9][0-9]|[2-8][0-9][0-9]|91[0-9]|92[0-5]))[0-9]{0,10}$/,
+            // Diners Club: 300-305, 36, 38, 14 dígitos
+            diners: /^(30[0-5][0-9]{0,11}|3[68][0-9]{0,12})$/,
+            // JCB: 2131, 1800, 35xx, 15-16 dígitos
+            jcb: /^(2131|1800|35[0-9]{0,2})[0-9]{0,12}$/,
+            // Maestro: otros rangos específicos (excluyendo los ya cubiertos por Mastercard)
+            maestro: /^(50[0-9]{0,14}|6[0-9]{0,15}|6759[0-9]{0,12}|6761[0-9]{0,12}|6762[0-9]{0,12}|6763[0-9]{0,12})$/
+        };
+          // Verificar cada patrón en orden de prioridad
+        // American Express y Diners tienen prioridad sobre JCB para 3xxx
+        if (cardPatterns.amex.test(number)) return 'amex';
+        if (cardPatterns.diners.test(number)) return 'diners';
+        if (cardPatterns.jcb.test(number)) return 'jcb';
+        if (cardPatterns.visa.test(number)) return 'visa';
+        if (cardPatterns.mastercard.test(number)) return 'mastercard';
+        if (cardPatterns.maestro.test(number)) return 'maestro';
+        if (cardPatterns.discover.test(number)) return 'discover';
+        
+        return 'unknown';
+    }
+      /**
+     * Actualiza el logo de la tarjeta en la interfaz
+     * @param {string} cardType - Tipo de tarjeta detectado
+     */
+    function updateCardLogo(cardType) {
+        const cardLogo = document.getElementById('cardLogo');
+        const numeroTarjetaInput = document.getElementById('numeroTarjeta');
+        
+        // Remover todas las clases de tarjetas
+        cardLogo.className = 'card-logo';
+        
+        // Agregar la clase correspondiente y mostrar el logo
+        if (cardType !== 'unknown') {
+            cardLogo.classList.add(cardType);
+            cardLogo.style.display = 'block';
+            
+            // Actualizar placeholder según el tipo de tarjeta
+            switch(cardType) {
+                case 'amex':
+                    numeroTarjetaInput.placeholder = 'XXXX XXXXXX XXXXX (15 dígitos)';
+                    numeroTarjetaInput.maxLength = 17; // 15 dígitos + 2 espacios
+                    break;
+                case 'diners':
+                    numeroTarjetaInput.placeholder = 'XXXX XXXX XXXX XX (14 dígitos)';
+                    numeroTarjetaInput.maxLength = 17; // 14 dígitos + 3 espacios
+                    break;
+                case 'visa':
+                    numeroTarjetaInput.placeholder = 'XXXX XXXX XXXX XXXX (Visa - 16 dígitos)';
+                    numeroTarjetaInput.maxLength = 19; // 16 dígitos + 3 espacios
+                    break;                case 'mastercard':
+                    numeroTarjetaInput.placeholder = 'XXXX XXXX XXXX XXXX (Mastercard - 16 dígitos)';
+                    numeroTarjetaInput.maxLength = 19; // 16 dígitos + 3 espacios
+                    break;
+                case 'maestro':
+                    numeroTarjetaInput.placeholder = 'XXXX XXXX XXXX XXXX (Maestro - 16 dígitos)';
+                    numeroTarjetaInput.maxLength = 19; // 16 dígitos + 3 espacios
+                    break;
+                case 'discover':
+                    numeroTarjetaInput.placeholder = 'XXXX XXXX XXXX XXXX (Discover - 16 dígitos)';
+                    numeroTarjetaInput.maxLength = 19; // 16 dígitos + 3 espacios
+                    break;
+                case 'jcb':
+                    numeroTarjetaInput.placeholder = 'XXXX XXXX XXXX XXXX (JCB - 16 dígitos)';
+                    numeroTarjetaInput.maxLength = 19; // 16 dígitos + 3 espacios
+                    break;
+                default:
+                    numeroTarjetaInput.placeholder = 'XXXX XXXX XXXX XXXX (16 dígitos)';
+                    numeroTarjetaInput.maxLength = 19;
+            }
+        } else {
+            cardLogo.style.display = 'none';
+            numeroTarjetaInput.placeholder = 'Ingrese el número de su tarjeta';
+            numeroTarjetaInput.maxLength = 23; // Máximo para cualquier tipo
+        }
+    }
+
+    // ===== EVENTOS DE FORMULARIOS =====
+
+    // Evento para detectar cambios en el número de tarjeta y actualizar el logo
+    formTarjeta.addEventListener('input', (event) => {
+        const numeroTarjeta = document.getElementById('numeroTarjeta').value;
+        const tipoTarjeta = detectCardType(numeroTarjeta);
+        updateCardLogo(tipoTarjeta);
+    });
 });

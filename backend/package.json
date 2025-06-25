@@ -4,6 +4,9 @@
   "main": "index.html",
   "scripts": {
     "start": "node server.js",
+    "dev": "node server.js",
+    "prod": "NODE_ENV=production node server.js",
+    "check-config": "node check-config.js",
     "obfuscate": "node obfuscate-js.js",
     "obfuscate-bat": "obfuscate-js.bat",
     "restore-js": "restore-js.bat",
@@ -11,6 +14,7 @@
     "migrate-passwords": "node migrate-passwords.js"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "compression": "^1.8.0",
     "cors": "^2.8.5",

@@ -19,6 +19,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# Local configuration files
+config.local.js
+
 # IDEs and editors
 .idea/
 .vscode/

@@ -780,3 +780,62 @@ input:checked + .slider:before {
     background-color: #c82333;
     transform: translateY(-2px);
 }
+
+/* Estilos para logos de tarjetas de crédito */
+/* Contenedor para input con logo de tarjeta */
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon input {
+    width: 100%;
+    padding-right: 40px; /* Espacio para el logo */
+}
+
+.card-logo {
+    position: absolute;
+    right: 10px;
+    width: 30px;
+    height: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: none;
+}
+
+.card-logo.visa {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA4MCA1MCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjUwIiByeD0iNSIgZmlsbD0id2hpdGUiLz4KPHRleHQgeD0iNDAiIHk9IjMwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMTQzNENCIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WSVNBPC90ZXh0Pgo8L3N2Zz4=');
+    display: block;
+}
+
+.card-logo.mastercard {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA4MCA1MCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjUwIiByeD0iNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMzAiIGN5PSIyNSIgcj0iMTUiIGZpbGw9IiNGRjUxNTYiLz4KPGNpcmNsZSBjeD0iNTAiIGN5PSIyNSIgcj0iMTUiIGZpbGw9IiNGRkI0MDAiLz4KPC9zdmc+');
+    display: block;
+}
+
+.card-logo.amex {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA4MCA1MCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjUwIiByeD0iNSIgZmlsbD0iIzAwNzNFNiIvPgo8dGV4dCB4PSI0MCIgeT0iMzAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5BTUVYPC90ZXh0Pgo8L3N2Zz4=');
+    display: block;
+}
+
+.card-logo.discover {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA4MCA1MCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjUwIiByeD0iNSIgZmlsbD0id2hpdGUiLz4KPGVsbGlwc2UgY3g9IjU1IiBjeT0iMjUiIHJ4PSIyMCIgcnk9IjE1IiBmaWxsPSIjRkY2RDAwIi8+Cjx0ZXh0IHg9IjI1IiB5PSIzMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzAwMCI+RElTQ09WRVI8L3RleHQ+Cjwvc3ZnPg==');
+    display: block;
+}
+
+.card-logo.diners {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA4MCA1MCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjUwIiByeD0iNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMjgiIGN5PSIyNSIgcj0iMTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwNjZBMSIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxjaXJjbGUgY3g9IjUyIiBjeT0iMjUiIHI9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDY2QTEiIHN0cm9rZS13aWR0aD0iMyIvPgo8L3N2Zz4=');
+    display: block;
+}
+
+.card-logo.jcb {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA4MCA1MCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjUwIiByeD0iNSIgZmlsbD0id2hpdGUiLz4KPHN2ZyB4PSIxNSIgeT0iMTAiIHdpZHRoPSI1MCIgaGVpZ2h0PSIzMCI+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxNSIgaGVpZ2h0PSIzMCIgZmlsbD0iIzAwNjZBMSIvPgo8cmVjdCB4PSIxNyIgeT0iMCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjMwIiBmaWxsPSIjRkYwMDAwIi8+CjxyZWN0IHg9IjM0IiB5PSIwIiB3aWR0aD0iMTUiIGhlaWdodD0iMzAiIGZpbGw9IiMwMUE2MDAiLz4KPC9zdmc+Cjwvc3ZnPg==');
+    display: block;
+}
+
+.card-logo.maestro {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA4MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjUwIiByeD0iNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMjgiIGN5PSIyNSIgcj0iMTIiIGZpbGw9IiMwMDY2QjIiLz4KPGNpcmNsZSBjeD0iNTIiIGN5PSIyNSIgcj0iMTIiIGZpbGw9IiNFRDIwMjQiLz4KPHBhdGggZD0iTTQwIDEzVjM3IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4=');
+    display: block;
+}
