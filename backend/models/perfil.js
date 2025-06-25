@@ -46,6 +46,7 @@ const PerfilSchema = new mongoose.Schema({
     tarjeta: [TarjetaSchema],
     carrito: [carritoSchema],
     registroCompra: [RegistroCompra],    rol: { type: String, default: "usuario" },
+    isVerified: { type: Boolean, default: false },
     token: { type: String, default: "" },
     tokenExpira: { type: Date },
     // Campos para Google OAuth

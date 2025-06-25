@@ -218,8 +218,7 @@ async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultar
         });
         ocultarLoader();
         return;
-    }
-    try {
+    }    try {
         const respuesta = await fetch('/api/crear-cuenta', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -227,14 +226,66 @@ async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultar
         });
         const data = await respuesta.json();
         if (respuesta.ok) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Cuenta creada',
-                text: 'Tu cuenta ha sido creada exitosamente.',
-                toast: true,
-                position: 'top-end'
-            });
-            iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn, crearCuentaBtn, hideModal, formSesion, btnSesion, mostrarPerfil, cerrarSesion, openCRUD, perfiles, carrito});
+            if (data.requiresVerification) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Cuenta creada - Verificación requerida',
+                    html: `
+                        <p>Tu cuenta ha sido creada exitosamente.</p>
+                        <p><strong>Se ha enviado un correo de verificación a:</strong></p>
+                        <p style="color: #007bff; font-weight: bold;">${correo}</p>
+                        <p>Por favor, revisa tu correo y haz clic en el enlace de verificación para activar tu cuenta.</p>
+                        <p><small>Si no ves el correo, revisa tu carpeta de spam.</small></p>
+                        <button id="reenviar-verificacion" style="margin-top: 10px; padding: 8px 16px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            Reenviar correo de verificación
+                        </button>
+                    `,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Entendido',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        const btnReenviar = document.getElementById('reenviar-verificacion');
+                        btnReenviar.onclick = async () => {
+                            btnReenviar.disabled = true;
+                            btnReenviar.textContent = 'Enviando...';
+                            
+                            try {
+                                const respuestaReenvio = await fetch('/api/reenviar-verificacion', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ correo })
+                                });
+                                const dataReenvio = await respuestaReenvio.json();
+                                
+                                if (respuestaReenvio.ok) {
+                                    btnReenviar.textContent = '✓ Enviado';
+                                    btnReenviar.style.backgroundColor = '#28a745';
+                                } else {
+                                    btnReenviar.textContent = 'Error al enviar';
+                                    btnReenviar.style.backgroundColor = '#dc3545';
+                                }
+                            } catch (error) {
+                                btnReenviar.textContent = 'Error al enviar';
+                                btnReenviar.style.backgroundColor = '#dc3545';
+                            }
+                            
+                            setTimeout(() => {
+                                btnReenviar.disabled = false;
+                                btnReenviar.textContent = 'Reenviar correo de verificación';
+                                btnReenviar.style.backgroundColor = '#28a745';
+                            }, 3000);
+                        };
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Cuenta creada',
+                    text: 'Tu cuenta ha sido creada exitosamente.',
+                    toast: true,
+                    position: 'top-end'
+                });
+            }
             hideModal();
         } else {
             Swal.fire({
@@ -282,8 +333,7 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
 
     const ipResponse = await fetch('https://api.ipify.org?format=json');
     const ipData = await ipResponse.json();
-    const ip = ipData.ip;
-    try {
+    const ip = ipData.ip;    try {
         const respuesta = await fetch('/api/iniciar-sesion', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -300,7 +350,8 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                 // Verificación de IP para admin
                 const ipAdminPermitida = await fetch(`/api/ips/${ip}`);
                 if (ipAdminPermitida.ok) {
-                    const ipPermitidaData = await ipAdminPermitida.json();                    if (ipPermitidaData && !ipPermitidaData.error) {
+                    const ipPermitidaData = await ipAdminPermitida.json();                    
+                    if (ipPermitidaData && !ipPermitidaData.error) {
                         setTimeout(() => {
                             Swal.fire({
                                 icon: 'success',
@@ -407,19 +458,71 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
             listaSesion.appendChild(cerrarSesionLi);
             if (carrito) carrito.style.display = 'block';
             hideModal();
-            if (formSesion) formSesion.reset();
-            if (typeof perfiles === 'function') perfiles();        } else {
-            setTimeout(() => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.error,
-                    toast: true,
-                    position: 'top-end',
-                    timer: 4000,
-                    showConfirmButton: false
-                });
-            }, 100);
+            if (formSesion) formSesion.reset();            if (typeof perfiles === 'function') perfiles();
+        } else {
+            if (data.requiresVerification) {
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cuenta no verificada',
+                        html: `
+                            <p>Tu cuenta no ha sido verificada aún.</p>
+                            <p>Por favor, revisa tu correo electrónico y haz clic en el enlace de verificación.</p>
+                            <p><small>Si no ves el correo, revisa tu carpeta de spam.</small></p>
+                            <button id="reenviar-verificacion-login" style="margin-top: 10px; padding: 8px 16px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                Reenviar correo de verificación
+                            </button>
+                        `,
+                        showConfirmButton: true,
+                        confirmButtonText: 'Entendido',
+                        didOpen: () => {
+                            const btnReenviar = document.getElementById('reenviar-verificacion-login');
+                            btnReenviar.onclick = async () => {
+                                btnReenviar.disabled = true;
+                                btnReenviar.textContent = 'Enviando...';
+                                
+                                try {
+                                    const respuestaReenvio = await fetch('/api/reenviar-verificacion', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ correo })
+                                    });
+                                    const dataReenvio = await respuestaReenvio.json();
+                                    
+                                    if (respuestaReenvio.ok) {
+                                        btnReenviar.textContent = '✓ Enviado';
+                                        btnReenviar.style.backgroundColor = '#28a745';
+                                    } else {
+                                        btnReenviar.textContent = 'Error al enviar';
+                                        btnReenviar.style.backgroundColor = '#dc3545';
+                                    }
+                                } catch (error) {
+                                    btnReenviar.textContent = 'Error al enviar';
+                                    btnReenviar.style.backgroundColor = '#dc3545';
+                                }
+                                
+                                setTimeout(() => {
+                                    btnReenviar.disabled = false;
+                                    btnReenviar.textContent = 'Reenviar correo de verificación';
+                                    btnReenviar.style.backgroundColor = '#28a745';
+                                }, 3000);
+                            };
+                        }
+                    });
+                }, 100);
+            } else {
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.error,
+                        toast: true,
+                        position: 'top-end',
+                        timer: 4000,
+                        showConfirmButton: false
+                    });
+                }, 100);
+            }
         }
     } catch (error) {
         console.error('Error al iniciar sesión:', error);

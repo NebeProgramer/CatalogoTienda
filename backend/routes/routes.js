@@ -7,6 +7,51 @@ const TermsAndConditions = require('./models/termsAndConditions');
 const Moneda = require('./models/Moneda');
 const Ubicacion = require('./models/Ubicacion');
 const Categoria = require('../models/categoria');
+const nodemailer = require('nodemailer');
+const { v4: uuidv4 } = require('uuid');
+
+// Configuración del transporter de nodemailer
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER || 'tu-correo@gmail.com',
+        pass: process.env.EMAIL_PASS || 'tu-contraseña-app'
+    }
+});
+
+// Función para enviar correo de verificación
+async function enviarCorreoVerificacion(correo, token) {
+    const urlVerificacion = `${process.env.BASE_URL || 'http://localhost:3000'}/verificar-correo?token=${token}`;
+    
+    const mailOptions = {
+        from: process.env.EMAIL_USER || 'andorpapi@gmail.com',
+        to: correo,
+        subject: 'Verificación de cuenta - Catálogo Tienda',
+        html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #333;">¡Bienvenido a Catálogo Tienda!</h2>
+                <p>Gracias por registrarte en nuestra plataforma. Para completar tu registro, necesitamos verificar tu dirección de correo electrónico.</p>
+                <p>Haz clic en el siguiente botón para verificar tu cuenta:</p>
+                <a href="${urlVerificacion}" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; margin: 20px 0;">Verificar mi cuenta</a>
+                <p>O copia y pega este enlace en tu navegador:</p>
+                <p style="word-break: break-all; color: #666;">${urlVerificacion}</p>
+                <p><strong>Nota:</strong> Este enlace expirará en 24 horas por seguridad.</p>
+                <p>Si no creaste esta cuenta, puedes ignorar este correo.</p>
+                <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+                <p style="color: #666; font-size: 12px;">Este es un correo automático, por favor no respondas a este mensaje.</p>
+            </div>
+        `
+    };
+    
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Correo de verificación enviado a:', correo);
+        return true;
+    } catch (error) {
+        console.error('Error al enviar correo de verificación:', error);
+        return false;
+    }
+}
 
 // Ruta para obtener productos
 router.get('/productos', async (req, res) => {
@@ -34,9 +79,44 @@ router.get('/monedas', async (req, res) => {
 router.post('/crear-cuenta', async (req, res) => {
     try {
         const { correo, contrasena } = req.body;
-        const nuevoUsuario = new Usuario({ correo, contrasena });
+        
+        // Verificar si el usuario ya existe
+        const usuarioExistente = await Usuario.findOne({ correo });
+        if (usuarioExistente) {
+            return res.status(400).json({ error: 'Ya existe una cuenta con este correo electrónico.' });
+        }
+        
+        // Generar token de verificación
+        const tokenVerificacion = uuidv4();
+        const tokenExpira = new Date();
+        tokenExpira.setHours(tokenExpira.getHours() + 24); // Expira en 24 horas
+        
+        // Crear usuario con verificación pendiente
+        const nuevoUsuario = new Usuario({ 
+            correo, 
+            contrasena,
+            rol: 'no verificado',
+            isVerified: false,
+            token: tokenVerificacion,
+            tokenExpira: tokenExpira
+        });
+        
         await nuevoUsuario.save();
-        res.status(201).json({ message: 'Cuenta creada exitosamente' });
+        
+        // Enviar correo de verificación
+        const correoEnviado = await enviarCorreoVerificacion(correo, tokenVerificacion);
+        
+        if (correoEnviado) {
+            res.status(201).json({ 
+                message: 'Cuenta creada exitosamente. Se ha enviado un correo de verificación a tu dirección de correo electrónico.',
+                requiresVerification: true
+            });
+        } else {
+            res.status(201).json({ 
+                message: 'Cuenta creada exitosamente, pero hubo un problema al enviar el correo de verificación. Contacta al soporte.',
+                requiresVerification: true
+            });
+        }
     } catch (error) {
         console.error('Error al crear la cuenta:', error);
         res.status(500).json({ error: 'Error al crear la cuenta.' });
@@ -48,13 +128,163 @@ router.post('/iniciar-sesion', async (req, res) => {
     try {
         const { correo, contrasena } = req.body;
         const usuario = await Usuario.findOne({ correo, contrasena });
+        
         if (!usuario) {
-            return res.status(404).json({ error: 'Usuario no encontrado.' });
+            return res.status(404).json({ error: 'Credenciales incorrectas.' });
         }
-        res.json({ user: { correo: usuario.correo, nombre: usuario.nombre, rol: usuario.rol } });
+        
+        // Verificar si la cuenta está verificada
+        if (!usuario.isVerified) {
+            return res.status(403).json({ 
+                error: 'Tu cuenta no ha sido verificada. Por favor, revisa tu correo electrónico y haz clic en el enlace de verificación.',
+                requiresVerification: true
+            });
+        }
+        
+        res.json({ 
+            user: { 
+                correo: usuario.correo, 
+                nombre: usuario.nombre, 
+                rol: usuario.rol 
+            } 
+        });
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
         res.status(500).json({ error: 'Error al iniciar sesión.' });
+    }
+});
+
+// Ruta para verificar correo electrónico
+router.get('/verificar-correo', async (req, res) => {
+    try {
+        const { token } = req.query;
+        
+        if (!token) {
+            return res.status(400).send(`
+                <html>
+                    <head>
+                        <title>Error de Verificación</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                            .error { color: #d32f2f; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1 class="error">Token de verificación faltante</h1>
+                        <p>El enlace de verificación es inválido.</p>
+                        <a href="/">Volver al inicio</a>
+                    </body>
+                </html>
+            `);
+        }
+        
+        // Buscar usuario por token
+        const usuario = await Usuario.findOne({ 
+            token: token,
+            tokenExpira: { $gt: new Date() } // Token no expirado
+        });
+        
+        if (!usuario) {
+            return res.status(400).send(`
+                <html>
+                    <head>
+                        <title>Error de Verificación</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                            .error { color: #d32f2f; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1 class="error">Token de verificación inválido o expirado</h1>
+                        <p>El enlace de verificación ha expirado o no es válido.</p>
+                        <p>Por favor, solicita un nuevo correo de verificación.</p>
+                        <a href="/">Volver al inicio</a>
+                    </body>
+                </html>
+            `);
+        }
+        
+        // Activar la cuenta
+        usuario.isVerified = true;
+        usuario.rol = 'usuario';
+        usuario.token = '';
+        usuario.tokenExpira = null;
+        await usuario.save();
+        
+        res.send(`
+            <html>
+                <head>
+                    <title>Cuenta Verificada</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                        .success { color: #2e7d32; }
+                        .btn { display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; margin: 20px 0; }
+                    </style>
+                </head>
+                <body>
+                    <h1 class="success">¡Cuenta verificada exitosamente!</h1>
+                    <p>Tu cuenta ha sido activada. Ya puedes iniciar sesión y disfrutar de todos nuestros servicios.</p>
+                    <a href="/" class="btn">Iniciar Sesión</a>
+                </body>
+            </html>
+        `);
+        
+    } catch (error) {
+        console.error('Error al verificar correo:', error);
+        res.status(500).send(`
+            <html>
+                <head>
+                    <title>Error del Servidor</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                        .error { color: #d32f2f; }
+                    </style>
+                </head>
+                <body>
+                    <h1 class="error">Error del servidor</h1>
+                    <p>Ocurrió un error al verificar tu cuenta. Por favor, inténtalo más tarde.</p>
+                    <a href="/">Volver al inicio</a>
+                </body>
+            </html>
+        `);
+    }
+});
+
+// Ruta para reenviar correo de verificación
+router.post('/reenviar-verificacion', async (req, res) => {
+    try {
+        const { correo } = req.body;
+        
+        const usuario = await Usuario.findOne({ correo });
+        if (!usuario) {
+            return res.status(404).json({ error: 'No se encontró una cuenta con este correo electrónico.' });
+        }
+        
+        if (usuario.isVerified) {
+            return res.status(400).json({ error: 'Esta cuenta ya está verificada.' });
+        }
+        
+        // Generar nuevo token de verificación
+        const nuevoToken = uuidv4();
+        const nuevaExpiracion = new Date();
+        nuevaExpiracion.setHours(nuevaExpiracion.getHours() + 24);
+        
+        usuario.token = nuevoToken;
+        usuario.tokenExpira = nuevaExpiracion;
+        await usuario.save();
+        
+        // Enviar nuevo correo de verificación
+        const correoEnviado = await enviarCorreoVerificacion(correo, nuevoToken);
+        
+        if (correoEnviado) {
+            res.json({ message: 'Se ha enviado un nuevo correo de verificación a tu dirección de correo electrónico.' });
+        } else {
+            res.status(500).json({ error: 'Error al enviar el correo de verificación. Inténtalo más tarde.' });
+        }
+        
+    } catch (error) {
+        console.error('Error al reenviar verificación:', error);
+        res.status(500).json({ error: 'Error al procesar la solicitud.' });
     }
 });
 

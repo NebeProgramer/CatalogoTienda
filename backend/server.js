@@ -325,8 +325,16 @@ app.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/' }),
     (req, res) => {        // *** NUEVO: Reiniciar contador de rate limit para esta IP al tener login exitoso con Google ***
         try {
-            // En versiones recientes de express-rate-limit, simplemente loggeamos el éxito
-            console.log(`Login exitoso con Google para IP: ${req.ip} - Rate limit será reseteado automáticamente`);
+            const key = req.ip; // Usar directamente la IP como clave
+            // Resetear usando el método correcto del rate limiter
+            if (authLimiter.resetKey) {
+                authLimiter.resetKey(key);
+            } else if (authLimiter.store && authLimiter.store.resetKey) {
+                authLimiter.store.resetKey(key);
+            } else if (authLimiter.store && authLimiter.store.delete) {
+                authLimiter.store.delete(key);
+            }
+            console.log(`Rate limit reset para IP: ${req.ip} después de login exitoso con Google`);
         } catch (resetError) {
             console.error('Error al resetear rate limit para Google OAuth:', resetError);
         }
@@ -582,6 +590,69 @@ app.put('/api/productos/:id/comentarios/:comentarioId', async (req, res) => {
 
 // Endpoints de usuarios
 
+// Configuración del transporter de nodemailer
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER || 'catalogotiendauno@gmail.com',
+        pass: process.env.EMAIL_PASS || decode('cXVraCBpcG5uIHJtaGcgcXhzcA==')
+    }
+});
+
+// Función para enviar correo de verificación
+async function enviarCorreoVerificacion(correo, token) {
+    const urlVerificacion = `${process.env.BASE_URL || 'http://localhost:3000'}/verificar-correo?token=${token}`;
+    
+    const mailOptions = {
+        from: process.env.EMAIL_USER || 'catalogotiendauno@gmail.com',
+        to: correo,
+        subject: 'Verificación de cuenta - Catálogo Tienda',        html: `
+            <div style="background-color:#fff5e6; font-family:sans-serif; padding:32px; border-radius:12px; max-width:600px; margin:auto; border:1px solid #ffb700;">
+                <div style="background-color:#ffb700; color:#222; padding:20px; border-radius:10px 10px 0 0; text-align:center;">
+                    <h2 style="margin:0; font-size:2rem;">¡Bienvenido a Catálogo Tienda!</h2>
+                </div>
+                <div style="padding:24px;">
+                    <p style="font-size:1.1rem; color:#333;">Hola,</p>
+                    <p style="font-size:1.1rem; color:#333;">
+                        Gracias por registrarte en nuestra plataforma. Para completar tu registro, necesitamos verificar tu dirección de correo electrónico.
+                    </p>
+                    <p style="font-size:1.1rem; color:#333;">
+                        Haz clic en el siguiente botón para verificar tu cuenta:
+                    </p>
+                    <div style="text-align:center; margin:32px 0;">
+                        <a href="${urlVerificacion}" style="background-color:#ffb700; color:#222; text-decoration:none; font-weight:bold; padding:14px 32px; border-radius:6px; font-size:1.1rem; display:inline-block; border:2px solid #b88400;">
+                            Verificar mi cuenta
+                        </a>
+                    </div>
+                    <p style="font-size:1rem; color:#555;">
+                        O copia y pega este enlace en tu navegador:<br>
+                        <span style="color:#b88400; word-break:break-all;">${urlVerificacion}</span>
+                    </p>
+                    <p style="font-size:0.95rem; color:#888;">
+                        Este enlace expirará en 24 horas por seguridad.
+                    </p>
+                    <p style="font-size:1.1rem; color:#333;">
+                        Si no creaste esta cuenta, puedes ignorar este correo.
+                    </p>
+                    <hr style="border:none; border-top:1px solid #ffb700; margin:32px 0;">
+                    <p style="font-size:0.95rem; color:#b88400; text-align:center;">
+                        © 2024 Mi Catálogo de Productos
+                    </p>
+                </div>
+            </div>
+        `
+    };
+    
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Correo de verificación enviado a:', correo);
+        return true;
+    } catch (error) {
+        console.error('Error al enviar correo de verificación:', error);
+        return false;
+    }
+}
+
 // Endpoint para crear una cuenta de usuario
 app.post('/api/crear-cuenta', async (req, res) => {
     try {
@@ -593,16 +664,21 @@ app.post('/api/crear-cuenta', async (req, res) => {
 
         const usuarioExistente = await Usuario.findOne({ correo });
         if (usuarioExistente) {
-            return res.status(400).json({ error: 'El usuario ya existe' });
+            return res.status(400).json({ error: 'Ya existe una cuenta con este correo electrónico.' });
         }
 
         // Cifrar la contraseña antes de guardarla
-        const saltRounds = 12; // Número de rondas de sal (más rondas = más seguro pero más lento)
+        const saltRounds = 12;
         const hashedPassword = await bcrypt.hash(contrasena, saltRounds);
+
+        // Generar token de verificación
+        const tokenVerificacion = uuidv4();
+        const tokenExpira = new Date();
+        tokenExpira.setHours(tokenExpira.getHours() + 24); // Expira en 24 horas
 
         const newUser = new Usuario({
             correo,
-            contrasena: hashedPassword, // Guardar la contraseña cifrada
+            contrasena: hashedPassword,
             nombre: "",
             apellido: "",
             telefono: "",
@@ -610,11 +686,29 @@ app.post('/api/crear-cuenta', async (req, res) => {
             descripcion: "",
             tarjeta: [],
             carrito: [],
-            registroCompras: [] // Asegurarse de inicializar este campo
+            registroCompras: [],
+            rol: 'no verificado',
+            isVerified: false,
+            token: tokenVerificacion,
+            tokenExpira: tokenExpira
         });
 
         await newUser.save();
-        res.status(201).json({ message: 'Cuenta creada exitosamente' });
+
+        // Enviar correo de verificación
+        const correoEnviado = await enviarCorreoVerificacion(correo, tokenVerificacion);
+
+        if (correoEnviado) {
+            res.status(201).json({ 
+                message: 'Cuenta creada exitosamente. Se ha enviado un correo de verificación a tu dirección de correo electrónico.',
+                requiresVerification: true
+            });
+        } else {
+            res.status(201).json({ 
+                message: 'Cuenta creada exitosamente, pero hubo un problema al enviar el correo de verificación. Contacta al soporte.',
+                requiresVerification: true
+            });
+        }
     } catch (error) {
         console.error('Error al crear la cuenta:', error);
         res.status(500).json({ error: 'Error al crear la cuenta.' });
@@ -630,15 +724,24 @@ app.post('/api/iniciar-sesion', authLimiter, async (req, res) => {
         }
         const usuario = await Usuario.findOne({ correo });
         if (!usuario) {
-            return res.status(404).json({ error: 'Usuario no encontrado.' });
+            return res.status(404).json({ error: 'Credenciales incorrectas.' });
         }
         
         // Verificar la contraseña cifrada
         const passwordMatch = await bcrypt.compare(contrasena, usuario.contrasena);
         if (!passwordMatch) {
-            return res.status(401).json({ error: 'Contraseña incorrecta.' });
+            return res.status(401).json({ error: 'Credenciales incorrectas.' });
         }
-          // Si es admin, verificar IP
+
+        // Verificar si la cuenta está verificada
+        if (!usuario.isVerified) {
+            return res.status(403).json({ 
+                error: 'Tu cuenta no ha sido verificada. Por favor, revisa tu correo electrónico y haz clic en el enlace de verificación.',
+                requiresVerification: true
+            });
+        }
+
+        // Si es admin, verificar IP
         if (usuario.rol === 'admin') {
             // Obtener IP pública del request
             
@@ -647,12 +750,19 @@ app.post('/api/iniciar-sesion', authLimiter, async (req, res) => {
             const ipRegistrada = await IPPermitida.findOne({ direccionIP: ip });
             if (!ipRegistrada) {
                 return res.status(403).json({ error: 'Acceso denegado: la IP no está registrada para administradores.' });
-            }
-        }        // *** NUEVO: Reiniciar contador de rate limit para esta IP al tener login exitoso ***
+            }        }        // *** NUEVO: Reiniciar contador de rate limit para esta IP al tener login exitoso ***
         try {
-            // En versiones recientes de express-rate-limit, simplemente loggeamos el éxito
-            // El rate limit se resetea automáticamente después del windowMs
-            console.log(`Login exitoso para IP: ${req.ip} - Rate limit será reseteado automáticamente`);
+            // Obtener la store del rate limiter (que usa MemoryStore por defecto)
+            const key = req.ip; // Usar directamente la IP como clave
+            // Resetear usando el método correcto del rate limiter
+            if (authLimiter.resetKey) {
+                authLimiter.resetKey(key);
+            } else if (authLimiter.store && authLimiter.store.resetKey) {
+                authLimiter.store.resetKey(key);
+            } else if (authLimiter.store && authLimiter.store.delete) {
+                authLimiter.store.delete(key);
+            }
+            console.log(`Rate limit reset para IP: ${req.ip} después de login exitoso`);
         } catch (resetError) {
             // Si hay error al resetear, solo loggearlo pero no fallar el login
             console.error('Error al resetear rate limit:', resetError);
@@ -661,7 +771,140 @@ app.post('/api/iniciar-sesion', authLimiter, async (req, res) => {
         res.status(200).json({ user: usuario });
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
-        res.status(500).json({ error: 'Error al iniciar sesión.' });
+        res.status(500).json({ error: 'Error al iniciar sesión.' });    }
+});
+
+// Endpoint para verificar correo electrónico
+app.get('/verificar-correo', async (req, res) => {
+    try {
+        const { token } = req.query;
+        
+        if (!token) {
+            return res.status(400).send(`
+                <html>
+                    <head>
+                        <title>Error de Verificación</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                            .error { color: #d32f2f; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1 class="error">Token de verificación faltante</h1>
+                        <p>El enlace de verificación es inválido.</p>
+                        <a href="/">Volver al inicio</a>
+                    </body>
+                </html>
+            `);
+        }
+        
+        // Buscar usuario por token
+        const usuario = await Usuario.findOne({ 
+            token: token,
+            tokenExpira: { $gt: new Date() } // Token no expirado
+        });
+        
+        if (!usuario) {
+            return res.status(400).send(`
+                <html>
+                    <head>
+                        <title>Error de Verificación</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                            .error { color: #d32f2f; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1 class="error">Token de verificación inválido o expirado</h1>
+                        <p>El enlace de verificación ha expirado o no es válido.</p>
+                        <p>Por favor, solicita un nuevo correo de verificación.</p>
+                        <a href="/">Volver al inicio</a>
+                    </body>
+                </html>
+            `);
+        }
+        
+        // Activar la cuenta
+        usuario.isVerified = true;
+        usuario.rol = 'usuario';
+        usuario.token = '';
+        usuario.tokenExpira = null;
+        await usuario.save();
+        
+        res.send(`
+            <html>
+                <head>
+                    <title>Cuenta Verificada</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                        .success { color: #2e7d32; }
+                        .btn { display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; margin: 20px 0; }
+                    </style>
+                </head>
+                <body>
+                    <h1 class="success">¡Cuenta verificada exitosamente!</h1>
+                    <p>Tu cuenta ha sido activada. Ya puedes iniciar sesión y disfrutar de todos nuestros servicios.</p>
+                    <a href="/" class="btn">Iniciar Sesión</a>
+                </body>
+            </html>
+        `);
+        
+    } catch (error) {
+        console.error('Error al verificar correo:', error);
+        res.status(500).send(`
+            <html>
+                <head>
+                    <title>Error del Servidor</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                        .error { color: #d32f2f; }
+                    </style>
+                </head>
+                <body>
+                    <h1 class="error">Error del servidor</h1>
+                    <p>Ocurrió un error al verificar tu cuenta. Por favor, inténtalo más tarde.</p>
+                    <a href="/">Volver al inicio</a>
+                </body>
+            </html>
+        `);
+    }
+});
+
+// Endpoint para reenviar correo de verificación
+app.post('/api/reenviar-verificacion', async (req, res) => {
+    try {
+        const { correo } = req.body;
+        
+        const usuario = await Usuario.findOne({ correo });
+        if (!usuario) {
+            return res.status(404).json({ error: 'No se encontró una cuenta con este correo electrónico.' });
+        }
+        
+        if (usuario.isVerified) {
+            return res.status(400).json({ error: 'Esta cuenta ya está verificada.' });
+        }
+        
+        // Generar nuevo token de verificación
+        const nuevoToken = uuidv4();
+        const nuevaExpiracion = new Date();
+        nuevaExpiracion.setHours(nuevaExpiracion.getHours() + 24);
+        
+        usuario.token = nuevoToken;
+        usuario.tokenExpira = nuevaExpiracion;
+        await usuario.save();
+        
+        // Enviar nuevo correo de verificación
+        const correoEnviado = await enviarCorreoVerificacion(correo, nuevoToken);
+        
+        if (correoEnviado) {
+            res.json({ message: 'Se ha enviado un nuevo correo de verificación a tu dirección de correo electrónico.' });
+        } else {
+            res.status(500).json({ error: 'Error al enviar el correo de verificación. Inténtalo más tarde.' });
+        }
+        
+    } catch (error) {
+        console.error('Error al reenviar verificación:', error);
+        res.status(500).json({ error: 'Error al procesar la solicitud.' });
     }
 });
 
@@ -1935,346 +2178,7 @@ app.post('/api/perfil/foto', uploadPerfiles.single('fotoPerfil'), async (req, re
 // ===== RUTAS PARA GESTIÓN DE IDIOMAS =====
 
 // Obtener todos los idiomas activos
-app.get('/api/idiomas', async (req, res) => {
-    try {
-        const idiomas = await Idioma.find({ activo: true }).sort({ nombre: 1 });
-        res.status(200).json(idiomas);
-    } catch (error) {
-        console.error('Error al obtener los idiomas:', error);
-        res.status(500).json({ error: 'Error al obtener los idiomas.' });
-    }
-});
 
-// Obtener todos los idiomas (incluye inactivos) - Solo para admin
-app.get('/api/idiomas/todos', async (req, res) => {
-    try {
-        const idiomas = await Idioma.find().sort({ nombre: 1 });
-        res.status(200).json(idiomas);
-    } catch (error) {
-        console.error('Error al obtener todos los idiomas:', error);
-        res.status(500).json({ error: 'Error al obtener todos los idiomas.' });
-    }
-});
 
-// Crear nuevo idioma
-app.post('/api/idiomas', async (req, res) => {
-    try {
-        const { codigo, nombre, nombreNativo, bandera, predeterminado } = req.body;
-        
-        if (!codigo || !nombre || !nombreNativo) {
-            return res.status(400).json({ error: 'Código, nombre y nombre nativo son obligatorios.' });
-        }
 
-        // Validar que el código no exista
-        const idiomaExistente = await Idioma.findOne({ codigo });
-        if (idiomaExistente) {
-            return res.status(400).json({ error: 'Ya existe un idioma con este código.' });
-        }
 
-        const nuevoIdioma = new Idioma({
-            codigo,
-            nombre,
-            nombreNativo,
-            bandera,
-            predeterminado: predeterminado || false
-        });
-
-        await nuevoIdioma.save();
-
-        // Si no hay traducciones base para este idioma, crear algunas básicas
-        await crearTraduccionesBase(codigo);
-
-        res.status(201).json({ message: 'Idioma creado correctamente.', idioma: nuevoIdioma });
-    } catch (error) {
-        console.error('Error al crear el idioma:', error);
-        res.status(500).json({ error: 'Error al crear el idioma.' });
-    }
-});
-
-// Actualizar idioma
-app.put('/api/idiomas/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { nombre, nombreNativo, bandera, activo, predeterminado } = req.body;
-
-        const idioma = await Idioma.findById(id);
-        if (!idioma) {
-            return res.status(404).json({ error: 'Idioma no encontrado.' });
-        }
-
-        if (nombre) idioma.nombre = nombre;
-        if (nombreNativo) idioma.nombreNativo = nombreNativo;
-        if (bandera !== undefined) idioma.bandera = bandera;
-        if (activo !== undefined) idioma.activo = activo;
-        if (predeterminado !== undefined) idioma.predeterminado = predeterminado;
-
-        await idioma.save();
-        res.status(200).json({ message: 'Idioma actualizado correctamente.', idioma });
-    } catch (error) {
-        console.error('Error al actualizar el idioma:', error);
-        res.status(500).json({ error: 'Error al actualizar el idioma.' });
-    }
-});
-
-// Eliminar idioma
-app.delete('/api/idiomas/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const idioma = await Idioma.findById(id);
-        if (!idioma) {
-            return res.status(404).json({ error: 'Idioma no encontrado.' });
-        }
-
-        // No permitir eliminar el idioma predeterminado
-        if (idioma.predeterminado) {
-            return res.status(400).json({ error: 'No se puede eliminar el idioma predeterminado.' });
-        }
-
-        // Eliminar todas las traducciones de este idioma
-        await Traduccion.deleteMany({ idioma: idioma.codigo });
-        await Idioma.findByIdAndDelete(id);
-
-        res.status(200).json({ message: 'Idioma eliminado correctamente.' });
-    } catch (error) {
-        console.error('Error al eliminar el idioma:', error);
-        res.status(500).json({ error: 'Error al eliminar el idioma.' });
-    }
-});
-
-// ===== RUTAS PARA GESTIÓN DE TRADUCCIONES =====
-
-// Obtener todas las traducciones de un idioma
-app.get('/api/traducciones/:idioma', async (req, res) => {
-    try {
-        const { idioma } = req.params;
-        const traducciones = await Traduccion.find({ idioma }).sort({ clave: 1 });
-        
-        // Convertir a objeto para facilitar el acceso
-        const objetoTraducciones = {};
-        traducciones.forEach(t => {
-            objetoTraducciones[t.clave] = t.texto;
-        });
-
-        res.status(200).json(objetoTraducciones);
-    } catch (error) {
-        console.error('Error al obtener las traducciones:', error);
-        res.status(500).json({ error: 'Error al obtener las traducciones.' });
-    }
-});
-
-// Crear o actualizar traducción
-app.post('/api/traducciones', async (req, res) => {
-    try {
-        const { clave, idioma, texto, contexto } = req.body;
-
-        if (!clave || !idioma || !texto) {
-            return res.status(400).json({ error: 'Clave, idioma y texto son obligatorios.' });
-        }
-
-        // Verificar que el idioma existe
-        const idiomaExiste = await Idioma.findOne({ codigo: idioma });
-        if (!idiomaExiste) {
-            return res.status(400).json({ error: 'El idioma especificado no existe.' });
-        }
-
-        const traduccionExistente = await Traduccion.findOne({ clave, idioma });
-        
-        if (traduccionExistente) {
-            // Actualizar traducción existente
-            traduccionExistente.texto = texto;
-            if (contexto) traduccionExistente.contexto = contexto;
-            await traduccionExistente.save();
-            res.status(200).json({ message: 'Traducción actualizada correctamente.' });
-        } else {
-            // Crear nueva traducción
-            const nuevaTraduccion = new Traduccion({ clave, idioma, texto, contexto });
-            await nuevaTraduccion.save();
-            res.status(201).json({ message: 'Traducción creada correctamente.' });
-        }
-    } catch (error) {
-        console.error('Error al crear/actualizar la traducción:', error);
-        res.status(500).json({ error: 'Error al crear/actualizar la traducción.' });
-    }
-});
-
-// Traducir automáticamente una clave a un idioma (usando Google Translate API simulado)
-app.post('/api/traducciones/auto', async (req, res) => {
-    try {
-        const { clave, idiomaOrigen, idiomaDestino, textoOrigen } = req.body;
-
-        if (!clave || !idiomaOrigen || !idiomaDestino || !textoOrigen) {
-            return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
-        }
-
-        // Aquí se integraría con un servicio real de traducción
-        // Por ahora, simularemos algunas traducciones básicas
-        const textoTraducido = await traducirTexto(textoOrigen, idiomaOrigen, idiomaDestino);
-
-        // Guardar la traducción automática
-        const traduccion = await Traduccion.findOneAndUpdate(
-            { clave, idioma: idiomaDestino },
-            { 
-                clave, 
-                idioma: idiomaDestino, 
-                texto: textoTraducido,
-                contexto: `Traducción automática desde ${idiomaOrigen}`
-            },
-            { upsert: true, new: true }
-        );
-
-        res.status(200).json({ 
-            message: 'Traducción automática creada correctamente.',
-            traduccion: textoTraducido
-        });
-    } catch (error) {
-        console.error('Error en la traducción automática:', error);
-        res.status(500).json({ error: 'Error en la traducción automática.' });
-    }
-});
-
-// ===== FUNCIONES AUXILIARES PARA IDIOMAS =====
-
-// Función para crear traducciones base cuando se crea un nuevo idioma
-async function crearTraduccionesBase(codigoIdioma) {
-    const traduccionesBase = [
-        { clave: 'app.title', texto: getTraduccionBase('app.title', codigoIdioma) },
-        { clave: 'nav.home', texto: getTraduccionBase('nav.home', codigoIdioma) },
-        { clave: 'nav.products', texto: getTraduccionBase('nav.products', codigoIdioma) },
-        { clave: 'nav.about', texto: getTraduccionBase('nav.about', codigoIdioma) },
-        { clave: 'nav.contact', texto: getTraduccionBase('nav.contact', codigoIdioma) },
-        { clave: 'nav.login', texto: getTraduccionBase('nav.login', codigoIdioma) },
-        { clave: 'nav.register', texto: getTraduccionBase('nav.register', codigoIdioma) },
-        { clave: 'nav.cart', texto: getTraduccionBase('nav.cart', codigoIdioma) },
-        { clave: 'nav.profile', texto: getTraduccionBase('nav.profile', codigoIdioma) },
-        { clave: 'nav.preferences', texto: getTraduccionBase('nav.preferences', codigoIdioma) },
-        { clave: 'btn.save', texto: getTraduccionBase('btn.save', codigoIdioma) },
-        { clave: 'btn.cancel', texto: getTraduccionBase('btn.cancel', codigoIdioma) },
-        { clave: 'btn.delete', texto: getTraduccionBase('btn.delete', codigoIdioma) },
-        { clave: 'btn.edit', texto: getTraduccionBase('btn.edit', codigoIdioma) },
-        { clave: 'btn.add', texto: getTraduccionBase('btn.add', codigoIdioma) },
-        { clave: 'form.email', texto: getTraduccionBase('form.email', codigoIdioma) },
-        { clave: 'form.password', texto: getTraduccionBase('form.password', codigoIdioma) },
-        { clave: 'form.name', texto: getTraduccionBase('form.name', codigoIdioma) },
-        { clave: 'form.surname', texto: getTraduccionBase('form.surname', codigoIdioma) },
-        { clave: 'form.phone', texto: getTraduccionBase('form.phone', codigoIdioma) }
-    ];
-
-    for (const traduccion of traduccionesBase) {
-        await Traduccion.findOneAndUpdate(
-            { clave: traduccion.clave, idioma: codigoIdioma },
-            { ...traduccion, idioma: codigoIdioma },
-            { upsert: true }
-        );
-    }
-}
-
-// Función para obtener traducciones base según el idioma
-function getTraduccionBase(clave, idioma) {
-    const traducciones = {
-        'es': {
-            'app.title': 'Catálogo de Productos',
-            'nav.home': 'Inicio',
-            'nav.products': 'Productos',
-            'nav.about': 'Acerca de',
-            'nav.contact': 'Contacto',
-            'nav.login': 'Iniciar Sesión',
-            'nav.register': 'Registrarse',
-            'nav.cart': 'Carrito',
-            'nav.profile': 'Perfil',
-            'nav.preferences': 'Preferencias',
-            'btn.save': 'Guardar',
-            'btn.cancel': 'Cancelar',
-            'btn.delete': 'Eliminar',
-            'btn.edit': 'Editar',
-            'btn.add': 'Agregar',
-            'form.email': 'Correo electrónico',
-            'form.password': 'Contraseña',
-            'form.name': 'Nombre',
-            'form.surname': 'Apellido',
-            'form.phone': 'Teléfono'
-        },
-        'en': {
-            'app.title': 'Product Catalog',
-            'nav.home': 'Home',
-            'nav.products': 'Products',
-            'nav.about': 'About',
-            'nav.contact': 'Contact',
-            'nav.login': 'Login',
-            'nav.register': 'Register',
-            'nav.cart': 'Cart',
-            'nav.profile': 'Profile',
-            'nav.preferences': 'Preferences',
-            'btn.save': 'Save',
-            'btn.cancel': 'Cancel',
-            'btn.delete': 'Delete',
-            'btn.edit': 'Edit',
-            'btn.add': 'Add',
-            'form.email': 'Email',
-            'form.password': 'Password',
-            'form.name': 'Name',
-            'form.surname': 'Last Name',
-            'form.phone': 'Phone'
-        },
-        'pt': {
-            'app.title': 'Catálogo de Produtos',
-            'nav.home': 'Início',
-            'nav.products': 'Produtos',
-            'nav.about': 'Sobre',
-            'nav.contact': 'Contato',
-            'nav.login': 'Entrar',
-            'nav.register': 'Registrar',
-            'nav.cart': 'Carrinho',
-            'nav.profile': 'Perfil',
-            'nav.preferences': 'Preferências',
-            'btn.save': 'Salvar',
-            'btn.cancel': 'Cancelar',
-            'btn.delete': 'Excluir',
-            'btn.edit': 'Editar',
-            'btn.add': 'Adicionar',
-            'form.email': 'E-mail',
-            'form.password': 'Senha',
-            'form.name': 'Nome',
-            'form.surname': 'Sobrenome',
-            'form.phone': 'Telefone'
-        }
-    };
-
-    return traducciones[idioma]?.[clave] || traducciones['es'][clave] || clave;
-}
-
-// Función de traducción automática simulada
-async function traducirTexto(texto, idiomaOrigen, idiomaDestino) {
-    // En una implementación real, aquí se usaría Google Translate API, DeepL, etc.
-    // Por ahora, retornamos traducciones básicas o el texto original
-    
-    const traduccionesBasicas = {
-        'es-en': {
-            'Hola': 'Hello',
-            'Adiós': 'Goodbye',
-            'Gracias': 'Thank you',
-            'Por favor': 'Please',
-            'Sí': 'Yes',
-            'No': 'No'
-        },
-        'en-es': {
-            'Hello': 'Hola',
-            'Goodbye': 'Adiós',
-            'Thank you': 'Gracias',
-            'Please': 'Por favor',
-            'Yes': 'Sí',
-            'No': 'No'
-        },
-        'es-pt': {
-            'Hola': 'Olá',
-            'Adiós': 'Tchau',
-            'Gracias': 'Obrigado',
-            'Por favor': 'Por favor',
-            'Sí': 'Sim',
-            'No': 'Não'
-        }
-    };
-
-    const claveDiccionario = `${idiomaOrigen}-${idiomaDestino}`;
-    return traduccionesBasicas[claveDiccionario]?.[texto] || texto;
-}
