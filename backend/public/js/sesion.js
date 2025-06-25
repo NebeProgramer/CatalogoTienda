@@ -300,49 +300,65 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                 // Verificación de IP para admin
                 const ipAdminPermitida = await fetch(`/api/ips/${ip}`);
                 if (ipAdminPermitida.ok) {
-                    const ipPermitidaData = await ipAdminPermitida.json();
-                    if (ipPermitidaData && !ipPermitidaData.error) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: '¡Bienvenido, administrador!',
-                            text: 'Has iniciado sesión como administrador.',
-                            toast: true,
-                            position: 'top-end'
-                        });
+                    const ipPermitidaData = await ipAdminPermitida.json();                    if (ipPermitidaData && !ipPermitidaData.error) {
+                        setTimeout(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Bienvenido, administrador!',
+                                text: 'Has iniciado sesión como administrador.',
+                                toast: true,
+                                position: 'top-end',
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
+                        }, 100);
                     } else {
+                        setTimeout(() => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Acceso restringido',
+                                text: 'No tienes permiso para iniciar sesión como administrador desde esta IP.',
+                                toast: true,
+                                position: 'top-end',
+                                timer: 4000,
+                                showConfirmButton: false
+                            });
+                        }, 100);
+                        ocultarLoader();
+                        return;
+                    }
+                } else {
+                    setTimeout(() => {
                         Swal.fire({
                             icon: 'error',
                             title: 'Acceso restringido',
                             text: 'No tienes permiso para iniciar sesión como administrador desde esta IP.',
                             toast: true,
-                            position: 'top-end'
+                            position: 'top-end',
+                            timer: 4000,
+                            showConfirmButton: false
                         });
-                        ocultarLoader();
-                        return;
-                    }
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Acceso restringido',
-                        text: 'No tienes permiso para iniciar sesión como administrador desde esta IP.',
-                        toast: true,
-                        position: 'top-end'
-                    });
+                    }, 100);
                     ocultarLoader();
                     return;
                 }
-            }
-            if(data.user.rol === 'usuario') {
+            }            if(data.user.rol === 'usuario') {
+                // Mostrar mensaje de bienvenida para usuario normal
+                setTimeout(() => {
                     Swal.fire({
                         icon: 'success',
                         title: '¡Bienvenido!',
                         text: 'Has iniciado sesión correctamente.',
                         toast: true,
-                        position: 'top-end'
+                        position: 'top-end',
+                        timer: 3000,
+                        showConfirmButton: false
                     });
-                }
+                }, 100);
+            }
             if (iniciarSesionBtn) iniciarSesionBtn.style.display = 'none';
-            if (crearCuentaBtn) crearCuentaBtn.style.display = 'none';            const listaSesion = document.querySelector('.iniciosesion');
+            if (crearCuentaBtn) crearCuentaBtn.style.display = 'none';            
+            const listaSesion = document.querySelector('.iniciosesion');
             const perfilLi = document.createElement('li');
             const perfilLink = document.createElement('a');
             
@@ -392,25 +408,32 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
             if (carrito) carrito.style.display = 'block';
             hideModal();
             if (formSesion) formSesion.reset();
-            if (typeof perfiles === 'function') perfiles();
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: data.error,
-                toast: true,
-                position: 'top-end'
-            });
+            if (typeof perfiles === 'function') perfiles();        } else {
+            setTimeout(() => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error,
+                    toast: true,
+                    position: 'top-end',
+                    timer: 4000,
+                    showConfirmButton: false
+                });
+            }, 100);
         }
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Hubo un error al iniciar sesión. Intenta nuevamente.',
-            toast: true,
-            position: 'top-end'
-        });
+        setTimeout(() => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al iniciar sesión. Intenta nuevamente.',
+                toast: true,
+                position: 'top-end',
+                timer: 4000,
+                showConfirmButton: false
+            });
+        }, 100);
     } finally {
         ocultarLoader();
     }
@@ -535,26 +558,43 @@ async function verificarAutenticacionGoogle() {
                 // Usuario autenticado exitosamente con Google
                 localStorage.setItem('usuario', JSON.stringify(data.user));
                 
-                // Mostrar mensaje de bienvenida
-                if (typeof Swal !== 'undefined') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Bienvenido!',
-                        text: `Has iniciado sesión con Google como ${data.user.nombre}`,
-                        toast: true,
-                        position: 'top-end',
-                        timer: 3000
-                    });
-                }
-                
-                // Actualizar la interfaz
+                // Actualizar la interfaz primero para evitar pantalla negra
                 actualizarInterfazUsuario(data.user);
+                
+                // Mostrar mensaje de bienvenida después de actualizar la interfaz
+                setTimeout(() => {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Bienvenido!',
+                            text: `Has iniciado sesión con Google como ${data.user.nombre || 'Usuario'}`,
+                            toast: true,
+                            position: 'top-end',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    }
+                }, 100);
+                
                 return true;
             }
         }
         return false;
     } catch (error) {
         console.error('Error al verificar autenticación con Google:', error);
+        // Mostrar error sin bloquear la interfaz
+        setTimeout(() => {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de conexión',
+                    text: 'No se pudo verificar la autenticación. Intenta nuevamente.',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000
+                });
+            }
+        }, 100);
         return false;
     }
 }
@@ -576,6 +616,28 @@ function actualizarInterfazUsuario(usuario) {
         const perfilLi = document.createElement('li');
         const perfilLink = document.createElement('a');
         
+        // Crear elemento para avatar
+        const avatarImg = document.createElement('img');
+        avatarImg.style.width = '25px';
+        avatarImg.style.height = '25px';
+        avatarImg.style.borderRadius = '50%';
+        avatarImg.style.marginRight = '8px';
+        avatarImg.style.objectFit = 'cover';
+        avatarImg.style.border = '2px solid #ddd';
+        
+        // Determinar qué imagen usar (priorizar fotoPerfil local sobre fotoGoogle)
+        if (usuario.fotoPerfil && usuario.fotoPerfil.trim() !== "") {
+            avatarImg.src = usuario.fotoPerfil;
+        } else if (usuario.fotoGoogle && usuario.fotoGoogle.trim() !== "") {
+            avatarImg.src = usuario.fotoGoogle;
+        } else {
+            avatarImg.src = '/img/default-avatar.svg'; // Avatar por defecto
+        }
+        
+        avatarImg.onerror = function() {
+            this.src = '/img/default-avatar.svg'; // Fallback si la imagen no carga
+        };
+        
         // Mostrar nombre o "Editar Perfil"
         if (usuario.nombre && usuario.nombre.trim() !== "") {
             perfilLink.textContent = usuario.nombre;
@@ -585,6 +647,9 @@ function actualizarInterfazUsuario(usuario) {
         
         perfilLink.id = 'perfilBtn';
         perfilLink.href = '#';
+        perfilLink.style.display = 'flex';
+        perfilLink.style.alignItems = 'center';
+        perfilLink.insertBefore(avatarImg, perfilLink.firstChild);
         perfilLink.addEventListener('click', () => {
             if (typeof mostrarPerfil === 'function') {
                 mostrarPerfil(usuario, Swal, mostrarLoader, ocultarLoader);
@@ -618,12 +683,14 @@ function actualizarInterfazUsuario(usuario) {
 function verificarParametrosGoogle() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('google_login') === 'success') {
-        // Eliminar el parámetro de la URL
+        // Eliminar el parámetro de la URL inmediatamente
         const newUrl = window.location.origin + window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
         
-        // Verificar autenticación
-        verificarAutenticacionGoogle();
+        // Verificar autenticación con un pequeño delay para evitar conflictos
+        setTimeout(() => {
+            verificarAutenticacionGoogle();
+        }, 200);
     }
 }
 
@@ -638,7 +705,10 @@ function inicializarBotonGoogle() {
 // Inicializar verificación de Google y eventos al cargar la página
 if (typeof document !== 'undefined') {
     document.addEventListener('DOMContentLoaded', function() {
-        verificarParametrosGoogle();
-        inicializarBotonGoogle();
+        // Dar tiempo para que se cargue completamente la página antes de ejecutar
+        setTimeout(() => {
+            verificarParametrosGoogle();
+            inicializarBotonGoogle();
+        }, 100);
     });
 }

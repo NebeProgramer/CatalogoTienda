@@ -121,18 +121,8 @@ app.use(helmet({
     crossOriginEmbedderPolicy: false
 }));
 
-// 3. Rate limiting - Límite general de requests
-const generalLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 100, // Máximo 100 requests por IP cada 15 minutos
-    message: {
-        error: 'Demasiadas solicitudes desde esta IP, intenta de nuevo en 15 minutos.'
-    },
-    standardHeaders: true, // Retorna rate limit info en headers `RateLimit-*`
-    legacyHeaders: false, // Desactiva headers `X-RateLimit-*`
-});
-
-// 4. Rate limiting estricto para endpoints de autenticación
+// ===== CONFIGURACIÓN DE RATE LIMITING =====
+// Rate limiting estricto para endpoints de autenticación
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
     max: 5, // Máximo 5 intentos de login por IP cada 15 minutos
@@ -149,9 +139,9 @@ const authLimiter = rateLimit({
     }
 });
 
-// Aplicar rate limiting general
-app.use(generalLimiter);
 // ===== CONFIGURACIÓN DE SESIONES Y PASSPORT =====
+// NOTA: No aplicamos rate limiting general para permitir uso normal de todas las APIs
+// Solo se aplica rate limiting estricto a la ruta de inicio de sesión
 app.use(session({
     secret: 'catalogo-tienda-secret-key-2024',
     resave: false,
