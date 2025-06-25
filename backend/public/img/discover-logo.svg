@@ -1,0 +1,5 @@
+<svg width="80" height="50" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="50" rx="5" fill="white" stroke="#ddd" stroke-width="1"/>
+  <ellipse cx="55" cy="25" rx="20" ry="15" fill="#FF6D00"/>
+  <text x="25" y="30" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#000">DISCOVER</text>
+</svg>

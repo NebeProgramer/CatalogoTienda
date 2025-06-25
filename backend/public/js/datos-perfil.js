@@ -180,6 +180,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('inicio').addEventListener('click', () => {
         window.location.href = '/'; // Redirigir a la página de inicio
     });
+
+    
+
         
 
         // Cargar tarjetas
@@ -788,8 +791,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCambiarAvatar = document.getElementById('btnCambiarAvatar');
     const btnEliminarAvatar = document.getElementById('btnEliminarAvatar');
 
-    // Funcionalidad del avatar
-    const inicializarAvatar = () => {
+    // Funcionalidad del avatar    const inicializarAvatar = () => {
         // Mostrar la imagen actual del usuario
         if (usuario.fotoGoogle && usuario.fotoGoogle.trim() !== "") {
             avatarPreview.src = usuario.fotoGoogle;
@@ -798,7 +800,19 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             avatarPreview.src = '/img/default-avatar.svg';
         }
-    };
+        
+        // Agregar manejo de errores para imágenes que no cargan
+        avatarPreview.onerror = function() {
+            this.src = '/img/default-avatar.svg';
+        };
+        
+        // Asegurar que las dimensiones se mantengan
+        avatarPreview.onload = function() {            this.style.width = '120px';
+            this.style.height = '120px';
+            this.style.objectFit = 'cover';
+            this.style.borderRadius = '50%';
+        };
+    
 
     // Event listener para cambiar avatar
     btnCambiarAvatar.addEventListener('click', () => {
@@ -988,8 +1002,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cardPatterns.discover.test(number)) return 'discover';
         
         return 'unknown';
-    }
-      /**
+    }    /**
      * Actualiza el logo de la tarjeta en la interfaz
      * @param {string} cardType - Tipo de tarjeta detectado
      */
@@ -997,12 +1010,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardLogo = document.getElementById('cardLogo');
         const numeroTarjetaInput = document.getElementById('numeroTarjeta');
         
-        // Remover todas las clases de tarjetas
-        cardLogo.className = 'card-logo';
+        // Mapeo de tipos de tarjeta a rutas de imagen
+        const logoSources = {
+            'visa': '/img/visa-logo.svg',
+            'mastercard': '/img/mastercard-logo.svg',
+            'amex': '/img/amex-logo.svg',
+            'discover': '/img/discover-logo.svg',
+            'diners': '/img/diners-logo.svg',
+            'jcb': '/img/jcb-logo.svg',
+            'maestro': '/img/maestro-logo.svg'
+        };
         
-        // Agregar la clase correspondiente y mostrar el logo
-        if (cardType !== 'unknown') {
-            cardLogo.classList.add(cardType);
+        // Mostrar el logo correspondiente o ocultarlo si es desconocido
+        if (cardType !== 'unknown' && logoSources[cardType]) {
+            cardLogo.src = logoSources[cardType];
             cardLogo.style.display = 'block';
             
             // Actualizar placeholder según el tipo de tarjeta
@@ -1040,6 +1061,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             cardLogo.style.display = 'none';
+            cardLogo.src = '';
             numeroTarjetaInput.placeholder = 'Ingrese el número de su tarjeta';
             numeroTarjetaInput.maxLength = 23; // Máximo para cualquier tipo
         }

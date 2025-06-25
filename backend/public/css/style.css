@@ -1,3 +1,86 @@
+/* ===== VARIABLES CSS PARA TEMAS DINÁMICOS ===== */
+:root {
+    /* Tema Claro (por defecto) */
+    --bg-primary: #fff5e6;
+    --bg-secondary: #ffb700;
+    --bg-tertiary: #ffffff;
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --text-accent: #ffb700;
+    --border-primary: #ddd;
+    --border-secondary: #ccc;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.2);
+    --success: #28a745;
+    --warning: #ffc107;
+    --error: #dc3545;
+    --info: #17a2b8;
+    --modal-bg: rgba(0, 0, 0, 0.4);
+    --hover-overlay: rgba(255, 183, 0, 0.1);
+}
+
+/* Tema Oscuro */
+[data-theme="dark"] {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --bg-tertiary: #3a3a3a;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-accent: #ffa500;
+    --border-primary: #555;
+    --border-secondary: #666;
+    --shadow-light: rgba(255, 255, 255, 0.1);
+    --shadow-medium: rgba(255, 255, 255, 0.2);
+    --success: #28a745;
+    --warning: #ffc107;
+    --error: #dc3545;
+    --info: #17a2b8;
+    --modal-bg: rgba(0, 0, 0, 0.7);
+    --hover-overlay: rgba(255, 165, 0, 0.1);
+}
+
+/* Tema Azul */
+[data-theme="blue"] {
+    --bg-primary: #e3f2fd;
+    --bg-secondary: #1976d2;
+    --bg-tertiary: #ffffff;
+    --text-primary: #0d47a1;
+    --text-secondary: #1565c0;
+    --text-accent: #1976d2;
+    --border-primary: #90caf9;
+    --border-secondary: #64b5f6;
+    --shadow-light: rgba(25, 118, 210, 0.1);
+    --shadow-medium: rgba(25, 118, 210, 0.2);
+    --success: #4caf50;
+    --warning: #ff9800;
+    --error: #f44336;
+    --info: #2196f3;
+    --modal-bg: rgba(0, 0, 0, 0.4);
+    --hover-overlay: rgba(25, 118, 210, 0.1);
+}
+
+/* Tema Verde */
+[data-theme="green"] {
+    --bg-primary: #e8f5e8;
+    --bg-secondary: #4caf50;
+    --bg-tertiary: #ffffff;
+    --text-primary: #1b5e20;
+    --text-secondary: #2e7d32;
+    --text-accent: #4caf50;
+    --border-primary: #a5d6a7;
+    --border-secondary: #81c784;
+    --shadow-light: rgba(76, 175, 80, 0.1);
+    --shadow-medium: rgba(76, 175, 80, 0.2);
+    --success: #4caf50;
+    --warning: #ff9800;
+    --error: #f44336;
+    --info: #2196f3;
+    --modal-bg: rgba(0, 0, 0, 0.4);
+    --hover-overlay: rgba(76, 175, 80, 0.1);
+}
+
+/* ===== APLICACIÓN DE VARIABLES A LOS ELEMENTOS EXISTENTES ===== */
+
 /* Estilos CSS Base - Los alumnos deben completar este archivo */
 body, html {
     margin: 0;
@@ -10,13 +93,17 @@ body {
     font-family: sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #fff5e6; /* Fondo base claro */
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 header {
-    background-color: #ffb700; /* Naranja base */
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
     padding: 20px;
     text-align: center;
+    transition: background-color 0.3s ease;
 }
 
 main {
@@ -49,20 +136,22 @@ main {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+    background-color: var(--modal-bg);
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
     margin: 5% auto;
     padding: 20px;
-    border: 1px solid #888;
+    border: 1px solid var(--border-primary);
     width: 80%;
     max-width: 600px;
     position: relative;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .form-container {
@@ -77,16 +166,16 @@ main {
 }
 
 .form-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--bg-primary);
 }
 
 .form-container::-webkit-scrollbar-thumb {
-    background: #888;
+    background: var(--border-secondary);
     border-radius: 5px;
 }
 
 .form-container::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: var(--text-secondary);
 }
 
 .close-btn {
@@ -102,14 +191,14 @@ main {
 
 .close-btn:hover,
 .close-btn:focus {
-    color: #000;
+    color: var(--text-primary);
     text-decoration: none;
     cursor: pointer;
 }
 
 h2, h3 {
     text-align: center;
-    color: #333;
+    color: var(--text-primary);
     margin-bottom: 20px;
 }
 
@@ -122,12 +211,22 @@ form {
 
 label {
     font-weight: bold;
+    color: var(--text-primary);
 }
 
 input, textarea, select {
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-primary);
     border-radius: 5px;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--text-accent);
+    box-shadow: 0 0 5px var(--shadow-light);
 }
 
 textarea {
@@ -135,17 +234,20 @@ textarea {
 }
 
 button {
-    background: #b88400;
-    color: rgb(0, 0, 0);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
     border: none;
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    font-weight: 500;
 }
 
 button:hover {
-    background: #ffb700af;
+    background: var(--text-secondary);
+    color: var(--bg-tertiary);
+    transform: translateY(-2px);
 }
 
 /* Estilos específicos */
@@ -155,19 +257,19 @@ input[type="file"] {
 
 .custom-file-label {
     display: inline-block;
-    background-color: #ffb700;
-    color: #000;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
     padding: 10px 15px;
     border-radius: 5px;
     font-size: 14px;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .custom-file-label:hover {
-    background-color: #a27400;
-    color: #fff;
+    background-color: var(--hover-overlay);
+    color: var(--text-accent);
 }
 
 /* Estilos para los checkboxes */
@@ -197,30 +299,34 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #000000;
+    color: var(--text-primary);
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 nav ul li a:hover {
     text-decoration: underline;
+    color: var(--text-accent);
 }
 
 /* Estilos para los productos en el carrusel */
 .producto {
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-primary);
     border-radius: 10px;
     padding: 15px;
     text-align: center;
     width: 200px;
     margin: 10px;
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    box-shadow: 0 4px 6px var(--shadow-light);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
 .producto:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 10px var(--shadow-medium);
+    background-color: var(--hover-overlay);
 }
 
 .producto-imagen {
@@ -235,7 +341,7 @@ nav ul li a:hover {
     font-size: 16px;
     font-weight: bold;
     margin: 5px 0;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .producto-precio,
@@ -243,7 +349,7 @@ nav ul li a:hover {
 .producto-calificacion {
     font-size: 14px;
     margin: 5px 0;
-    color: #555;
+    color: var(--text-secondary);
 }
 
 .producto-acciones {
@@ -253,19 +359,20 @@ nav ul li a:hover {
 }
 
 .producto-acciones button {
-    background-color: #ffb700;
-    color: #000;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
     border: none;
     padding: 8px 10px;
     border-radius: 5px;
     font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 .producto-acciones button:hover {
-    background-color: #a27400;
-    color: #fff;
+    background-color: var(--hover-overlay);
+    color: var(--text-accent);
+    transform: translateY(-2px);
 }
 
 .producto-detalle {
@@ -275,10 +382,12 @@ nav ul li a:hover {
     text-align: center;
     margin: 20px;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-primary);
     border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    box-shadow: 0 4px 6px var(--shadow-light);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .producto-detalle img {
@@ -292,9 +401,11 @@ nav ul li a:hover {
 .comentarios {
     margin: 20px;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-primary);
     border-radius: 10px;
-    background-color: #f9f9f9;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .comentarios ul {
@@ -305,7 +416,8 @@ nav ul li a:hover {
 .comentarios li {
     margin-bottom: 15px;
     padding: 10px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border-secondary);
+    color: var(--text-primary);
 }
 
 .comentarios li:last-child {
@@ -320,7 +432,7 @@ nav ul li a:hover {
 .mensaje-vacio {
     text-align: center;
     font-size: 1.2rem;
-    color: #888;
+    color: var(--text-secondary);
     margin-top: 20px;
 }
 
@@ -328,14 +440,16 @@ nav ul li a:hover {
 #formComentario {
     margin-top: 20px;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-primary);
     border-radius: 10px;
-    background-color: #f9f9f9;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 #formComentario h4 {
     text-align: center;
-    color: #333;
+    color: var(--text-primary);
     margin-bottom: 15px;
 }
 
@@ -360,20 +474,24 @@ nav ul li a:hover {
 
 #calificacion {
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-primary);
     border-radius: 5px;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
     font-size: 14px;
     cursor: pointer;
 }
 
 footer {
-    background-color: #ffb700; 
+    background-color: var(--bg-secondary); 
+    color: var(--text-primary);
     padding: 10px;
     text-align: center;
     position: relative;
     bottom: 0;
     width: 100%;
     display: flex;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* === Footer Flexbox Layout === */
@@ -472,7 +590,7 @@ footer {
 
 .social-icon-item span {
     font-size: 16px;
-    color: #222;
+    color: var(--text-primary);
     margin-top: 2px;
     font-weight: bold;
 }
@@ -529,7 +647,7 @@ footer {
     transition: transform 0.5s ease-in-out;
     position: relative;
     padding-bottom: 50px;
-    background-color: #f9f9f9;
+    background-color: var(--bg-primary);
     border-radius: 10px;
     padding: 40px 0;
     min-height: 420px;
@@ -540,19 +658,21 @@ footer {
     margin: 0 24px;
     text-align: center;
     position: relative;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-primary);
     border-radius: 16px;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    box-shadow: 0 4px 12px var(--shadow-light);
     padding: 28px 16px 28px 16px;
     min-height: 420px;
     max-width: 340px;
-    transition: box-shadow 0.3s, transform 0.3s;
+    transition: box-shadow 0.3s, transform 0.3s, background-color 0.3s ease, color 0.3s ease;
 }
 
 .carrusel-item:hover {
-    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    box-shadow: 0 8px 20px var(--shadow-medium);
     transform: translateY(-8px) scale(1.04);
+    background-color: var(--hover-overlay);
 }
 
 .carruselModal {
@@ -666,12 +786,12 @@ footer {
     left: -300px; /* Ocultar el menú fuera de la pantalla */
     width: 250px;
     height: 100%;
-    background-color: #ffb700;
-    color: black;
-    transition: left 0.3s ease;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    transition: left 0.3s ease, background-color 0.3s ease, color 0.3s ease;
     z-index: 100;
     padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 2px 0 5px var(--shadow-medium);
 }
 
 .menuHamburguesa.activo {
@@ -688,19 +808,23 @@ footer {
     position: fixed;
     top: 20px;
     left: -30px; /* Semioculto, solo se asoma */
-    background-color: orange;
-    color: white;
+    background-color: var(--text-secondary);
+    color: var(--bg-tertiary);
     border: none;
     padding: 10px 15px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: bold;
     border-radius: 5px;
     z-index: 500;
-    transition: left 0.3s ease;
+    transition: left 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 2px 8px var(--shadow-medium);
 }
 
 #Burguer:hover {
     left: 0; /* Se muestra completamente al pasar el mouse */
+    background-color: var(--text-primary);
+    color: var(--bg-tertiary);
 }
 
 #Burguer.activo {
@@ -718,14 +842,19 @@ footer {
 }
 
 .menuHamburguesa ul li a {
-    color: black;
+    color: var(--bg-tertiary);
     text-decoration: none;
     font-size: 18px;
-    transition: color 0.3s;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: block;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .menuHamburguesa ul li a:hover {
-    color: orange;
+    background-color: var(--text-primary);
+    color: var(--bg-tertiary);
 }
 
 
@@ -735,17 +864,17 @@ footer {
     bottom: 10px; /* Separación desde la parte inferior */
     left: 50%; /* Centrar horizontalmente */
     transform: translateX(-50%); /* Ajustar el centrado */
-    background-color: #b88400; 
-    color: white; /* Color del texto */
+    background-color: var(--text-accent); 
+    color: var(--text-primary); /* Color del texto */
     border: none; /* Sin bordes */
     border-radius: 5px; /* Bordes redondeados */
     padding: 10px 20px; /* Espaciado interno */
     font-size: 16px; /* Tamaño del texto */
     font-weight: bold; /* Texto en negrita */
     cursor: pointer; /* Cambiar el cursor al pasar por encima */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+    box-shadow: 0 4px 6px var(--shadow-light); /* Sombra */
     z-index: 10; /* Asegurarse de que esté encima de otros elementos */
-    transition: background-color 0.3s ease; /* Animación al pasar el mouse */
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; /* Animación al pasar el mouse */
     width: auto; /* Ajusta el ancho al contenido */
     max-width: 200px; /* Limita el ancho máximo */
     padding: 10px 15px; /* Ajusta el espaciado interno */
@@ -753,7 +882,8 @@ footer {
 
 /* Cambiar el color al pasar el mouse */
 .btnComprarTodo:hover {
-    background-color: #725201;
+    background-color: var(--hover-overlay);
+    transform: translateX(-50%) translateY(-2px);
 }
 
 /* Ajustar el botón en pantallas pequeñas */
@@ -763,14 +893,16 @@ footer {
         padding: 8px 12px; /* Reducir el espaciado interno */
     }
 
-        /* Estilo para el contenedor del formulario */
+    /* Estilo para el contenedor del formulario */
     #formPagoContainer {
-        background-color: #fff;
+        background-color: var(--bg-tertiary);
+        color: var(--text-primary);
         border-radius: 10px;
         padding: 20px;
         max-width: 800px;
         margin: 0 auto;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 8px var(--shadow-medium);
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
     
     /* Estilo para los productos */
@@ -778,7 +910,7 @@ footer {
         display: flex;
         align-items: center;
         margin-bottom: 15px;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid var(--border-secondary);
         padding-bottom: 10px;
     }
     
@@ -795,17 +927,20 @@ footer {
         width: 100%;
         border-collapse: collapse;
         margin-top: 10px;
+        background-color: var(--bg-tertiary);
+        color: var(--text-primary);
     }
     
     #tarjetaCredito table th, #DireccionEnvio table th,
     #tarjetaCredito table td, #DireccionEnvio table td {
         padding: 10px;
         text-align: left;
-        border: 1px solid #ddd;
+        border: 1px solid var(--border-primary);
     }
     
     #tarjetaCredito table th, #DireccionEnvio table th {
-        background-color: #f4f4f4;
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
         font-weight: bold;
     }
 }
@@ -815,29 +950,34 @@ footer {
     width: 100%; /* Asegura que las tablas ocupen todo el ancho */
     border-collapse: collapse;
     margin-top: 10px;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
 }
 
 #tarjetaCredito table th, #DireccionEnvio table th,
 #tarjetaCredito table td, #DireccionEnvio table td {
     padding: 10px;
     text-align: left;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-primary);
 }
 
 #tarjetaCredito table th, #DireccionEnvio table th {
-    background-color: #f4f4f4;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
     font-weight: bold;
 }
 
 /* Estilo para el contenedor del formulario */
 #formPagoContainer {
-    background-color: #fff;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
     border-radius: 10px;
     padding: 20px;
     max-width: 800px; /* Ancho máximo en pantallas grandes */
     width: 90%; /* Ancho relativo en pantallas pequeñas */
     margin: 0 auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px var(--shadow-medium);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Estilo para los productos */
@@ -845,7 +985,7 @@ footer {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border-secondary);
     padding-bottom: 10px;
 }
 
@@ -1805,15 +1945,76 @@ button.eliminar-termino-btn:hover {
     border-bottom: 1px solid #e8eaed;
 }
 
-/* Responsivo para el botón de Google */
-@media (max-width: 768px) {
-    .google-signin-btn {
-        font-size: 13px;
-        padding: 10px 14px;
-    }
-    
-    .google-signin-btn svg {
-        width: 16px;
-        height: 16px;
-    }
+/* ===== ESTILOS PARA PREFERENCIAS ===== */
+.preference-group {
+    margin-bottom: 20px;
+}
+
+.preference-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.preference-group select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-primary);
+    border-radius: 6px;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 16px;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.preference-group select:focus {
+    outline: none;
+    border-color: var(--text-accent);
+    box-shadow: 0 0 5px var(--shadow-light);
+}
+
+#btnGuardarPreferencias {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--text-accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#btnGuardarPreferencias:hover {
+    background-color: var(--text-secondary);
+    transform: translateY(-2px);
+}
+
+/* Transiciones suaves para cambio de tema */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ===== ESTILOS PARA INDICADOR DE TEMA ===== */
+.theme-indicator {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 1000;
+    box-shadow: 0 2px 10px var(--shadow-light);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.theme-indicator:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px var(--shadow-medium);
 }

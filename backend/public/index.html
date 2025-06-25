@@ -36,8 +36,7 @@ scale=1.0">
                     </ul>
                 </div>
             </section>
-            <section id="footer">
-                <ul>
+            <section id="footer">                <ul>
                     <li><a href="/" id="inicio">Página Principal</a></li>
                     <li><a href="/contacto">Contacto</a></li>
                     <li><a href="/sobre-nosotros">Sobre Nosotros</a></li>
@@ -49,15 +48,13 @@ scale=1.0">
         
     </div>
     
-    <nav> 
-        <ul class="iniciosesion">
+    <nav>        <ul class="iniciosesion">
             <li><a id="iniciarSesion" href="#">Iniciar Sesión</a></li>
             <li><a id="crearCuenta" href="#">Crear Cuenta</a></li>
         </ul>
     </nav>
 <h1>Catálogo de Productos</h1>
-<nav>
-    <ul>
+<nav>    <ul>
         <li style="display: none;" id='carrito'><a href="#carrito">Mi carrito</a></li>
         <li><a href="/preguntas-respuestas" id='Preguntas'>Preguntas y respuestas</a></li>
     </ul>
@@ -163,16 +160,27 @@ scale=1.0">
                     <input type="email" id="emailOlvido" placeholder="nombre@mail.com" required>
                     <button type="submit" id="btnContra">Recuperar Contraseña</button>
                 </form>
-            </div>
-
-            <div id="form-preferencias" class="modal-section">
+            </div>            <div id="form-preferencias" class="modal-section">
                 <h3>Preferencias</h3>
                 <form id="formPreferencias">
-                    <label for="monedaPreferida">Selecciona tu moneda:</label>
-                    <select id="monedaPreferida" name="monedaPreferida" required>
-                        <!-- Las opciones se cargarán dinámicamente desde monedas.json -->
-                    </select>
-                    <button type="submit" id="btnGuardarPreferencias">Guardar Preferencias</button>
+                    <div class="preference-group">
+                        <label for="temaPreferido">Selecciona tu tema:</label>
+                        <select id="temaPreferido" name="temaPreferido" required>
+                            <option value="light">🌞 Claro</option>
+                            <option value="dark">🌙 Oscuro</option>
+                            <option value="blue">🌊 Azul</option>
+                            <option value="green">🌿 Verde</option>
+                        </select>
+                    </div>
+                    
+                    <div class="preference-group">
+                        <label for="monedaPreferida">Selecciona tu moneda:</label>
+                        <select id="monedaPreferida" name="monedaPreferida" required>
+                            <!-- Las opciones se cargarán dinámicamente desde monedas.json -->
+                        </select>
+                    </div>
+                    
+                    <button type="submit" id="btnGuardarPreferencias">💾 Guardar Preferencias</button>
                 </form>
             </div>
         </div>
@@ -217,9 +225,10 @@ scale=1.0">
   </div>
 </footer>
 <script src="/js/Loaders.js"></script>
-    <script src="/js/Mapa.js"></script>
-    <script src="/js/Redes.js"></script>
-    <script src="/js/Sesion.js"></script>
+<script src="/js/Mapa.js"></script>
+<script src="/js/Redes.js"></script>
+<script src="/js/Sesion.js"></script>
+<script src="/js/temasManager.js"></script>
 <script src="/js/script.js"></script>
 </body>
 </html>

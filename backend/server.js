@@ -325,9 +325,8 @@ app.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/' }),
     (req, res) => {        // *** NUEVO: Reiniciar contador de rate limit para esta IP al tener login exitoso con Google ***
         try {
-            const key = req.ip; // Usar directamente la IP como clave
-            authLimiter.store.resetKey(key);
-            console.log(`Rate limit reset para IP: ${req.ip} después de login exitoso con Google`);
+            // En versiones recientes de express-rate-limit, simplemente loggeamos el éxito
+            console.log(`Login exitoso con Google para IP: ${req.ip} - Rate limit será reseteado automáticamente`);
         } catch (resetError) {
             console.error('Error al resetear rate limit para Google OAuth:', resetError);
         }
@@ -651,10 +650,9 @@ app.post('/api/iniciar-sesion', authLimiter, async (req, res) => {
             }
         }        // *** NUEVO: Reiniciar contador de rate limit para esta IP al tener login exitoso ***
         try {
-            // Obtener la store del rate limiter (que usa MemoryStore por defecto)
-            const key = req.ip; // Usar directamente la IP como clave
-            await authLimiter.store.resetKey(key);
-            console.log(`Rate limit reset para IP: ${req.ip} después de login exitoso`);
+            // En versiones recientes de express-rate-limit, simplemente loggeamos el éxito
+            // El rate limit se resetea automáticamente después del windowMs
+            console.log(`Login exitoso para IP: ${req.ip} - Rate limit será reseteado automáticamente`);
         } catch (resetError) {
             // Si hay error al resetear, solo loggearlo pero no fallar el login
             console.error('Error al resetear rate limit:', resetError);
@@ -1933,3 +1931,350 @@ app.post('/api/perfil/foto', uploadPerfiles.single('fotoPerfil'), async (req, re
         res.status(500).json({ error: 'Error al subir la foto de perfil.' });
     }
 });
+
+// ===== RUTAS PARA GESTIÓN DE IDIOMAS =====
+
+// Obtener todos los idiomas activos
+app.get('/api/idiomas', async (req, res) => {
+    try {
+        const idiomas = await Idioma.find({ activo: true }).sort({ nombre: 1 });
+        res.status(200).json(idiomas);
+    } catch (error) {
+        console.error('Error al obtener los idiomas:', error);
+        res.status(500).json({ error: 'Error al obtener los idiomas.' });
+    }
+});
+
+// Obtener todos los idiomas (incluye inactivos) - Solo para admin
+app.get('/api/idiomas/todos', async (req, res) => {
+    try {
+        const idiomas = await Idioma.find().sort({ nombre: 1 });
+        res.status(200).json(idiomas);
+    } catch (error) {
+        console.error('Error al obtener todos los idiomas:', error);
+        res.status(500).json({ error: 'Error al obtener todos los idiomas.' });
+    }
+});
+
+// Crear nuevo idioma
+app.post('/api/idiomas', async (req, res) => {
+    try {
+        const { codigo, nombre, nombreNativo, bandera, predeterminado } = req.body;
+        
+        if (!codigo || !nombre || !nombreNativo) {
+            return res.status(400).json({ error: 'Código, nombre y nombre nativo son obligatorios.' });
+        }
+
+        // Validar que el código no exista
+        const idiomaExistente = await Idioma.findOne({ codigo });
+        if (idiomaExistente) {
+            return res.status(400).json({ error: 'Ya existe un idioma con este código.' });
+        }
+
+        const nuevoIdioma = new Idioma({
+            codigo,
+            nombre,
+            nombreNativo,
+            bandera,
+            predeterminado: predeterminado || false
+        });
+
+        await nuevoIdioma.save();
+
+        // Si no hay traducciones base para este idioma, crear algunas básicas
+        await crearTraduccionesBase(codigo);
+
+        res.status(201).json({ message: 'Idioma creado correctamente.', idioma: nuevoIdioma });
+    } catch (error) {
+        console.error('Error al crear el idioma:', error);
+        res.status(500).json({ error: 'Error al crear el idioma.' });
+    }
+});
+
+// Actualizar idioma
+app.put('/api/idiomas/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre, nombreNativo, bandera, activo, predeterminado } = req.body;
+
+        const idioma = await Idioma.findById(id);
+        if (!idioma) {
+            return res.status(404).json({ error: 'Idioma no encontrado.' });
+        }
+
+        if (nombre) idioma.nombre = nombre;
+        if (nombreNativo) idioma.nombreNativo = nombreNativo;
+        if (bandera !== undefined) idioma.bandera = bandera;
+        if (activo !== undefined) idioma.activo = activo;
+        if (predeterminado !== undefined) idioma.predeterminado = predeterminado;
+
+        await idioma.save();
+        res.status(200).json({ message: 'Idioma actualizado correctamente.', idioma });
+    } catch (error) {
+        console.error('Error al actualizar el idioma:', error);
+        res.status(500).json({ error: 'Error al actualizar el idioma.' });
+    }
+});
+
+// Eliminar idioma
+app.delete('/api/idiomas/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const idioma = await Idioma.findById(id);
+        if (!idioma) {
+            return res.status(404).json({ error: 'Idioma no encontrado.' });
+        }
+
+        // No permitir eliminar el idioma predeterminado
+        if (idioma.predeterminado) {
+            return res.status(400).json({ error: 'No se puede eliminar el idioma predeterminado.' });
+        }
+
+        // Eliminar todas las traducciones de este idioma
+        await Traduccion.deleteMany({ idioma: idioma.codigo });
+        await Idioma.findByIdAndDelete(id);
+
+        res.status(200).json({ message: 'Idioma eliminado correctamente.' });
+    } catch (error) {
+        console.error('Error al eliminar el idioma:', error);
+        res.status(500).json({ error: 'Error al eliminar el idioma.' });
+    }
+});
+
+// ===== RUTAS PARA GESTIÓN DE TRADUCCIONES =====
+
+// Obtener todas las traducciones de un idioma
+app.get('/api/traducciones/:idioma', async (req, res) => {
+    try {
+        const { idioma } = req.params;
+        const traducciones = await Traduccion.find({ idioma }).sort({ clave: 1 });
+        
+        // Convertir a objeto para facilitar el acceso
+        const objetoTraducciones = {};
+        traducciones.forEach(t => {
+            objetoTraducciones[t.clave] = t.texto;
+        });
+
+        res.status(200).json(objetoTraducciones);
+    } catch (error) {
+        console.error('Error al obtener las traducciones:', error);
+        res.status(500).json({ error: 'Error al obtener las traducciones.' });
+    }
+});
+
+// Crear o actualizar traducción
+app.post('/api/traducciones', async (req, res) => {
+    try {
+        const { clave, idioma, texto, contexto } = req.body;
+
+        if (!clave || !idioma || !texto) {
+            return res.status(400).json({ error: 'Clave, idioma y texto son obligatorios.' });
+        }
+
+        // Verificar que el idioma existe
+        const idiomaExiste = await Idioma.findOne({ codigo: idioma });
+        if (!idiomaExiste) {
+            return res.status(400).json({ error: 'El idioma especificado no existe.' });
+        }
+
+        const traduccionExistente = await Traduccion.findOne({ clave, idioma });
+        
+        if (traduccionExistente) {
+            // Actualizar traducción existente
+            traduccionExistente.texto = texto;
+            if (contexto) traduccionExistente.contexto = contexto;
+            await traduccionExistente.save();
+            res.status(200).json({ message: 'Traducción actualizada correctamente.' });
+        } else {
+            // Crear nueva traducción
+            const nuevaTraduccion = new Traduccion({ clave, idioma, texto, contexto });
+            await nuevaTraduccion.save();
+            res.status(201).json({ message: 'Traducción creada correctamente.' });
+        }
+    } catch (error) {
+        console.error('Error al crear/actualizar la traducción:', error);
+        res.status(500).json({ error: 'Error al crear/actualizar la traducción.' });
+    }
+});
+
+// Traducir automáticamente una clave a un idioma (usando Google Translate API simulado)
+app.post('/api/traducciones/auto', async (req, res) => {
+    try {
+        const { clave, idiomaOrigen, idiomaDestino, textoOrigen } = req.body;
+
+        if (!clave || !idiomaOrigen || !idiomaDestino || !textoOrigen) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+        }
+
+        // Aquí se integraría con un servicio real de traducción
+        // Por ahora, simularemos algunas traducciones básicas
+        const textoTraducido = await traducirTexto(textoOrigen, idiomaOrigen, idiomaDestino);
+
+        // Guardar la traducción automática
+        const traduccion = await Traduccion.findOneAndUpdate(
+            { clave, idioma: idiomaDestino },
+            { 
+                clave, 
+                idioma: idiomaDestino, 
+                texto: textoTraducido,
+                contexto: `Traducción automática desde ${idiomaOrigen}`
+            },
+            { upsert: true, new: true }
+        );
+
+        res.status(200).json({ 
+            message: 'Traducción automática creada correctamente.',
+            traduccion: textoTraducido
+        });
+    } catch (error) {
+        console.error('Error en la traducción automática:', error);
+        res.status(500).json({ error: 'Error en la traducción automática.' });
+    }
+});
+
+// ===== FUNCIONES AUXILIARES PARA IDIOMAS =====
+
+// Función para crear traducciones base cuando se crea un nuevo idioma
+async function crearTraduccionesBase(codigoIdioma) {
+    const traduccionesBase = [
+        { clave: 'app.title', texto: getTraduccionBase('app.title', codigoIdioma) },
+        { clave: 'nav.home', texto: getTraduccionBase('nav.home', codigoIdioma) },
+        { clave: 'nav.products', texto: getTraduccionBase('nav.products', codigoIdioma) },
+        { clave: 'nav.about', texto: getTraduccionBase('nav.about', codigoIdioma) },
+        { clave: 'nav.contact', texto: getTraduccionBase('nav.contact', codigoIdioma) },
+        { clave: 'nav.login', texto: getTraduccionBase('nav.login', codigoIdioma) },
+        { clave: 'nav.register', texto: getTraduccionBase('nav.register', codigoIdioma) },
+        { clave: 'nav.cart', texto: getTraduccionBase('nav.cart', codigoIdioma) },
+        { clave: 'nav.profile', texto: getTraduccionBase('nav.profile', codigoIdioma) },
+        { clave: 'nav.preferences', texto: getTraduccionBase('nav.preferences', codigoIdioma) },
+        { clave: 'btn.save', texto: getTraduccionBase('btn.save', codigoIdioma) },
+        { clave: 'btn.cancel', texto: getTraduccionBase('btn.cancel', codigoIdioma) },
+        { clave: 'btn.delete', texto: getTraduccionBase('btn.delete', codigoIdioma) },
+        { clave: 'btn.edit', texto: getTraduccionBase('btn.edit', codigoIdioma) },
+        { clave: 'btn.add', texto: getTraduccionBase('btn.add', codigoIdioma) },
+        { clave: 'form.email', texto: getTraduccionBase('form.email', codigoIdioma) },
+        { clave: 'form.password', texto: getTraduccionBase('form.password', codigoIdioma) },
+        { clave: 'form.name', texto: getTraduccionBase('form.name', codigoIdioma) },
+        { clave: 'form.surname', texto: getTraduccionBase('form.surname', codigoIdioma) },
+        { clave: 'form.phone', texto: getTraduccionBase('form.phone', codigoIdioma) }
+    ];
+
+    for (const traduccion of traduccionesBase) {
+        await Traduccion.findOneAndUpdate(
+            { clave: traduccion.clave, idioma: codigoIdioma },
+            { ...traduccion, idioma: codigoIdioma },
+            { upsert: true }
+        );
+    }
+}
+
+// Función para obtener traducciones base según el idioma
+function getTraduccionBase(clave, idioma) {
+    const traducciones = {
+        'es': {
+            'app.title': 'Catálogo de Productos',
+            'nav.home': 'Inicio',
+            'nav.products': 'Productos',
+            'nav.about': 'Acerca de',
+            'nav.contact': 'Contacto',
+            'nav.login': 'Iniciar Sesión',
+            'nav.register': 'Registrarse',
+            'nav.cart': 'Carrito',
+            'nav.profile': 'Perfil',
+            'nav.preferences': 'Preferencias',
+            'btn.save': 'Guardar',
+            'btn.cancel': 'Cancelar',
+            'btn.delete': 'Eliminar',
+            'btn.edit': 'Editar',
+            'btn.add': 'Agregar',
+            'form.email': 'Correo electrónico',
+            'form.password': 'Contraseña',
+            'form.name': 'Nombre',
+            'form.surname': 'Apellido',
+            'form.phone': 'Teléfono'
+        },
+        'en': {
+            'app.title': 'Product Catalog',
+            'nav.home': 'Home',
+            'nav.products': 'Products',
+            'nav.about': 'About',
+            'nav.contact': 'Contact',
+            'nav.login': 'Login',
+            'nav.register': 'Register',
+            'nav.cart': 'Cart',
+            'nav.profile': 'Profile',
+            'nav.preferences': 'Preferences',
+            'btn.save': 'Save',
+            'btn.cancel': 'Cancel',
+            'btn.delete': 'Delete',
+            'btn.edit': 'Edit',
+            'btn.add': 'Add',
+            'form.email': 'Email',
+            'form.password': 'Password',
+            'form.name': 'Name',
+            'form.surname': 'Last Name',
+            'form.phone': 'Phone'
+        },
+        'pt': {
+            'app.title': 'Catálogo de Produtos',
+            'nav.home': 'Início',
+            'nav.products': 'Produtos',
+            'nav.about': 'Sobre',
+            'nav.contact': 'Contato',
+            'nav.login': 'Entrar',
+            'nav.register': 'Registrar',
+            'nav.cart': 'Carrinho',
+            'nav.profile': 'Perfil',
+            'nav.preferences': 'Preferências',
+            'btn.save': 'Salvar',
+            'btn.cancel': 'Cancelar',
+            'btn.delete': 'Excluir',
+            'btn.edit': 'Editar',
+            'btn.add': 'Adicionar',
+            'form.email': 'E-mail',
+            'form.password': 'Senha',
+            'form.name': 'Nome',
+            'form.surname': 'Sobrenome',
+            'form.phone': 'Telefone'
+        }
+    };
+
+    return traducciones[idioma]?.[clave] || traducciones['es'][clave] || clave;
+}
+
+// Función de traducción automática simulada
+async function traducirTexto(texto, idiomaOrigen, idiomaDestino) {
+    // En una implementación real, aquí se usaría Google Translate API, DeepL, etc.
+    // Por ahora, retornamos traducciones básicas o el texto original
+    
+    const traduccionesBasicas = {
+        'es-en': {
+            'Hola': 'Hello',
+            'Adiós': 'Goodbye',
+            'Gracias': 'Thank you',
+            'Por favor': 'Please',
+            'Sí': 'Yes',
+            'No': 'No'
+        },
+        'en-es': {
+            'Hello': 'Hola',
+            'Goodbye': 'Adiós',
+            'Thank you': 'Gracias',
+            'Please': 'Por favor',
+            'Yes': 'Sí',
+            'No': 'No'
+        },
+        'es-pt': {
+            'Hola': 'Olá',
+            'Adiós': 'Tchau',
+            'Gracias': 'Obrigado',
+            'Por favor': 'Por favor',
+            'Sí': 'Sim',
+            'No': 'Não'
+        }
+    };
+
+    const claveDiccionario = `${idiomaOrigen}-${idiomaDestino}`;
+    return traduccionesBasicas[claveDiccionario]?.[texto] || texto;
+}

@@ -1,4 +1,11 @@
+// Inicializar gestor de temas (ya no es necesario porque se hace automáticamente en temasManager.js)
+// Solo guardamos la referencia global
+let temasManager;
+
 document.addEventListener('DOMContentLoaded', () => {
+
+    // Usar el gestor de temas global
+    temasManager = window.temasManager;
 
     const contenedorProductos = document.getElementById('contenedor-productos');
     const modal = document.getElementById('modal');
@@ -920,18 +927,25 @@ function openCRUD() {
             mostrandoCarrito = false;
             ocultarLoader();
         }
-    });
-
-    document.getElementById('btnPreferencias').addEventListener('click', () => {
+    });    document.getElementById('btnPreferencias').addEventListener('click', () => {
         showModal(formPreferenciasContainer, modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer);
-        CargarPreferencias();
-    });
-
-    // Función para guardar las preferencias del usuario
+        cargarMonedas();
+        // Establecer el tema actual en el selector cuando se abre el modal
+        if (temasManager) {
+            temasManager.establecerTemaEnSelector();
+        }
+    });    // Función para guardar las preferencias del usuario (temas y monedas)
     document.getElementById('formPreferencias').addEventListener('submit', (event) => {
         event.preventDefault();
         mostrarLoader();
         try {
+            // Guardar tema
+            const temaPreferido = document.getElementById('temaPreferido').value;
+            if (temaPreferido && temasManager) {
+                temasManager.aplicarTema(temaPreferido);
+            }
+
+            // Guardar moneda
             const monedaPreferida = document.getElementById('monedaPreferida').value;
             if (!monedaPreferida) {
                 Swal.fire({
@@ -946,13 +960,15 @@ function openCRUD() {
 
             // Guardar la moneda preferida en el localStorage
             localStorage.setItem('monedaPreferida', monedaPreferida);
+            
             Swal.fire({
                 icon: 'success',
                 title: 'Preferencias guardadas',
-                text: 'Preferencias guardadas exitosamente.',
+                text: 'Temas y preferencias guardadas exitosamente.',
                 toast: true,
                 position: 'top-end' 
             });
+            
             hideModal(modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer);
             cargarProductos(); // Recargar los productos con la moneda seleccionada
             cargarProductosRecomendados(); // Recargar los productos recomendados
