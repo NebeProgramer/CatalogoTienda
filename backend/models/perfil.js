@@ -45,10 +45,14 @@ const PerfilSchema = new mongoose.Schema({
     descripcion: { type: String, default: "" },
     tarjeta: [TarjetaSchema],
     carrito: [carritoSchema],
-    registroCompra: [RegistroCompra],
-    rol: { type: String, default: "usuario" },
+    registroCompra: [RegistroCompra],    rol: { type: String, default: "usuario" },
     token: { type: String, default: "" },
     tokenExpira: { type: Date },
+    // Campos para Google OAuth
+    googleId: { type: String, default: "" },
+    fotoGoogle: { type: String, default: "" },
+    // Campo para foto de perfil personalizada
+    fotoPerfil: { type: String, default: "" },
 });
 
 module.exports = mongoose.model('Perfil', PerfilSchema);

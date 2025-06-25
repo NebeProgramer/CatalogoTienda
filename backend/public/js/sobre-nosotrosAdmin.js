@@ -211,8 +211,7 @@ function ocultarLoader() {
                 const Apellidos = miembro.querySelector('input[name="apellidos"]')?.value.trim();
                 const Correo = miembro.querySelector('input[name="correo"]')?.value.trim();
                 const Telefono = miembro.querySelector('input[name="telefono"]')?.value.trim();
-                const Descripcion = miembro.querySelector('textarea[name="descripcion"]')?.value.trim();
-                const FotoImg = miembro.querySelector('img.team-photo');
+                const Descripcion = miembro.querySelector('textarea[name="descripcion"]')?.value.trim();                const FotoImg = miembro.querySelector('img.team-photo');
                 const FotoFile = miembro.querySelector('input[name="foto"]')?.files[0];
 
                 // Validar campos obligatorios
@@ -234,21 +233,24 @@ function ocultarLoader() {
                 formData.append('Apellidos', Apellidos);
                 formData.append('Correo', Correo);
                 formData.append('Telefono', Telefono);
+                
+                // Manejar la foto: priorizar archivo nuevo, luego conservar imagen existente
                 if (FotoFile) {
+                    // Si hay un archivo nuevo seleccionado, subirlo
                     formData.append('foto', FotoFile);
-                } else if (FotoImg && FotoImg.src) {
-                    const fileName = FotoImg.src.split('/').pop();
-                    formData.append('foto', fileName);
-                }
-
-                console.log('Datos enviados:', {
-                    id: formData.get('id'),
+                } else if (FotoImg && FotoImg.src && !FotoImg.src.startsWith('data:') && !FotoImg.src.includes('blob:')) {
+                    // Si no hay archivo nuevo pero hay una imagen existente (no data URL ni blob), conservar la ruta
+                    const rutaImagen = FotoImg.src.replace(window.location.origin, ''); // Obtener ruta relativa
+                    formData.append('fotoExistente', rutaImagen);
+                }                console.log('Datos enviados:', {
+                    id: formData.get('Id'),
                     descripcion: formData.get('Descripcion'),
                     nombres: formData.get('Nombres'),
                     apellidos: formData.get('Apellidos'),
                     correo: formData.get('Correo'),
                     telefono: formData.get('Telefono'),
-                    foto: formData.get('foto')
+                    foto: formData.get('foto'),
+                    fotoExistente: formData.get('fotoExistente')
                 });
 
                 const respuesta = await fetch('/api/sobre-nosotros', {

@@ -77,10 +77,22 @@
             </div>
         </div>
 
-            <main>
-                <div class="formPerfilContainer">
+            <main>                <div class="formPerfilContainer">
                     <h2>Editar Perfil</h2>
                     <form id="formPerfil">
+                        <!-- Sección de Avatar/Foto de Perfil -->
+                        <div class="avatar-section">
+                            <label>Foto de Perfil:</label>
+                            <div class="avatar-container">
+                                <img id="avatarPreview" src="/img/default-avatar.svg" alt="Avatar" class="avatar-preview">
+                                <div class="avatar-buttons">
+                                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                                    <button type="button" id="btnCambiarAvatar" class="btn-avatar">Cambiar Foto</button>
+                                    <button type="button" id="btnEliminarAvatar" class="btn-avatar btn-eliminar">Eliminar</button>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <label for="nombrePerfil">Nombre:</label>
                         <input type="text" id="nombrePerfil" required>
                         <label for="apellidoPerfil">Apellido:</label>
@@ -171,7 +183,7 @@
 <script src="/js/Loaders.js"></script>
 <script src="/js/Mapa.js"></script>
 <script src="/js/Redes.js"></script>
-<script src="/js/sesion.js"></script>
+<script src="/js/Sesion.js"></script>
 <script src="/js/datos-perfil.js"></script>
         </body>
 

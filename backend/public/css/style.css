@@ -1729,3 +1729,91 @@ button.eliminar-termino-btn:hover {
 .producto-recomendado:hover .producto-recomendado-inner {
     transform: rotateY(180deg);
 }
+
+/* ===== ESTILOS PARA BOTÓN DE GOOGLE OAUTH ===== */
+.google-signin-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 16px;
+    margin: 10px 0;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #3c4043;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.google-signin-btn:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-color: #c6c6c6;
+    background-color: #f8f9fa;
+}
+
+.google-signin-btn:active {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    background-color: #f1f3f4;
+}
+
+.google-signin-btn svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* Contenedor para separador "O" entre métodos de login */
+.login-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 15px 0;
+    color: #5f6368;
+    font-size: 14px;
+}
+
+.login-separator::before,
+.login-separator::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #dadce0;
+}
+
+.login-separator::before {
+    margin-right: 16px;
+}
+
+.login-separator::after {
+    margin-left: 16px;
+}
+
+/* Ajustes para el modal de sesión con Google */
+.form-sesion-container {
+    position: relative;
+}
+
+.google-auth-section {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e8eaed;
+}
+
+/* Responsivo para el botón de Google */
+@media (max-width: 768px) {
+    .google-signin-btn {
+        font-size: 13px;
+        padding: 10px 14px;
+    }
+    
+    .google-signin-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+}

@@ -342,17 +342,42 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                     });
                 }
             if (iniciarSesionBtn) iniciarSesionBtn.style.display = 'none';
-            if (crearCuentaBtn) crearCuentaBtn.style.display = 'none';
-            const listaSesion = document.querySelector('.iniciosesion');
+            if (crearCuentaBtn) crearCuentaBtn.style.display = 'none';            const listaSesion = document.querySelector('.iniciosesion');
             const perfilLi = document.createElement('li');
             const perfilLink = document.createElement('a');
+            
+            // Crear elemento para avatar
+            const avatarImg = document.createElement('img');
+            avatarImg.style.width = '25px';
+            avatarImg.style.height = '25px';
+            avatarImg.style.borderRadius = '50%';
+            avatarImg.style.marginRight = '8px';
+            avatarImg.style.objectFit = 'cover';
+            avatarImg.style.border = '2px solid #ddd';
+              // Determinar qué imagen usar
+            if (data.user.fotoGoogle && data.user.fotoGoogle.trim() !== "") {
+                avatarImg.src = data.user.fotoGoogle;
+            } else if (data.user.fotoPerfil && data.user.fotoPerfil.trim() !== "") {
+                avatarImg.src = data.user.fotoPerfil;
+            } else {
+                avatarImg.src = '/img/default-avatar.svg'; // Avatar por defecto
+            }
+            
+            avatarImg.onerror = function() {
+                this.src = '/img/default-avatar.svg'; // Fallback si la imagen no carga
+            };
+            
             if (data.user && data.user.nombre && data.user.nombre.trim() !== "") {
                 perfilLink.textContent = data.user.nombre;
             } else {
                 perfilLink.textContent = 'Editar Perfil';
             }
+            
             perfilLink.id = 'perfilBtn';
             perfilLink.href = '#';
+            perfilLink.style.display = 'flex';
+            perfilLink.style.alignItems = 'center';
+            perfilLink.insertBefore(avatarImg, perfilLink.firstChild);
             perfilLink.addEventListener('click', () => mostrarPerfil(data.user, Swal, mostrarLoader, ocultarLoader));
             perfilLi.appendChild(perfilLink);
             const cerrarSesionLi = document.createElement('li');
@@ -432,16 +457,41 @@ function usuarioActivo(Swal, mostrarLoader, ocultarLoader) {
     if (usuario) {
         console.log('Sesión activa:', usuario);
         document.getElementById('crearCuenta').style.display = 'none';
-        document.getElementById('iniciarSesion').style.display = 'none';
-        const listaSesion = document.querySelector('.iniciosesion');
+        document.getElementById('iniciarSesion').style.display = 'none';        const listaSesion = document.querySelector('.iniciosesion');
         const perfilLi = document.createElement('li');
         const perfilLink = document.createElement('a');
+        
+        // Crear elemento para avatar
+        const avatarImg = document.createElement('img');
+        avatarImg.style.width = '25px';
+        avatarImg.style.height = '25px';
+        avatarImg.style.borderRadius = '50%';
+        avatarImg.style.marginRight = '8px';
+        avatarImg.style.objectFit = 'cover';
+        avatarImg.style.border = '2px solid #ddd';
+          // Determinar qué imagen usar
+        if (usuario.fotoGoogle && usuario.fotoGoogle.trim() !== "") {
+            avatarImg.src = usuario.fotoGoogle;
+        } else if (usuario.fotoPerfil && usuario.fotoPerfil.trim() !== "") {
+            avatarImg.src = usuario.fotoPerfil;
+        } else {
+            avatarImg.src = '/img/default-avatar.svg'; // Avatar por defecto
+        }
+        
+        avatarImg.onerror = function() {
+            this.src = '/img/default-avatar.svg'; // Fallback si la imagen no carga
+        };
+        
         if (usuario.nombre && usuario.nombre.trim() !== "") {
             perfilLink.textContent = usuario.nombre;
         } else {
             perfilLink.textContent = 'Editar Perfil';
         }
         perfilLink.id = 'perfilBtn';
+        perfilLink.href = '#';
+        perfilLink.style.display = 'flex';
+        perfilLink.style.alignItems = 'center';
+        perfilLink.insertBefore(avatarImg, perfilLink.firstChild);
         perfilLink.href = '#';
         perfilLink.addEventListener('click', () => mostrarPerfil(usuario, Swal, mostrarLoader, ocultarLoader));
         perfilLi.appendChild(perfilLink);
@@ -462,4 +512,133 @@ function usuarioActivo(Swal, mostrarLoader, ocultarLoader) {
     } else {
         console.log('No hay sesión activa.');
     }
+}
+
+// ===== FUNCIONES DE GOOGLE OAUTH =====
+
+// Función para iniciar el proceso de autenticación con Google
+function iniciarSesionGoogle() {
+    window.location.href = '/auth/google';
+}
+
+// Función para verificar si el usuario se autenticó exitosamente con Google
+async function verificarAutenticacionGoogle() {
+    try {
+        const respuesta = await fetch('/api/auth/user', {
+            method: 'GET',
+            credentials: 'include' // Importante para incluir cookies de sesión
+        });
+        
+        if (respuesta.ok) {
+            const data = await respuesta.json();
+            if (data.user) {
+                // Usuario autenticado exitosamente con Google
+                localStorage.setItem('usuario', JSON.stringify(data.user));
+                
+                // Mostrar mensaje de bienvenida
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Bienvenido!',
+                        text: `Has iniciado sesión con Google como ${data.user.nombre}`,
+                        toast: true,
+                        position: 'top-end',
+                        timer: 3000
+                    });
+                }
+                
+                // Actualizar la interfaz
+                actualizarInterfazUsuario(data.user);
+                return true;
+            }
+        }
+        return false;
+    } catch (error) {
+        console.error('Error al verificar autenticación con Google:', error);
+        return false;
+    }
+}
+
+// Función para actualizar la interfaz cuando un usuario se autentica
+function actualizarInterfazUsuario(usuario) {
+    // Ocultar botones de inicio de sesión y registro
+    const iniciarSesionBtn = document.getElementById('iniciarSesion');
+    const crearCuentaBtn = document.getElementById('crearCuenta');
+    
+    if (iniciarSesionBtn) iniciarSesionBtn.style.display = 'none';
+    if (crearCuentaBtn) crearCuentaBtn.style.display = 'none';
+    
+    // Crear elementos del perfil
+    const listaSesion = document.querySelector('.iniciosesion');
+    if (listaSesion) {
+        listaSesion.innerHTML = ''; // Limpiar contenido existente
+        
+        const perfilLi = document.createElement('li');
+        const perfilLink = document.createElement('a');
+        
+        // Mostrar nombre o "Editar Perfil"
+        if (usuario.nombre && usuario.nombre.trim() !== "") {
+            perfilLink.textContent = usuario.nombre;
+        } else {
+            perfilLink.textContent = 'Editar Perfil';
+        }
+        
+        perfilLink.id = 'perfilBtn';
+        perfilLink.href = '#';
+        perfilLink.addEventListener('click', () => {
+            if (typeof mostrarPerfil === 'function') {
+                mostrarPerfil(usuario, Swal, mostrarLoader, ocultarLoader);
+            } else {
+                window.location.href = '/perfil';
+            }
+        });
+        perfilLi.appendChild(perfilLink);
+        
+        // Botón de cerrar sesión
+        const cerrarSesionLi = document.createElement('li');
+        const cerrarSesionLink = document.createElement('a');
+        cerrarSesionLink.textContent = 'Cerrar Sesión';
+        cerrarSesionLink.id = 'cerrarSesionBtn';
+        cerrarSesionLink.href = '#';
+        cerrarSesionLink.addEventListener('click', cerrarSesion);
+        cerrarSesionLi.appendChild(cerrarSesionLink);
+        
+        listaSesion.appendChild(perfilLi);
+        listaSesion.appendChild(cerrarSesionLi);
+    }
+    
+    // Mostrar carrito si existe
+    const carrito = document.getElementById('carrito');
+    if (carrito) {
+        carrito.style.display = 'block';
+    }
+}
+
+// Función para verificar autenticación de Google al cargar la página
+function verificarParametrosGoogle() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('google_login') === 'success') {
+        // Eliminar el parámetro de la URL
+        const newUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+        
+        // Verificar autenticación
+        verificarAutenticacionGoogle();
+    }
+}
+
+// Función para inicializar el botón de Google OAuth
+function inicializarBotonGoogle() {
+    const botonGoogle = document.getElementById('googleSignInBtn');
+    if (botonGoogle) {
+        botonGoogle.addEventListener('click', iniciarSesionGoogle);
+    }
+}
+
+// Inicializar verificación de Google y eventos al cargar la página
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', function() {
+        verificarParametrosGoogle();
+        inicializarBotonGoogle();
+    });
 }

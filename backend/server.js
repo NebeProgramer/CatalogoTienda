@@ -1,7 +1,12 @@
+// CONFIGURACIÓN PARA USO LOCAL - Credenciales incluidas directamente en el código
+// MongoDB URI y credenciales de correo están configuradas directamente para desarrollo local
+// IMPORTANTE: Cambiar a variables de entorno para producción
+
 require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 const multer = require('multer');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -18,12 +23,19 @@ const { v4: uuidv4 } = require('uuid'); // Import uuid for unique ID generation
 const RedSocial = require('./models/redSocial'); // Import the RedSocial model
 const IPPermitida = require('./models/ipPermitida'); // Importa el modelo de IP permitida
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt'); // Importar bcrypt para cifrado de contraseñas
+const compression = require('compression'); // Compresión gzip
+const helmet = require('helmet'); // Headers de seguridad
+const rateLimit = require('express-rate-limit'); // Rate limiting
+const passport = require('passport'); // Autenticación
+const GoogleStrategy = require('passport-google-oauth20').Strategy; // Google OAuth
+const session = require('express-session'); // Manejo de sesiones
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Conexión a MongoDB actualizada
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect("mongodb+srv://Anderson:20010113@practicbd.yolfa87.mongodb.net/?retryWrites=true&w=majority&appName=PracticBD")
     .then(() => {
         console.log('Conexión a MongoDB exitosa');
     })
@@ -46,10 +58,13 @@ app.use(express.urlencoded({ extended: true })); // Middleware para procesar dat
 
 // Configurar CORS
 app.use(cors({
-    origin: '*', // Permitir solicitudes desde cualquier origen
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-    allowedHeaders: ['Content-Type', 'Authorization'] // Encabezados permitidos
+    origin: function (origin, callback) {
+        callback(null, true);
+    },
+    credentials: true
 }));
+
+// ===== MIDDLEWARE DE SEGURIDAD Y RENDIMIENTO =====
 
 // Configuración de multer para guardar imágenes
 const storageProductos = multer.diskStorage({
@@ -64,7 +79,7 @@ const storageProductos = multer.diskStorage({
 
 const storageSobreNosotros = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '..', 'public', 'img'));
+        cb(null, path.join(__dirname, 'public', 'img'));
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -72,8 +87,253 @@ const storageSobreNosotros = multer.diskStorage({
     }
 });
 
+// Configuración de multer para fotos de perfil
+const storagePerfiles = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, 'public', 'img', 'perfiles'));
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        cb(null, `perfil-${uniqueSuffix}-${file.originalname}`);
+    }
+});
+
 const uploadProductos = multer({ storage: storageProductos });
 const uploadSobreNosotros = multer({ storage: storageSobreNosotros });
+const uploadPerfiles = multer({ storage: storagePerfiles });
+
+// 1. Compresión gzip para mejorar velocidad de transferencia
+app.use(compression());
+
+// 2. Headers de seguridad con Helmet
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://code.jquery.com", "https://accounts.google.com", "https://cdn.jsdelivr.net"],
+            imgSrc: ["'self'", "data:", "blob:", "https://lh3.googleusercontent.com", "https://accounts.google.com", "https://cdn.simpleicons.org"],
+            connectSrc: ["'self'", "https://accounts.google.com", "https://api.ipify.org"],
+            frameSrc: ["'self'", "https://accounts.google.com", "https://www.google.com", "https://maps.google.com"]
+        }
+    },
+    crossOriginEmbedderPolicy: false
+}));
+
+// 3. Rate limiting - Límite general de requests
+const generalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 100, // Máximo 100 requests por IP cada 15 minutos
+    message: {
+        error: 'Demasiadas solicitudes desde esta IP, intenta de nuevo en 15 minutos.'
+    },
+    standardHeaders: true, // Retorna rate limit info en headers `RateLimit-*`
+    legacyHeaders: false, // Desactiva headers `X-RateLimit-*`
+});
+
+// 4. Rate limiting estricto para endpoints de autenticación
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 5, // Máximo 5 intentos de login por IP cada 15 minutos
+    message: {
+        error: 'Demasiados intentos de inicio de sesión, intenta de nuevo en 15 minutos.'
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+    // Permitir reset manual del contador
+    skipSuccessfulRequests: false,
+    skipFailedRequests: false,
+    keyGenerator: (req) => {
+        return req.ip; // Usar IP como clave para el rate limiting
+    }
+});
+
+// Aplicar rate limiting general
+app.use(generalLimiter);
+// ===== CONFIGURACIÓN DE SESIONES Y PASSPORT =====
+app.use(session({
+    secret: 'catalogo-tienda-secret-key-2024',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// ===== CONFIGURACIÓN DE ARCHIVOS ESTÁTICOS CON CACHÉ =====
+
+// Middleware para caché de archivos estáticos
+app.use('/productos', express.static(path.join(__dirname, '..', 'public', 'productos'), {
+    maxAge: '30d', // Caché por 30 días
+    etag: true,
+    lastModified: true
+}));
+
+app.use('/img', express.static(path.join(__dirname, '..', 'public', 'img'), {
+    maxAge: '7d', // Caché por 7 días
+    etag: true,    lastModified: true
+}));
+
+// ===== FUNCIÓN PARA DESCARGAR IMAGEN DE GOOGLE =====
+async function descargarImagenGoogle(urlImagen, nombreUsuario) {
+    return new Promise((resolve, reject) => {
+        if (!urlImagen) {
+            resolve(null);
+            return;
+        }
+
+        // Crear nombre único para la imagen
+        const timestamp = Date.now();
+        const extension = '.jpg'; // Google siempre devuelve JPEG
+        const nombreArchivo = `google_${nombreUsuario}_${timestamp}${extension}`;
+        const rutaCompleta = path.join(__dirname, 'public', 'img', 'perfiles', nombreArchivo);
+        const rutaRelativa = `/img/perfiles/${nombreArchivo}`;
+
+        // Asegurar que el directorio existe
+        const directorioPerfiles = path.join(__dirname, 'public', 'img', 'perfiles');
+        if (!fs.existsSync(directorioPerfiles)) {
+            fs.mkdirSync(directorioPerfiles, { recursive: true });
+        }
+
+        // Descargar la imagen
+        const archivo = fs.createWriteStream(rutaCompleta);
+        
+        https.get(urlImagen, (response) => {
+            if (response.statusCode !== 200) {
+                reject(new Error(`Error al descargar imagen: ${response.statusCode}`));
+                return;
+            }
+
+            response.pipe(archivo);
+
+            archivo.on('finish', () => {
+                archivo.close();
+                console.log(`Imagen de Google descargada: ${nombreArchivo}`);
+                resolve(rutaRelativa);
+            });
+
+            archivo.on('error', (err) => {
+                fs.unlink(rutaCompleta, () => {}); // Eliminar archivo parcial
+                reject(err);
+            });
+        }).on('error', (err) => {
+            reject(err);
+        });
+    });
+}
+
+// ===== CONFIGURACIÓN DE GOOGLE OAUTH =====
+passport.use(new GoogleStrategy({
+    clientID: "314054446098-nt5n2fbv5fd9ifvo6ac5kithqhb6gded.apps.googleusercontent.com",
+    clientSecret: "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",
+    callbackURL: "/auth/google/callback"
+}, async (accessToken, refreshToken, profile, done) => {
+    try {
+        let usuario = await Usuario.findOne({ correo: profile.emails[0].value });
+        
+        // Descargar imagen de Google si existe
+        let fotoPerfilLocal = null;
+        if (profile.photos && profile.photos[0] && profile.photos[0].value) {
+            try {
+                const nombreUsuario = profile.name.givenName.toLowerCase().replace(/[^a-z0-9]/g, '');
+                fotoPerfilLocal = await descargarImagenGoogle(profile.photos[0].value, nombreUsuario);
+            } catch (error) {
+                console.error('Error al descargar imagen de Google:', error);
+                // Continuar sin la imagen si hay error
+            }
+        }
+        
+        if (usuario) {
+            usuario.googleId = profile.id;
+            usuario.nombre = usuario.nombre || profile.name.givenName;
+            usuario.apellido = usuario.apellido || profile.name.familyName;
+            usuario.fotoGoogle = profile.photos[0]?.value;
+            
+            // Actualizar foto de perfil local solo si se descargó exitosamente
+            if (fotoPerfilLocal) {
+                // Si ya tenía una foto de perfil local anterior, eliminarla
+                if (usuario.fotoPerfil) {
+                    const rutaAnterior = path.join(__dirname, 'public', usuario.fotoPerfil);
+                    if (fs.existsSync(rutaAnterior)) {
+                        fs.unlinkSync(rutaAnterior);
+                    }
+                }
+                usuario.fotoPerfil = fotoPerfilLocal;
+            }
+            
+            await usuario.save();
+            return done(null, usuario);
+        } else {
+            const nuevoUsuario = new Usuario({
+                googleId: profile.id,
+                correo: profile.emails[0].value,
+                nombre: profile.name.givenName,
+                apellido: profile.name.familyName,
+                fotoGoogle: profile.photos[0]?.value,
+                fotoPerfil: fotoPerfilLocal, // Guardar la imagen local
+                contrasena: 'google-oauth',
+                telefono: "",
+                direccion: [],
+                descripcion: "",
+                tarjeta: [],
+                carrito: [],
+                registroCompras: [],
+                rol: 'usuario'
+            });
+            
+            await nuevoUsuario.save();
+            return done(null, nuevoUsuario);
+        }
+    } catch (error) {
+        console.error('Error en Google OAuth:', error);
+        return done(error, null);
+    }
+}));
+
+passport.serializeUser((usuario, done) => {
+    done(null, usuario._id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const usuario = await Usuario.findById(id);
+        done(null, usuario);
+    } catch (error) {
+        done(error, null);
+    }
+});
+
+// ===== RUTAS DE GOOGLE OAUTH =====
+app.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile', 'email']
+}));
+
+app.get('/auth/google/callback', 
+    passport.authenticate('google', { failureRedirect: '/' }),
+    (req, res) => {
+        // *** NUEVO: Reiniciar contador de rate limit para esta IP al tener login exitoso con Google ***
+        try {
+            const key = authLimiter.keyGenerator(req);
+            authLimiter.store.resetKey(key);
+            console.log(`Rate limit reset para IP: ${req.ip} después de login exitoso con Google`);
+        } catch (resetError) {
+            console.error('Error al resetear rate limit para Google OAuth:', resetError);
+        }
+        
+        res.redirect('/?google_login=success');
+    }
+);
+
+// Endpoint para obtener datos del usuario autenticado con Google
+app.get('/api/auth/user', (req, res) => {
+    if (req.user) {
+        res.json({ user: req.user });
+    } else {
+        res.status(401).json({ error: 'No autenticado' });
+    }
+});
 
 // Endpoint para obtener los productos
 app.get('/api/productos', async (req, res) => {
@@ -327,9 +587,13 @@ app.post('/api/crear-cuenta', async (req, res) => {
             return res.status(400).json({ error: 'El usuario ya existe' });
         }
 
+        // Cifrar la contraseña antes de guardarla
+        const saltRounds = 12; // Número de rondas de sal (más rondas = más seguro pero más lento)
+        const hashedPassword = await bcrypt.hash(contrasena, saltRounds);
+
         const newUser = new Usuario({
             correo,
-            contrasena,
+            contrasena: hashedPassword, // Guardar la contraseña cifrada
             nombre: "",
             apellido: "",
             telefono: "",
@@ -348,8 +612,8 @@ app.post('/api/crear-cuenta', async (req, res) => {
     }
 });
 
-// Endpoint para iniciar sesión
-app.post('/api/iniciar-sesion', async (req, res) => {
+// Endpoint para iniciar sesión (con rate limiting estricto)
+app.post('/api/iniciar-sesion', authLimiter, async (req, res) => {
     try {
         const { correo, contrasena, ip } = req.body;
         if (!correo || !contrasena) {
@@ -359,10 +623,13 @@ app.post('/api/iniciar-sesion', async (req, res) => {
         if (!usuario) {
             return res.status(404).json({ error: 'Usuario no encontrado.' });
         }
-        if (usuario.contrasena !== contrasena) {
+        
+        // Verificar la contraseña cifrada
+        const passwordMatch = await bcrypt.compare(contrasena, usuario.contrasena);
+        if (!passwordMatch) {
             return res.status(401).json({ error: 'Contraseña incorrecta.' });
         }
-        // Si es admin, verificar IP
+          // Si es admin, verificar IP
         if (usuario.rol === 'admin') {
             // Obtener IP pública del request
             
@@ -373,6 +640,18 @@ app.post('/api/iniciar-sesion', async (req, res) => {
                 return res.status(403).json({ error: 'Acceso denegado: la IP no está registrada para administradores.' });
             }
         }
+
+        // *** NUEVO: Reiniciar contador de rate limit para esta IP al tener login exitoso ***
+        try {
+            // Obtener la store del rate limiter (que usa MemoryStore por defecto)
+            const key = authLimiter.keyGenerator(req);
+            await authLimiter.store.resetKey(key);
+            console.log(`Rate limit reset para IP: ${req.ip} después de login exitoso`);
+        } catch (resetError) {
+            // Si hay error al resetear, solo loggearlo pero no fallar el login
+            console.error('Error al resetear rate limit:', resetError);
+        }
+
         res.status(200).json({ user: usuario });
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
@@ -404,12 +683,33 @@ app.get('/api/perfil', async (req, res) => {
 // Endpoint para actualizar el perfil de un usuario
 app.put('/api/perfil', async (req, res) => {
     try {
-
-
-        const { correo, tarjeta, ...datosActualizados } = req.body;
+        const { correo, tarjeta, fotoPerfil, ...datosActualizados } = req.body;
 
         if (!correo) {
             return res.status(400).json({ error: 'El correo es obligatorio' });
+        }
+
+        // Buscar el usuario actual para manejar la foto de perfil
+        const usuarioActual = await Usuario.findOne({ correo });
+        if (!usuarioActual) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        // Manejar eliminación de foto de perfil
+        if (fotoPerfil === "" && usuarioActual.fotoPerfil) {
+            // Eliminar archivo físico de la foto anterior
+            const rutaAnterior = path.join(__dirname, 'public', usuarioActual.fotoPerfil);
+            if (fs.existsSync(rutaAnterior)) {
+                try {
+                    fs.unlinkSync(rutaAnterior);
+                    console.log(`Archivo de foto eliminado: ${usuarioActual.fotoPerfil}`);
+                } catch (error) {
+                    console.error('Error al eliminar archivo de foto:', error);
+                }
+            }
+            datosActualizados.fotoPerfil = "";
+        } else if (fotoPerfil !== undefined) {
+            datosActualizados.fotoPerfil = fotoPerfil;
         }
 
         if (tarjeta && Array.isArray(tarjeta)) {
@@ -426,11 +726,6 @@ app.put('/api/perfil', async (req, res) => {
             { $set: datosActualizados },
             { new: true }
         );
-
-        if (!usuario) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
-        }
-
 
         res.status(200).json({ message: 'Perfil actualizado exitosamente'});
     } catch (error) {
@@ -674,10 +969,24 @@ app.put('/api/sobre-nosotros', async (req, res) => {
 // Ruta para guardar datos del equipo
 app.post('/api/sobre-nosotros', uploadSobreNosotros.single('foto'), async (req, res) => {
     try {
-        const { Id, Descripcion, Nombres, Apellidos, Correo, Telefono } = req.body;
-        const foto = req.file ? `/img/${req.file.filename}` : req.body.foto || '/img/default.jpg'; // Usar el archivo subido o la ruta proporcionada
+        const { Id, Descripcion, Nombres, Apellidos, Correo, Telefono, fotoExistente } = req.body;
+        
+        let foto;
+        if (req.file) {
+            // Si se subió una nueva imagen, usar la nueva
+            foto = `/img/${req.file.filename}`;
+        } else if (fotoExistente && fotoExistente !== 'undefined') {
+            // Si no hay nueva imagen pero hay una existente enviada desde el frontend, mantener la existente
+            foto = fotoExistente;
+        } else if (req.body.foto && req.body.foto !== 'undefined') {
+            // Mantener compatibilidad con el campo foto anterior
+            foto = req.body.foto;
+        } else {
+            // Si no hay imagen, usar la por defecto
+            foto = '/img/default.jpg';
+        }
 
-        console.log('Datos recibidos:', { Id, Descripcion, Nombres, Apellidos, Correo, Telefono, Foto: foto });
+        console.log('Datos recibidos:', { Id, Descripcion, Nombres, Apellidos, Correo, Telefono, Foto: foto, fotoExistente });
 
         // Validar que los campos requeridos no sean nulos o vacíos
         if (!Descripcion || !Nombres || !Apellidos || !Correo || !Telefono) {
@@ -1303,12 +1612,11 @@ app.post('/api/historia', (req, res) => {
 });
 
 // Función para enviar correo de recuperación
-async function enviarCorreoRecuperacion(destinatario, token, req) {
-    let transporter = nodemailer.createTransport({
+async function enviarCorreoRecuperacion(destinatario, token, req) {    let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: process.env.EMAIL_USER, // Correo desde variable de entorno
-            pass: process.env.EMAIL_PASS  // Contraseña desde variable de entorno
+            user: 'catalogotiendauno@gmail.com', // Correo directo para uso local
+            pass: 'qukh ipnn rmhg qxsp'  // Contraseña de aplicación directa para uso local
         }
     });
 
@@ -1316,7 +1624,7 @@ async function enviarCorreoRecuperacion(destinatario, token, req) {
     const baseUrl = process.env.BASE_URL || (req ? `${req.protocol}://${req.get('host')}` : '');
     const enlace = `${baseUrl}/restablecer-contrasena/${token}`;
     let mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: 'catalogotiendauno@gmail.com',
         to: destinatario,
         subject: 'Recuperación de contraseña',
         html: `
@@ -1360,7 +1668,7 @@ async function enviarCorreoRecuperacion(destinatario, token, req) {
 
 
 // Endpoint para solicitar recuperación de contraseña
-app.post('/api/recuperar-contrasena', async (req, res) => {
+app.post('/api/recuperar-contrasena', authLimiter, async (req, res) => {
     try {
         const { correo } = req.body;
         if (!correo) {
@@ -1383,8 +1691,8 @@ app.post('/api/recuperar-contrasena', async (req, res) => {
     }
 });
 
-// Endpoint para restablecer la contraseña con token
-app.post('/api/restablecer-contrasena', async (req, res) => {
+// Endpoint para restablecer la contraseña con token (con rate limiting estricto)
+app.post('/api/restablecer-contrasena', authLimiter, async (req, res) => {
     try {
         const { token, nuevaContrasena } = req.body;
         if (!token || !nuevaContrasena) {
@@ -1395,7 +1703,12 @@ app.post('/api/restablecer-contrasena', async (req, res) => {
         if (!usuario || !usuario.tokenExpira || usuario.tokenExpira < Date.now()) {
             return res.status(400).json({ error: 'Token inválido o expirado.' });
         }
-        usuario.contrasena = nuevaContrasena;
+        
+        // Cifrar la nueva contraseña antes de guardarla
+        const saltRounds = 12;
+        const hashedPassword = await bcrypt.hash(nuevaContrasena, saltRounds);
+        
+        usuario.contrasena = hashedPassword; // Guardar la contraseña cifrada
         usuario.token = undefined; // Eliminar el token para que no se reutilice
         usuario.tokenExpira = undefined;
         await usuario.save();
@@ -1552,4 +1865,54 @@ app.get('/restablecer-contrasena/:token?', (req, res) => {
 });
 app.get('/factura/:factura?', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'confirmacion.html'));
+});
+
+// Endpoint para subir foto de perfil
+app.post('/api/perfil/foto', uploadPerfiles.single('fotoPerfil'), async (req, res) => {
+    try {
+        const { correo } = req.body;
+
+        if (!correo) {
+            return res.status(400).json({ error: 'El correo es obligatorio' });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ error: 'No se ha subido ninguna imagen' });
+        }
+
+        // Buscar el usuario actual para eliminar la foto anterior
+        const usuarioActual = await Usuario.findOne({ correo });
+        if (!usuarioActual) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        // Eliminar la foto anterior si existe
+        if (usuarioActual.fotoPerfil) {
+            const rutaAnterior = path.join(__dirname, 'public', usuarioActual.fotoPerfil);
+            if (fs.existsSync(rutaAnterior)) {
+                try {
+                    fs.unlinkSync(rutaAnterior);
+                    console.log(`Archivo de foto anterior eliminado: ${usuarioActual.fotoPerfil}`);
+                } catch (error) {
+                    console.error('Error al eliminar archivo anterior:', error);
+                }
+            }
+        }
+
+        const rutaFoto = `/img/perfiles/${req.file.filename}`;
+
+        const usuario = await Usuario.findOneAndUpdate(
+            { correo },
+            { $set: { fotoPerfil: rutaFoto } },
+            { new: true }
+        );
+
+        res.status(200).json({ 
+            message: 'Foto de perfil actualizada exitosamente',
+            fotoPerfil: rutaFoto
+        });
+    } catch (error) {
+        console.error('Error al subir foto de perfil:', error);
+        res.status(500).json({ error: 'Error al subir la foto de perfil.' });
+    }
 });

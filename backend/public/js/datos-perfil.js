@@ -600,16 +600,12 @@ document.addEventListener('DOMContentLoaded', () => {
     btnBorrarTarjeta.addEventListener('click', borrarTarjeta);
     btnGuardarDireccion.addEventListener('click', guardarDireccion);
     btnGuardarTarjeta.addEventListener('click', guardarTarjeta);
-    closeModal.addEventListener('click', ocultarModalUnico);
-
-    window.addEventListener('click', function(event) {
+    closeModal.addEventListener('click', ocultarModalUnico);    window.addEventListener('click', function(event) {
         const modal = document.getElementById('modal');
         if (event.target === modal) {
             ocultarModalUnico();
         }
-    });
-
-    cargarPerfil();
+    });    cargarPerfil();
     cargarUbicaciones(); // Cargar países, ciudades y departamentos
 
     const inputNumeroTarjeta = document.getElementById('numeroTarjeta');
@@ -737,4 +733,170 @@ document.addEventListener('DOMContentLoaded', () => {
         formTarjetaContainer.style.display = 'none';
         formDireccionContainer.style.display = 'none';
     }
+
+    // Elementos del avatar
+    const avatarPreview = document.getElementById('avatarPreview');
+    const avatarInput = document.getElementById('avatarInput');
+    const btnCambiarAvatar = document.getElementById('btnCambiarAvatar');
+    const btnEliminarAvatar = document.getElementById('btnEliminarAvatar');
+
+    // Funcionalidad del avatar
+    const inicializarAvatar = () => {
+        // Mostrar la imagen actual del usuario
+        if (usuario.fotoGoogle && usuario.fotoGoogle.trim() !== "") {
+            avatarPreview.src = usuario.fotoGoogle;
+        } else if (usuario.fotoPerfil && usuario.fotoPerfil.trim() !== "") {
+            avatarPreview.src = usuario.fotoPerfil;
+        } else {
+            avatarPreview.src = '/img/default-avatar.svg';
+        }
+    };
+
+    // Event listener para cambiar avatar
+    btnCambiarAvatar.addEventListener('click', () => {
+        avatarInput.click();
+    });
+
+    // Event listener para eliminar avatar
+    btnEliminarAvatar.addEventListener('click', async () => {
+        try {
+            mostrarLoader();
+            
+            const result = await Swal.fire({
+                title: '¿Eliminar foto de perfil?',
+                text: "Se establecerá la imagen por defecto",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ffb700',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            });
+            
+            if (result.isConfirmed) {
+                // Actualizar en la base de datos
+                const response = await fetch('/api/perfil', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        correo: usuario.correo,
+                        fotoPerfil: ""
+                    })
+                });
+                
+                if (response.ok) {
+                    usuario.fotoPerfil = "";
+                    actualizarLocalStorage();
+                    avatarPreview.src = '/img/default-avatar.svg';
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Foto eliminada',
+                        text: 'Tu foto de perfil ha sido eliminada exitosamente.',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 3000
+                    });
+                } else {
+                    throw new Error('Error al eliminar la foto');
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo eliminar la foto de perfil.',
+                toast: true,
+                position: 'top-end'
+            });
+        } finally {
+            ocultarLoader();
+        }
+    });
+
+    // Event listener para subir nueva imagen
+    avatarInput.addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Validar tipo de archivo
+        if (!file.type.startsWith('image/')) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Archivo inválido',
+                text: 'Por favor selecciona una imagen válida.',
+                toast: true,
+                position: 'top-end'
+            });
+            return;
+        }
+
+        // Validar tamaño (máximo 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Archivo muy grande',
+                text: 'La imagen debe ser menor a 5MB.',
+                toast: true,
+                position: 'top-end'
+            });
+            return;
+        }
+
+        try {
+            mostrarLoader();
+            
+            // Crear FormData para enviar la imagen
+            const formData = new FormData();
+            formData.append('fotoPerfil', file);
+            formData.append('correo', usuario.correo);
+
+            const response = await fetch('/api/perfil/foto', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Actualizar la imagen en el preview
+                avatarPreview.src = data.fotoPerfil;
+                
+                // Actualizar el usuario y localStorage
+                usuario.fotoPerfil = data.fotoPerfil;
+                actualizarLocalStorage();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Foto actualizada',
+                    text: 'Tu foto de perfil ha sido actualizada exitosamente.',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000
+                });
+            } else {
+                throw new Error(data.error || 'Error al subir la imagen');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo subir la imagen. Intenta nuevamente.',
+                toast: true,
+                position: 'top-end'
+            });
+        } finally {
+            ocultarLoader();
+        }
+        
+        // Limpiar el input
+        avatarInput.value = '';
+    });    // Inicializar avatar al cargar la página
+    inicializarAvatar();
+
+    // Llamadas a funciones globales de loader, redes y mapa
+    cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
+    renderMapaFooter(); // Llamar a la función para renderizar el mapa en el footer
 });
