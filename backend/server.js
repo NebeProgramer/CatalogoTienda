@@ -1,6 +1,7 @@
-// CONFIGURACIÓN PARA USO LOCAL - Credenciales incluidas directamente en el código
-// MongoDB URI y credenciales de correo están configuradas directamente para desarrollo local
-// IMPORTANTE: Cambiar a variables de entorno para producción
+// CONFIGURACIÓN DE CATÁLOGO TIENDA
+// Las credenciales sensibles se manejan mediante variables de entorno (.env)
+// Para desarrollo local: copiar .env.example como .env y completar credenciales
+// IMPORTANTE: El archivo .env no debe subirse a Git (está en .gitignore)
 
 require('dotenv').config();
 const express = require('express');
@@ -35,7 +36,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Conexión a MongoDB actualizada
-mongoose.connect("mongodb+srv://Anderson:20010113@practicbd.yolfa87.mongodb.net/?retryWrites=true&w=majority&appName=PracticBD")
+mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://Anderson:20010113@practicbd.yolfa87.mongodb.net/?retryWrites=true&w=majority&appName=PracticBD")
     .then(() => {
         console.log('Conexión a MongoDB exitosa');
     })
@@ -143,7 +144,7 @@ const authLimiter = rateLimit({
 // NOTA: No aplicamos rate limiting general para permitir uso normal de todas las APIs
 // Solo se aplica rate limiting estricto a la ruta de inicio de sesión
 app.use(session({
-    secret: 'catalogo-tienda-secret-key-2024',
+    secret: process.env.SESSION_SECRET || 'catalogo-tienda-secret-key-2024',
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
@@ -216,9 +217,9 @@ async function descargarImagenGoogle(urlImagen, nombreUsuario) {
 
 // ===== CONFIGURACIÓN DE GOOGLE OAUTH =====
 passport.use(new GoogleStrategy({
-    clientID: "314054446098-nt5n2fbv5fd9ifvo6ac5kithqhb6gded.apps.googleusercontent.com",
-    clientSecret: "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",
-    callbackURL: "/auth/google/callback"
+    clientID: process.env.GOOGLE_CLIENT_ID || "314054446098-nt5n2fbv5fd9ifvo6ac5kithqhb6gded.apps.googleusercontent.com",
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET || "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",
+    callbackURL: process.env.GOOGLE_CALLBACK_URL || "/auth/google/callback"
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         let usuario = await Usuario.findOne({ correo: profile.emails[0].value });
