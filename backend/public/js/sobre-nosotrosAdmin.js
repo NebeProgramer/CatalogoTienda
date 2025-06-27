@@ -1,14 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
-
     const usuario = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
-
     if (usuario) {
-        console.log('Sesión activa:', usuario);
-
         // Obtener el ul donde se agregarán los elementos
         const listaSesion = document.querySelector('.iniciosesion');
-
         // Crear el elemento <li> para "Perfil"
         const perfilLi = document.createElement('li');
         const perfilLink = document.createElement('a');
@@ -21,15 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
         perfilLink.href = '#';
         perfilLink.addEventListener('click', () => mostrarPerfil(usuario));
         perfilLi.appendChild(perfilLink);
-
         // Agregar ambos elementos al <ul>
         listaSesion.innerHTML = '';
         listaSesion.appendChild(perfilLi);
     } else {
-        console.log('No hay sesión activa.');
-    }
+        }
 });
-
 document.addEventListener("DOMContentLoaded", async () => {
     // Loader functions
 function mostrarLoader() {
@@ -40,7 +31,6 @@ function ocultarLoader() {
     const loader = document.getElementById('loader');
     if (loader) loader.style.display = 'none';
 }
-
     async function cargarEquipoParaEditar() {
         mostrarLoader();
         try {
@@ -48,13 +38,10 @@ function ocultarLoader() {
             if (!respuesta.ok) {
                 throw new Error('Error al cargar los datos del equipo.');
             }
-    
             const data = await respuesta.json();
-
             data.forEach(miembro => {
             const equipoLista = document.getElementById('equipo-lista');
             equipoLista.innerHTML = ''; // Limpiar el contenedor
-    
             // Crear un formulario para editar los datos
             const miembroDiv = document.createElement('div');
             miembroDiv.classList.add('miembro-item'); // Clase para identificar cada miembro
@@ -75,16 +62,13 @@ function ocultarLoader() {
                     </div>
                 </div>
             `;
-    
             const fotoInput = miembroDiv.querySelector('input[name="foto"]');
             const fotoImg = miembroDiv.querySelector('img');
             const eliminarBtn = miembroDiv.querySelector('.eliminar-miembro-btn');
-    
             // Permitir cambiar la foto al hacer clic
             fotoImg.addEventListener('click', () => {
                 fotoInput.click();
             });
-    
             // Actualizar la vista previa de la foto al seleccionar un archivo
             fotoInput.addEventListener('change', (event) => {
                 const file = event.target.files[0];
@@ -96,7 +80,6 @@ function ocultarLoader() {
                     reader.readAsDataURL(file);
                 }
             });
-    
             // Evento para eliminar el miembro
             eliminarBtn.addEventListener('click', async () => {
                 try {
@@ -114,11 +97,9 @@ function ocultarLoader() {
                             const response = await fetch(`/api/sobre-nosotros/${memberId}`, {
                                 method: 'DELETE'
                             });
-
                             if (!response.ok) {
                                 throw new Error('Error al eliminar el miembro.');
                             }
-
                             swal.fire({
                                 icon: 'success',
                                 title: 'Miembro eliminado',
@@ -135,9 +116,7 @@ function ocultarLoader() {
                     console.error('Error al eliminar el miembro:', error);
                     alert('No se pudo eliminar el miembro.');
                 }
-            
             });
-    
             equipoLista.appendChild(miembroDiv);
         });
         } catch (error) {
@@ -147,7 +126,6 @@ function ocultarLoader() {
             ocultarLoader();
         }
     }
-    
     function agregarCampoMiembro() {
         const equipoLista = document.getElementById('equipo-lista');
         const nuevoMiembro = document.createElement('div');
@@ -169,16 +147,13 @@ function ocultarLoader() {
                     </div>
                 </div>
         `;
-    
         const fotoInput = nuevoMiembro.querySelector('input[name="foto"]');
         const fotoImg = nuevoMiembro.querySelector('img');
         const eliminarBtn = nuevoMiembro.querySelector('.eliminar-miembro-btn');
-    
         // Permitir cambiar la foto al hacer clic
         fotoImg.addEventListener('click', () => {
             fotoInput.click();
         });
-    
         // Actualizar la vista previa de la foto al seleccionar un archivo
         fotoInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
@@ -190,21 +165,16 @@ function ocultarLoader() {
                 reader.readAsDataURL(file);
             }
         });
-    
         // Evento para eliminar el miembro
         eliminarBtn.addEventListener('click', () => {
             equipoLista.removeChild(nuevoMiembro);
         });
-    
         equipoLista.appendChild(nuevoMiembro);
     }
-
     async function guardarEquipo() {
         mostrarLoader();
         try {
-            console.log('Guardando datos del equipo...');
             const miembros = document.querySelectorAll('.miembro-item'); // Seleccionar todos los miembros
-
             for (const miembro of miembros) {
                 const Id = miembro.querySelector('input[name="equipo-id"]')?.value.trim();
                 const Nombres = miembro.querySelector('input[name="nombres"]')?.value.trim();
@@ -213,7 +183,6 @@ function ocultarLoader() {
                 const Telefono = miembro.querySelector('input[name="telefono"]')?.value.trim();
                 const Descripcion = miembro.querySelector('textarea[name="descripcion"]')?.value.trim();                const FotoImg = miembro.querySelector('img.team-photo');
                 const FotoFile = miembro.querySelector('input[name="foto"]')?.files[0];
-
                 // Validar campos obligatorios
                 if (!Nombres || !Apellidos || !Correo || !Telefono || !Descripcion) {
                     Swal.fire({
@@ -225,7 +194,6 @@ function ocultarLoader() {
                     });
                     return;
                 }
-
                 const formData = new FormData();
                 if (Id) formData.append('Id', Id);
                 formData.append('Descripcion', Descripcion);
@@ -233,7 +201,6 @@ function ocultarLoader() {
                 formData.append('Apellidos', Apellidos);
                 formData.append('Correo', Correo);
                 formData.append('Telefono', Telefono);
-                
                 // Manejar la foto: priorizar archivo nuevo, luego conservar imagen existente
                 if (FotoFile) {
                     // Si hay un archivo nuevo seleccionado, subirlo
@@ -242,22 +209,10 @@ function ocultarLoader() {
                     // Si no hay archivo nuevo pero hay una imagen existente (no data URL ni blob), conservar la ruta
                     const rutaImagen = FotoImg.src.replace(window.location.origin, ''); // Obtener ruta relativa
                     formData.append('fotoExistente', rutaImagen);
-                }                console.log('Datos enviados:', {
-                    id: formData.get('Id'),
-                    descripcion: formData.get('Descripcion'),
-                    nombres: formData.get('Nombres'),
-                    apellidos: formData.get('Apellidos'),
-                    correo: formData.get('Correo'),
-                    telefono: formData.get('Telefono'),
-                    foto: formData.get('foto'),
-                    fotoExistente: formData.get('fotoExistente')
-                });
-
-                const respuesta = await fetch('/api/sobre-nosotros', {
+                }                const respuesta = await fetch('/api/sobre-nosotros', {
                     method: 'POST',
                     body: formData
                 });
-
                 if (!respuesta.ok) {
                     const errorData = await respuesta.json();
                     Swal.fire({
@@ -270,7 +225,6 @@ function ocultarLoader() {
                     return;
                 }
             }
-
             Swal.fire({
                 icon: 'success',
                 title: 'Guardado exitoso',
@@ -292,21 +246,14 @@ function ocultarLoader() {
             ocultarLoader();
         }
     }
-    
     cargarEquipoParaEditar();
-
-
 document.getElementById('agregar-miembro-btn').addEventListener('click', () => {
     agregarCampoMiembro();
 });
-
 document.getElementById('guardar-equipo-btn').addEventListener('click', async (e) => {
     e.preventDefault();
     await guardarEquipo();
 });
-
-
-
     // Cargar historia en el textarea
     async function cargarHistoria() {
         const textarea = document.getElementById('historia-textarea');
@@ -323,7 +270,6 @@ document.getElementById('guardar-equipo-btn').addEventListener('click', async (e
             textarea.value = '';
         }
     }
-
     // Guardar historia al enviar el formulario
     const formHistoria = document.getElementById('form-historia');
     if (formHistoria) {
@@ -376,5 +322,4 @@ document.getElementById('guardar-equipo-btn').addEventListener('click', async (e
         });
         cargarHistoria();
     }
-
 });

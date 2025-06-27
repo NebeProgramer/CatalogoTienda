@@ -11,7 +11,6 @@ function showModal(container, modal, formSesionContainer, olvidoContainer, formP
     }
     container.style.display = 'block';
 }
-
 function hideModal(modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer) {
     modal.style.display = 'none';
     formSesionContainer.style.display = 'none';
@@ -27,17 +26,14 @@ function hideModal(modal, formSesionContainer, olvidoContainer, formPreferencias
     document.getElementById('emailSesionC').value = '';
     document.getElementById('passwordSesionC').value = '';
 }
-
 //color de req rojo
 function resetRequisitos(reqLength, reqMayus, reqMinus, reqNum, reqEspecial) {
-    
     reqLength.style.color = 'red';
     reqMayus.style.color = 'red';
     reqMinus.style.color = 'red';
     reqNum.style.color = 'red';
     reqEspecial.style.color = 'red';
 }
-
 function setupLoginForm({
     opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
 }) {
@@ -62,7 +58,6 @@ function setupLoginForm({
     reqNum.style.display = 'none';
     reqEspecial.style.display = 'none';
 }
-
 function setupRegisterForm({
     opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
 }) {
@@ -88,7 +83,6 @@ function setupRegisterForm({
     reqEspecial.style.display = 'block';
     resetRequisitos(reqLength, reqMayus, reqMinus, reqNum, reqEspecial);
 }
-
 function validarRequisitos(password, reqLength, reqMayus, reqMinus, reqNum, reqEspecial) {
     let validos = 0;
     if (password.length >= 8) { reqLength.style.color = 'green'; validos++; } else reqLength.style.color = 'red';
@@ -98,7 +92,6 @@ function validarRequisitos(password, reqLength, reqMayus, reqMinus, reqNum, reqE
     if (/[^A-Za-z0-9]/.test(password)) { reqEspecial.style.color = 'green'; validos++; } else reqEspecial.style.color = 'red';
     return validos === 5;
 }
-
 function validarCoincidencias(password1, password2, passwordSesion, passwordSesionC) {
     if (password1 && password2) {
         if (password1 === password2) {
@@ -113,7 +106,6 @@ function validarCoincidencias(password1, password2, passwordSesion, passwordSesi
         passwordSesionC.style.borderColor = '';
     }
 }
-
 function validarCorreos(correo1, correo2, emailSesion, emailSesionC) {
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!regexCorreo.test(correo1) || !regexCorreo.test(correo2)) {
@@ -130,11 +122,9 @@ function validarCorreos(correo1, correo2, emailSesion, emailSesionC) {
     emailSesion.style.borderColor = 'green';
     return true;
 }
-
 function validarContraseña(password1, password2) {
     return password1 && password2 && password1 === password2;
 }
-
 async function recuperarContraseña(correoRecuperar, Swal, hideModal) {
     if (!correoRecuperar) {
         Swal.fire({
@@ -181,14 +171,12 @@ async function recuperarContraseña(correoRecuperar, Swal, hideModal) {
         });
     }
 }
-
 async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn, crearCuentaBtn, hideModal, formSesion, btnSesion, mostrarPerfil, cerrarSesion, openCRUD, closeCRUD, perfiles, carrito, emailSesionC, passwordSesionC, validarRequisitos, validarCorreos, reqLength, reqMayus, reqMinus, reqNum, reqEspecial }) {
     mostrarLoader();
     const correo = emailSesionC.value;
     const confirmCo = emailSesion.value;
     const contrasena = passwordSesionC.value;
     const confirmCon = passwordSesion.value;
-
     if (!correo || !contrasena || !confirmCo || !confirmCon) {
         Swal.fire({
             icon: 'warning',
@@ -248,7 +236,6 @@ async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultar
                         btnReenviar.onclick = async () => {
                             btnReenviar.disabled = true;
                             btnReenviar.textContent = 'Enviando...';
-                            
                             try {
                                 const respuestaReenvio = await fetch('/api/reenviar-verificacion', {
                                     method: 'POST',
@@ -256,7 +243,6 @@ async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultar
                                     body: JSON.stringify({ correo })
                                 });
                                 const dataReenvio = await respuestaReenvio.json();
-                                
                                 if (respuestaReenvio.ok) {
                                     btnReenviar.textContent = '✓ Enviado';
                                     btnReenviar.style.backgroundColor = '#28a745';
@@ -268,7 +254,6 @@ async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultar
                                 btnReenviar.textContent = 'Error al enviar';
                                 btnReenviar.style.backgroundColor = '#dc3545';
                             }
-                            
                             setTimeout(() => {
                                 btnReenviar.disabled = false;
                                 btnReenviar.textContent = 'Reenviar correo de verificación';
@@ -313,12 +298,10 @@ async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultar
     hideModal();
     formSesion.reset();
 }
-
 async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocultarLoader, Swal, iniciarSesionBtn, crearCuentaBtn, hideModal, formSesion, btnSesion, mostrarPerfil, cerrarSesion, openCRUD, perfiles, carrito }) {
     mostrarLoader();
     const correo = emailSesion.value;
     const contrasena = passwordSesion.value;
-
     if (!correo || !contrasena) {
         Swal.fire({
             icon: 'warning',
@@ -330,7 +313,6 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
         ocultarLoader();
         return;
     }
-
     const ipResponse = await fetch('https://api.ipify.org?format=json');
     const ipData = await ipResponse.json();
     const ip = ipData.ip;    try {
@@ -412,7 +394,6 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
             const listaSesion = document.querySelector('.iniciosesion');
             const perfilLi = document.createElement('li');
             const perfilLink = document.createElement('a');
-            
             // Crear elemento para avatar
             const avatarImg = document.createElement('img');
             avatarImg.style.width = '25px';
@@ -429,17 +410,14 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
             } else {
                 avatarImg.src = '/img/default-avatar.svg'; // Avatar por defecto
             }
-            
             avatarImg.onerror = function() {
                 this.src = '/img/default-avatar.svg'; // Fallback si la imagen no carga
             };
-            
             if (data.user && data.user.nombre && data.user.nombre.trim() !== "") {
                 perfilLink.textContent = data.user.nombre;
             } else {
                 perfilLink.textContent = 'Editar Perfil';
             }
-            
             perfilLink.id = 'perfilBtn';
             perfilLink.href = '#';
             perfilLink.style.display = 'flex';
@@ -480,7 +458,6 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                             btnReenviar.onclick = async () => {
                                 btnReenviar.disabled = true;
                                 btnReenviar.textContent = 'Enviando...';
-                                
                                 try {
                                     const respuestaReenvio = await fetch('/api/reenviar-verificacion', {
                                         method: 'POST',
@@ -488,7 +465,6 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                                         body: JSON.stringify({ correo })
                                     });
                                     const dataReenvio = await respuestaReenvio.json();
-                                    
                                     if (respuestaReenvio.ok) {
                                         btnReenviar.textContent = '✓ Enviado';
                                         btnReenviar.style.backgroundColor = '#28a745';
@@ -500,7 +476,6 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                                     btnReenviar.textContent = 'Error al enviar';
                                     btnReenviar.style.backgroundColor = '#dc3545';
                                 }
-                                
                                 setTimeout(() => {
                                     btnReenviar.disabled = false;
                                     btnReenviar.textContent = 'Reenviar correo de verificación';
@@ -541,12 +516,10 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
         ocultarLoader();
     }
 }
-
 function cerrarSesion() {
     localStorage.removeItem('usuario');
     location.reload();
 }
-
 async function mostrarPerfil(user, Swal, mostrarLoader, ocultarLoader) {
     mostrarLoader();
     try {
@@ -577,16 +550,13 @@ async function mostrarPerfil(user, Swal, mostrarLoader, ocultarLoader) {
         ocultarLoader();
     }
 }
-
 function usuarioActivo(Swal, mostrarLoader, ocultarLoader) {
     const usuario = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
     if (usuario) {
-        console.log('Sesión activa:', usuario);
         document.getElementById('crearCuenta').style.display = 'none';
         document.getElementById('iniciarSesion').style.display = 'none';        const listaSesion = document.querySelector('.iniciosesion');
         const perfilLi = document.createElement('li');
         const perfilLink = document.createElement('a');
-        
         // Crear elemento para avatar
         const avatarImg = document.createElement('img');
         avatarImg.style.width = '25px';
@@ -603,11 +573,9 @@ function usuarioActivo(Swal, mostrarLoader, ocultarLoader) {
         } else {
             avatarImg.src = '/img/default-avatar.svg'; // Avatar por defecto
         }
-        
         avatarImg.onerror = function() {
             this.src = '/img/default-avatar.svg'; // Fallback si la imagen no carga
         };
-        
         if (usuario.nombre && usuario.nombre.trim() !== "") {
             perfilLink.textContent = usuario.nombre;
         } else {
@@ -636,17 +604,13 @@ function usuarioActivo(Swal, mostrarLoader, ocultarLoader) {
             carrito.style.display = 'block';
         }
     } else {
-        console.log('No hay sesión activa.');
-    }
+        }
 }
-
 // ===== FUNCIONES DE GOOGLE OAUTH =====
-
 // Función para iniciar el proceso de autenticación con Google
 function iniciarSesionGoogle() {
     window.location.href = '/auth/google';
 }
-
 // Función para verificar si el usuario se autenticó exitosamente con Google
 async function verificarAutenticacionGoogle() {
     try {
@@ -654,16 +618,13 @@ async function verificarAutenticacionGoogle() {
             method: 'GET',
             credentials: 'include' // Importante para incluir cookies de sesión
         });
-        
         if (respuesta.ok) {
             const data = await respuesta.json();
             if (data.user) {
                 // Usuario autenticado exitosamente con Google
                 localStorage.setItem('usuario', JSON.stringify(data.user));
-                
                 // Actualizar la interfaz primero para evitar pantalla negra
                 actualizarInterfazUsuario(data.user);
-                
                 // Mostrar mensaje de bienvenida después de actualizar la interfaz
                 setTimeout(() => {
                     if (typeof Swal !== 'undefined') {
@@ -678,7 +639,6 @@ async function verificarAutenticacionGoogle() {
                         });
                     }
                 }, 100);
-                
                 return true;
             }
         }
@@ -701,24 +661,19 @@ async function verificarAutenticacionGoogle() {
         return false;
     }
 }
-
 // Función para actualizar la interfaz cuando un usuario se autentica
 function actualizarInterfazUsuario(usuario) {
     // Ocultar botones de inicio de sesión y registro
     const iniciarSesionBtn = document.getElementById('iniciarSesion');
     const crearCuentaBtn = document.getElementById('crearCuenta');
-    
     if (iniciarSesionBtn) iniciarSesionBtn.style.display = 'none';
     if (crearCuentaBtn) crearCuentaBtn.style.display = 'none';
-    
     // Crear elementos del perfil
     const listaSesion = document.querySelector('.iniciosesion');
     if (listaSesion) {
         listaSesion.innerHTML = ''; // Limpiar contenido existente
-        
         const perfilLi = document.createElement('li');
         const perfilLink = document.createElement('a');
-        
         // Crear elemento para avatar
         const avatarImg = document.createElement('img');
         avatarImg.style.width = '25px';
@@ -727,7 +682,6 @@ function actualizarInterfazUsuario(usuario) {
         avatarImg.style.marginRight = '8px';
         avatarImg.style.objectFit = 'cover';
         avatarImg.style.border = '2px solid #ddd';
-        
         // Determinar qué imagen usar (priorizar fotoPerfil local sobre fotoGoogle)
         if (usuario.fotoPerfil && usuario.fotoPerfil.trim() !== "") {
             avatarImg.src = usuario.fotoPerfil;
@@ -736,18 +690,15 @@ function actualizarInterfazUsuario(usuario) {
         } else {
             avatarImg.src = '/img/default-avatar.svg'; // Avatar por defecto
         }
-        
         avatarImg.onerror = function() {
             this.src = '/img/default-avatar.svg'; // Fallback si la imagen no carga
         };
-        
         // Mostrar nombre o "Editar Perfil"
         if (usuario.nombre && usuario.nombre.trim() !== "") {
             perfilLink.textContent = usuario.nombre;
         } else {
             perfilLink.textContent = 'Editar Perfil';
         }
-        
         perfilLink.id = 'perfilBtn';
         perfilLink.href = '#';
         perfilLink.style.display = 'flex';
@@ -761,7 +712,6 @@ function actualizarInterfazUsuario(usuario) {
             }
         });
         perfilLi.appendChild(perfilLink);
-        
         // Botón de cerrar sesión
         const cerrarSesionLi = document.createElement('li');
         const cerrarSesionLink = document.createElement('a');
@@ -770,18 +720,15 @@ function actualizarInterfazUsuario(usuario) {
         cerrarSesionLink.href = '#';
         cerrarSesionLink.addEventListener('click', cerrarSesion);
         cerrarSesionLi.appendChild(cerrarSesionLink);
-        
         listaSesion.appendChild(perfilLi);
         listaSesion.appendChild(cerrarSesionLi);
     }
-    
     // Mostrar carrito si existe
     const carrito = document.getElementById('carrito');
     if (carrito) {
         carrito.style.display = 'block';
     }
 }
-
 // Función para verificar autenticación de Google al cargar la página
 function verificarParametrosGoogle() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -789,14 +736,12 @@ function verificarParametrosGoogle() {
         // Eliminar el parámetro de la URL inmediatamente
         const newUrl = window.location.origin + window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
-        
         // Verificar autenticación con un pequeño delay para evitar conflictos
         setTimeout(() => {
             verificarAutenticacionGoogle();
         }, 200);
     }
 }
-
 // Función para inicializar el botón de Google OAuth
 function inicializarBotonGoogle() {
     const botonGoogle = document.getElementById('googleSignInBtn');
@@ -804,7 +749,6 @@ function inicializarBotonGoogle() {
         botonGoogle.addEventListener('click', iniciarSesionGoogle);
     }
 }
-
 // Inicializar verificación de Google y eventos al cargar la página
 if (typeof document !== 'undefined') {
     document.addEventListener('DOMContentLoaded', function() {

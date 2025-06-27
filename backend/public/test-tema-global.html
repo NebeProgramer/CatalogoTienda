@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Temas Global</title>
+    <script src="/js/tema-global.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: var(--bg-primary, #ffffff);
+            border: 2px solid var(--border-primary, #dee2e6);
+            border-radius: 10px;
+            box-shadow: var(--shadow-medium, 0 4px 6px rgba(0,0,0,0.1));
+        }
+        
+        .test-card {
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--bg-secondary, #f8f9fa);
+            border: 1px solid var(--border-secondary, #e9ecef);
+            border-radius: 8px;
+            color: var(--text-primary, #212529);
+        }
+        
+        .test-button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: var(--text-accent, #007bff);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .test-button:hover {
+            background: var(--hover-overlay, rgba(0,123,255,0.8));
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+        
+        .status.success {
+            background: var(--success, #d4edda);
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .status.info {
+            background: var(--info, #d1ecf1);
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        
+        .status.warning {
+            background: var(--warning, #fff3cd);
+            border-color: #ffc107;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎨 Test de Temas Global</h1>
+        <p>Esta página prueba la funcionalidad de temas globales en todas las páginas.</p>
+        
+        <div class="test-card">
+            <h3>Estado del Tema</h3>
+            <div id="tema-status">Cargando...</div>
+        </div>
+        
+        <div class="test-card">
+            <h3>Colores de Prueba</h3>
+            <div style="background: var(--bg-primary, #fff); padding: 10px; margin: 5px; border: 1px solid var(--border-primary, #dee2e6);">
+                Fondo primario con texto primario
+            </div>
+            <div style="background: var(--bg-secondary, #f8f9fa); padding: 10px; margin: 5px; border: 1px solid var(--border-secondary, #e9ecef);">
+                Fondo secundario con texto secundario
+            </div>
+            <div style="background: var(--text-accent, #007bff); color: white; padding: 10px; margin: 5px;">
+                Color de acento
+            </div>
+        </div>
+        
+        <div class="test-card">
+            <h3>Acciones</h3>
+            <button class="test-button" onclick="mostrarInfoTema()">ℹ️ Info del Tema</button>
+            <button class="test-button" onclick="limpiarTema()">🗑️ Limpiar Tema</button>
+            <button class="test-button" onclick="recargarPagina()">🔄 Recargar</button>
+            <a href="/" class="test-button" style="text-decoration: none; display: inline-block;">🏠 Volver al Inicio</a>
+        </div>
+        
+        <div id="info-adicional" class="test-card" style="display: none;">
+            <h3>Información Detallada</h3>
+            <pre id="tema-info"></pre>
+        </div>
+    </div>
+    
+    <script>
+        function actualizarEstadoTema() {
+            const statusDiv = document.getElementById('tema-status');
+            const temaActual = window.obtenerTemaActual ? window.obtenerTemaActual() : null;
+            
+            if (temaActual) {
+                statusDiv.innerHTML = `
+                    <div class="status success">
+                        <strong>✅ Tema Aplicado:</strong> ${temaActual.icono} ${temaActual.nombre}
+                        <br><small>ID: ${temaActual.id}</small>
+                        <br><small>Colores: ${temaActual.colores ? Object.keys(temaActual.colores).length : 0} variables</small>
+                    </div>
+                `;
+            } else {
+                statusDiv.innerHTML = `
+                    <div class="status warning">
+                        <strong>⚠️ Sin Tema:</strong> No hay tema personalizado aplicado
+                    </div>
+                `;
+            }
+        }
+        
+        function mostrarInfoTema() {
+            const infoDiv = document.getElementById('info-adicional');
+            const infoText = document.getElementById('tema-info');
+            
+            const temaActual = window.obtenerTemaActual ? window.obtenerTemaActual() : null;
+            const localStorage = {
+                temaSeleccionado: localStorage.getItem('temaSeleccionado'),
+                nombreTemaSeleccionado: localStorage.getItem('nombreTemaSeleccionado'),
+                iconicoTema: localStorage.getItem('iconicoTema'),
+                coloresTema: localStorage.getItem('coloresTema')
+            };
+            
+            infoText.textContent = JSON.stringify({
+                temaActual,
+                localStorage,
+                funcionesGlobales: {
+                    aplicarTemaGuardado: typeof window.aplicarTemaGuardado,
+                    obtenerTemaActual: typeof window.obtenerTemaActual,
+                    aplicarTemaById: typeof window.aplicarTemaById,
+                    cargarListaTemas: typeof window.cargarListaTemas
+                }
+            }, null, 2);
+            
+            infoDiv.style.display = infoDiv.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function limpiarTema() {
+            localStorage.removeItem('temaSeleccionado');
+            localStorage.removeItem('nombreTemaSeleccionado');
+            localStorage.removeItem('iconicoTema');
+            localStorage.removeItem('coloresTema');
+            
+            // Limpiar variables CSS
+            const root = document.documentElement;
+            const varsCss = ['--bg-primary', '--bg-secondary', '--bg-tertiary', '--text-primary', '--text-secondary', '--text-accent', '--border-primary', '--border-secondary'];
+            varsCss.forEach(varCss => root.style.removeProperty(varCss));
+            
+            alert('Tema limpiado. Recarga la página para ver los cambios.');
+            actualizarEstadoTema();
+        }
+        
+        function recargarPagina() {
+            window.location.reload();
+        }
+        
+        // Actualizar estado al cargar
+        setTimeout(actualizarEstadoTema, 100);
+    </script>
+</body>
+</html>

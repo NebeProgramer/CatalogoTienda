@@ -12,7 +12,9 @@ scale=1.0">
 
 <title>Catálogo de Productos</title>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/tema-global.js"></script>
 <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/editor-temas.css">
 </head>
 <body>
 <div id="loader" style="display:none;">
@@ -120,7 +122,7 @@ scale=1.0">
 
 <!-- Modal para preferencias de monedas -->
 <div id="modal-preferencias" class="modal">
-    <div class="modal-content">
+    <div class="modal-content modal-temas">
         <span class="close" id="closeModalPreferencias">&times;</span>
         <h2>Preferencias de Monedas</h2>
         <table id="tablaMonedas">
@@ -149,6 +151,58 @@ scale=1.0">
 
             <button type="submit">Agregar Moneda</button>
         </form>
+        <h2>Personalizar Temas</h2>
+        <div class="temas-container">
+            <!-- Header del editor -->
+            <div class="temas-header">
+                <h3>Editor de Temas Dinámicos</h3>
+                <div class="editor-header-controls">
+                    <!-- Botones principales -->
+                    <div class="editor-acciones">
+                        <button id="btnGuardarTemas" class="btn-tema btn-aplicar">💾 Guardar Cambios</button>
+                        <button id="btnCancelarTemas" class="btn-tema btn-eliminar">❌ Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de temas -->
+            <div class="temas-lista" id="temasLista">
+                <!-- Los temas se cargarán dinámicamente aquí -->
+                <div class="nuevo-tema-form" id="nuevoTemaCard">
+                    <div class="nuevo-tema-icon">➕</div>
+                    <div class="nuevo-tema-text">Crear Nuevo Tema</div>
+                    <form class="form-nuevo-tema" id="formNuevoTema">
+                        <input type="text" class="input-nombre-tema" id="nombreNuevoTema" placeholder="Nombre del tema" required>
+                        <div class="form-buttons">
+                            <button type="submit" class="btn-tema btn-aplicar">✓ Crear</button>
+                            <button type="button" class="btn-tema btn-eliminar" id="cancelarNuevoTema">✗ Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Editor de colores -->
+            <div class="editor-colores" id="editorColores">
+                <div class="editor-header">
+                    <div class="editor-header-left">
+                        <div class="editor-titulo" id="editorTitulo">Editando: Tema</div>
+                        <div class="cambios-indicator" id="cambiosIndicator">
+                            <div class="dot"></div>
+                            <span>Cambios no guardados</span>
+                        </div>
+                    </div>
+                    <div class="editor-acciones">
+                        <button id="btnGuardarEditor" class="btn-guardar-editor">💾 Guardar</button>
+                        <button id="btnAplicarPrevio" class="btn-tema btn-aplicar">👁 Previsualizar</button>
+                        <button id="btnCerrarEditor" class="btn-tema btn-eliminar">✗ Cerrar</button>
+                    </div>
+                </div>
+                <div class="colores-grid" id="coloresGrid">
+                    <!-- Los grupos de colores se generarán dinámicamente aquí -->
+                </div>
+            </div>
+        </div>
+        </h2>
         <h2>Ubicaciones</h2>
         <table id="tablaUbicaciones">
             <thead>
@@ -195,7 +249,12 @@ scale=1.0">
         </table>
     </div>  
 </div>
+<script src="/js/temasDB.js"></script>
 <script src="/js/temasManager.js"></script>
+<script src="/js/editor-temas.js"></script>
 <script src="/js/scriptAdmin.js"></script>
+<script src="/js/test-scriptAdmin.js"></script>
+<script src="/js/test-funcionalidad-temas.js"></script>
+<script src="/js/forzar-temas.js"></script>
 </body>
 </html>

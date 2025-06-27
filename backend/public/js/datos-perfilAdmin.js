@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const actualizarLocalStorage = () => {
         localStorage.setItem('usuario', JSON.stringify(usuario));
-        console.log(usuario);
     };
 
     

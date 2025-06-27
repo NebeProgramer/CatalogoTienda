@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo de Correos Tematizados - Catálogo Tienda</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .email-preview {
+            border: 2px solid var(--border-primary);
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .email-header {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+        .email-body {
+            padding: 0;
+            background: white;
+        }
+        .info-box {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-primary);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .btn {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--text-accent));
+            color: var(--text-primary);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--info), var(--text-accent));
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>🎨 Sistema de Correos Tematizados</h1>
+        <p>Los correos del sistema ahora se adaptan automáticamente a los colores del tema seleccionado por el usuario, proporcionando una experiencia visual consistente y personalizada.</p>
+
+        <div class="info-box">
+            <h2>📧 Características del Sistema</h2>
+            <div class="feature-list">
+                <div class="feature-card">
+                    <span class="feature-icon">🎨</span>
+                    <h3>Colores Dinámicos</h3>
+                    <p>Los correos usan automáticamente los colores del tema activo</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📱</span>
+                    <h3>Diseño Responsivo</h3>
+                    <p>Perfecta visualización en todos los dispositivos</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">✨</span>
+                    <h3>Estilo Moderno</h3>
+                    <p>Gradientes, sombras y animaciones sutiles</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔒</span>
+                    <h3>Seguridad Visual</h3>
+                    <p>Indicadores claros de seguridad y validez</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>📮 Tipos de Correos Personalizados</h2>
+
+        <!-- Correo de Verificación -->
+        <div class="email-preview">
+            <div class="email-header">
+                📧 Correo de Verificación de Cuenta
+            </div>
+            <div class="email-body">
+                <iframe 
+                    src="data:text/html;charset=utf-8,
+                    <div style='background-color:var(--bg-primary); font-family:sans-serif; padding:32px; border-radius:12px; max-width:600px; margin:auto;'>
+                        <div style='background: linear-gradient(135deg, var(--bg-secondary), var(--text-accent)); color: white; padding:32px 24px; text-align:center; border-radius:12px 12px 0 0;'>
+                            <h1 style='margin:0; font-size:28px; font-weight:700;'>🛍️ ¡Bienvenido a Catálogo Tienda!</h1>
+                        </div>
+                        <div style='padding:32px 24px; background:white; border-radius:0 0 12px 12px;'>
+                            <div style='text-align:center; margin-bottom:24px;'>
+                                <div style='display:inline-block; padding:16px; background-color:var(--bg-primary); border-radius:50%; margin-bottom:16px;'>
+                                    <span style='font-size:32px;'>📧</span>
+                                </div>
+                            </div>
+                            <h2 style='color:var(--text-primary); text-align:center; margin-bottom:16px;'>Verificación de Correo Electrónico</h2>
+                            <p style='color:var(--text-secondary); line-height:1.6; margin-bottom:24px;'>
+                                ¡Hola! 👋 Gracias por registrarte en nuestra plataforma. Para completar tu registro, necesitamos verificar tu dirección de correo.
+                            </p>
+                            <div style='text-align:center; margin:32px 0;'>
+                                <a style='display:inline-block; background:linear-gradient(135deg, var(--bg-secondary), var(--text-accent)); color:white; text-decoration:none; font-weight:700; padding:16px 32px; border-radius:50px; box-shadow:0 4px 15px rgba(0,0,0,0.2);'>
+                                    ✨ Verificar mi Cuenta ✨
+                                </a>
+                            </div>
+                        </div>
+                    </div>"
+                    width="100%" 
+                    height="400" 
+                    frameborder="0">
+                </iframe>
+            </div>
+        </div>
+
+        <!-- Correo de Recuperación -->
+        <div class="email-preview">
+            <div class="email-header">
+                🔐 Correo de Recuperación de Contraseña
+            </div>
+            <div class="email-body">
+                <iframe 
+                    src="data:text/html;charset=utf-8,
+                    <div style='background-color:var(--bg-primary); font-family:sans-serif; padding:32px; border-radius:12px; max-width:600px; margin:auto;'>
+                        <div style='background: linear-gradient(135deg, var(--info), var(--text-accent)); color: white; padding:32px 24px; text-align:center; border-radius:12px 12px 0 0;'>
+                            <h1 style='margin:0; font-size:28px; font-weight:700;'>🔐 Recuperación de Contraseña</h1>
+                        </div>
+                        <div style='padding:32px 24px; background:white; border-radius:0 0 12px 12px;'>
+                            <div style='text-align:center; margin-bottom:24px;'>
+                                <div style='display:inline-block; padding:16px; background-color:var(--bg-primary); border-radius:50%; margin-bottom:16px;'>
+                                    <span style='font-size:32px;'>🔑</span>
+                                </div>
+                            </div>
+                            <h2 style='color:var(--text-primary); text-align:center; margin-bottom:16px;'>Restablecer tu Contraseña</h2>
+                            <p style='color:var(--text-secondary); line-height:1.6; margin-bottom:24px;'>
+                                ¡Hola! 👋 Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en Catálogo Tienda.
+                            </p>
+                            <div style='text-align:center; margin:32px 0;'>
+                                <a style='display:inline-block; background:linear-gradient(135deg, var(--info), var(--text-accent)); color:white; text-decoration:none; font-weight:700; padding:16px 32px; border-radius:50px; box-shadow:0 4px 15px rgba(0,0,0,0.2);'>
+                                    🔓 Restablecer Contraseña
+                                </a>
+                            </div>
+                        </div>
+                    </div>"
+                    width="100%" 
+                    height="400" 
+                    frameborder="0">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h2>🛠️ Implementación Técnica</h2>
+            <p><strong>Backend:</strong> Las funciones <code>enviarCorreoVerificacionTematizado()</code> y <code>enviarCorreoRecuperacionTematizado()</code> obtienen automáticamente el tema activo de la base de datos y generan el HTML del correo con los colores correspondientes.</p>
+            
+            <p><strong>Frontend:</strong> Las páginas de verificación también usan los colores del tema mediante las funciones <code>generarPaginaErrorTematizada()</code> y <code>generarPaginaExitoTematizada()</code>.</p>
+            
+            <p><strong>API endpoints:</strong></p>
+            <ul>
+                <li><code>GET /api/tema-activo</code> - Obtiene el tema actualmente activo</li>
+                <li><code>GET /api/tema-css</code> - Genera CSS dinámico con variables del tema</li>
+                <li><code>POST /api/temas/:id/aplicar</code> - Aplica un tema específico</li>
+            </ul>
+        </div>
+
+        <div class="test-buttons">
+            <button class="btn" onclick="mostrarNotificacionTema('¡Correo de verificación enviado!', 'Se ha enviado un correo con los colores del tema activo.', 'success')">
+                📧 Probar Notificación de Correo
+            </button>
+            <button class="btn btn-secondary" onclick="window.location.href='/api/tema-css'">
+                🎨 Ver CSS del Tema
+            </button>
+            <button class="btn" onclick="window.location.href='/api/tema-activo'">
+                📋 Ver Tema Activo (JSON)
+            </button>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 Ventajas del Sistema</h3>
+            <ul>
+                <li>✅ <strong>Coherencia visual:</strong> Todos los correos siguen la identidad visual del tema</li>
+                <li>✅ <strong>Personalización automática:</strong> Sin necesidad de configuración manual</li>
+                <li>✅ <strong>Compatibilidad:</strong> Funciona en todos los clientes de correo</li>
+                <li>✅ <strong>Mantenibilidad:</strong> Un solo lugar para cambiar todos los estilos</li>
+                <li>✅ <strong>Experiencia de usuario:</strong> Branding consistente en toda la plataforma</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Cargar el sistema de temas -->
+    <script src="/js/sweetalert-tema.js"></script>
+    <script>
+        // Demostrar notificación tematizada
+        function mostrarNotificacionTema(titulo, mensaje, tipo) {
+            if (typeof mostrarNotificacionTema !== 'undefined') {
+                mostrarNotificacionTema(titulo, mensaje, tipo);
+            } else {
+                alert(titulo + '\n\n' + mensaje);
+            }
+        }
+    </script>
+</body>
+</html>

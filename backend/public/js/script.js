@@ -89,6 +89,81 @@ const reqEspecial = document.getElementById('req-especial');
     // Llamar a la función para cargar las monedas al iniciar
     cargarMonedas();
 
+    // Función para cargar temas dinámicos en el modal de preferencias
+    const cargarTemasEnPreferencias = async () => {
+        try {
+            const selectorTemas = document.getElementById('temaPreferido');
+            if (!selectorTemas) {
+                console.warn('⚠️ Selector de temas no encontrado');
+                return;
+            }
+
+            // Mostrar estado de carga
+            selectorTemas.innerHTML = '<option value="">Cargando temas...</option>';
+            
+            // Usar la función global para cargar temas
+            if (typeof window.cargarListaTemas === 'function') {
+                const temas = await window.cargarListaTemas();
+                
+                if (temas && temas.length > 0) {
+                    // Limpiar y cargar nuevas opciones
+                    selectorTemas.innerHTML = '';
+                    
+                    // Agregar temas de la base de datos
+                    temas.forEach(tema => {
+                        const opcion = document.createElement('option');
+                        opcion.value = tema._id;
+                        // Mostrar nombre completo con icono
+                        opcion.textContent = `${tema.icono || '🎨'} ${tema.nombre}`;
+                        opcion.dataset.tema = JSON.stringify(tema); // Guardar datos completos del tema
+                        selectorTemas.appendChild(opcion);
+                    });
+                    
+                    // Establecer el tema actual seleccionado
+                    const temaActualId = localStorage.getItem('temaSeleccionado');
+                    if (temaActualId) {
+                        selectorTemas.value = temaActualId;
+                    } else if (temas.length > 0) {
+                        // Si no hay tema seleccionado, usar el primero
+                        selectorTemas.value = temas[0]._id;
+                    }
+                    
+                    // Agregar event listener para cambios en tiempo real
+                    selectorTemas.addEventListener('change', async (e) => {
+                        const temaSeleccionado = e.target.value;
+                        if (temaSeleccionado && typeof window.aplicarTemaById === 'function') {
+                            try {
+                                await window.aplicarTemaById(temaSeleccionado);
+                            } catch (error) {
+                                // Error silencioso, el usuario será notificado por la función aplicarTemaById
+                            }
+                        }
+                    });
+                    
+                } else {
+                    cargarTemasFallback(selectorTemas);
+                }
+            } else {
+                cargarTemasFallback(selectorTemas);
+            }
+        } catch (error) {
+            const selectorTemas = document.getElementById('temaPreferido');
+            if (selectorTemas) {
+                cargarTemasFallback(selectorTemas);
+            }
+        }
+    };
+
+    // Función de fallback para temas estáticos
+    const cargarTemasFallback = (selectorTemas) => {
+        selectorTemas.innerHTML = `
+            <option value="light">🌞 Claro</option>
+            <option value="dark">🌙 Oscuro</option>
+            <option value="blue">🌊 Azul</option>
+            <option value="green">🌿 Verde</option>
+        `;
+    };
+
     const convertirPrecio = async (precio, monedaOriginal, monedaDestino) => {
         if (monedaOriginal === monedaDestino) {
             return precio; // No es necesario convertir si es la misma moneda
@@ -363,93 +438,159 @@ function openCRUD() {
         closeCRUD();
     }
 
-    document.querySelector('.btn-lupa').addEventListener('click', async (event) => {
+    // === FUNCIONALIDAD DE BÚSQUEDA MEJORADA ===
+    const campoBusqueda = document.getElementById('buscar');
+    const btnLupa = document.querySelector('.btn-lupa');
+    
+    // Búsqueda en tiempo real (debounced)
+    let timeoutBusqueda = null;
+    campoBusqueda?.addEventListener('input', () => {
+        clearTimeout(timeoutBusqueda);
+        timeoutBusqueda = setTimeout(() => {
+            const termino = campoBusqueda.value.trim();
+            if (termino.length >= 2) {
+                realizarBusqueda(termino);
+            } else if (termino.length === 0) {
+                restablecerVista();
+            }
+        }, 300); // Esperar 300ms después de que el usuario deje de escribir
+    });
+
+    // Búsqueda al hacer clic en el botón lupa
+    btnLupa?.addEventListener('click', async (event) => {
         event.preventDefault();
+        
+        if (btnLupa.textContent === '🔍') {
+            const termino = campoBusqueda.value.trim();
+            if (termino.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Búsqueda vacía',
+                    text: 'Por favor, ingresa un término de búsqueda.',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                return;
+            }
+            await realizarBusqueda(termino);
+        } else {
+            restablecerVista();
+        }
+    });
+
+    // Función para realizar la búsqueda
+    async function realizarBusqueda(terminoBusqueda) {
+        if (!terminoBusqueda || terminoBusqueda.length < 1) return;
+        
         mostrarLoader();
         try {
-            const campoBusqueda = document.getElementById('buscar');
-            const btnLupa = document.querySelector('.btn-lupa');
-            const carruselItems = document.querySelector('.carrusel-items');
-            const terminoBusqueda = campoBusqueda.value.trim().toLowerCase();
-            const monedaPreferida = localStorage.getItem('monedaPreferida') || 'USD';
-        
-            if (btnLupa.textContent === '🔍') {
-                // Modo búsqueda
-                try {
-                    const respuesta = await fetch('/api/productos');
-                    if (!respuesta.ok) {
-                        throw new Error('Error al cargar los productos.');
-                    }
-        
-                    const productos = await respuesta.json();
-        
-                    // Filtrar productos por coincidencia
-                    const productosFiltrados = productos.filter((producto) =>
-                        producto.nombre.toLowerCase().includes(terminoBusqueda) ||
-                        producto.descripcion.toLowerCase().includes(terminoBusqueda)
-                    );
-        
-                    carruselItems.innerHTML = ''; // Limpiar el carrusel
-        
-                    if (productosFiltrados.length === 0) {
-                        const mensajeVacio = document.createElement('p');
-                        mensajeVacio.textContent = 'No se encontraron productos.';
-                        mensajeVacio.classList.add('mensaje-vacio');
-                        carruselItems.appendChild(mensajeVacio);
-                    } else {
-                        for (const producto of productosFiltrados) {
-                            const precioConvertido = await convertirPrecio(producto.precio, producto.moneda, monedaPreferida);
-        
-                            const divProducto = document.createElement('div');
-                            divProducto.classList.add('producto');
-                            divProducto.dataset.id = producto.id;
-        
-                            // Mostrar solo la primera imagen del producto
-                            const primeraImagen = producto.imagenes.length > 0 ? producto.imagenes[0] : '/placeholder.jpg';
-        
-                            divProducto.innerHTML = `
-                                <img src="${primeraImagen}" alt="${producto.nombre}" class="producto-imagen">
-                                <h3 class="producto-nombre">${producto.nombre}</h3>
-                                <p class="producto-precio">💰 ${monedaPreferida} ${precioConvertido}</p>
-                                <p class="producto-stock">📦 Stock: ${producto.stock}</p>
-                                <div class="producto-acciones">
-                                    <button class="btnMasInfo" data-id="${producto.id}">ℹ️ Más información</button>
-                                    <button class="btnCarrito" data-id="${producto.id}">🛒 Añadir al carrito</button>
-                                </div>
-                            `;
-        
-                            // Agregar eventos a los botones
-                            const btnMasInfo = divProducto.querySelector('.btnMasInfo');
-                            btnMasInfo.addEventListener('click', () => {
-                                window.location.href = `/producto/${producto.id}`;
-                            });
-        
-                            const btnCarrito = divProducto.querySelector('.btnCarrito');
-                            btnCarrito.addEventListener('click', async () => {
-                                agregarAlCarrito(producto.id);
-                            });
-        
-                            carruselItems.appendChild(divProducto);
-                        }
-                    }
-        
-                    btnLupa.textContent = '↩️'; // Cambiar el texto del botón a "volver"
-                } catch (error) {
-                    console.error('Error al buscar productos:', error);
-                    alert('Hubo un error al buscar los productos.');
-                }
-            } else {
-                // Modo volver atrás
-                campoBusqueda.value = '';
-                cargarProductos(); // Recargar todos los productos
-                btnLupa.textContent = '🔍'; // Cambiar el texto del botón a "buscar"
+            const respuesta = await fetch('/api/productos');
+            if (!respuesta.ok) {
+                throw new Error('Error al cargar los productos.');
             }
+
+            const productos = await respuesta.json();
+            const carruselItems = document.querySelector('.carrusel-items');
+            const monedaPreferida = localStorage.getItem('monedaPreferida') || 'USD';
+
+            // Filtrar productos por coincidencia (nombre, descripción, categoría)
+            const productosFiltrados = productos.filter((producto) => {
+                const nombre = producto.nombre?.toLowerCase() || '';
+                const descripcion = producto.descripcion?.toLowerCase() || '';
+                const categoria = producto.categoria?.toLowerCase() || '';
+                const busqueda = terminoBusqueda.toLowerCase();
+                
+                return nombre.includes(busqueda) || 
+                       descripcion.includes(busqueda) || 
+                       categoria.includes(busqueda);
+            });
+
+            carruselItems.innerHTML = ''; // Limpiar el carrusel
+
+            if (productosFiltrados.length === 0) {
+                const mensajeVacio = document.createElement('div');
+                mensajeVacio.className = 'mensaje-vacio';
+                mensajeVacio.innerHTML = `
+                    <h3>🔍 No se encontraron productos</h3>
+                    <p>No hay productos que coincidan con "${terminoBusqueda}"</p>
+                    <button onclick="restablecerVista()" class="btn-secondary">Ver todos los productos</button>
+                `;
+                carruselItems.appendChild(mensajeVacio);
+            } else {
+                // Mostrar resultados de búsqueda
+                const resultadosHeader = document.createElement('div');
+                resultadosHeader.className = 'resultados-header';
+                resultadosHeader.innerHTML = `
+                    <h3>🔍 Resultados de búsqueda para "${terminoBusqueda}"</h3>
+                    <p>Se encontraron ${productosFiltrados.length} producto(s)</p>
+                `;
+                carruselItems.appendChild(resultadosHeader);
+
+                for (const producto of productosFiltrados) {
+                    const precioConvertido = await convertirPrecio(producto.precio, producto.moneda, monedaPreferida);
+
+                    const divProducto = document.createElement('div');
+                    divProducto.classList.add('carrusel-item');
+                    divProducto.dataset.id = producto.id;
+
+                    // Mostrar solo la primera imagen del producto
+                    const primeraImagen = producto.imagenes?.length > 0 ? producto.imagenes[0] : '/img/placeholder.jpg';
+
+                    divProducto.innerHTML = `
+                        <img src="${primeraImagen}" alt="${producto.nombre}" class="producto-imagen">
+                        <h3 class="producto-nombre">${producto.nombre}</h3>
+                        <p class="producto-precio">💰 ${monedaPreferida} ${precioConvertido}</p>
+                        <p class="producto-stock">📦 Stock: ${producto.stock}</p>
+                        <div class="producto-acciones">
+                            <button class="btnMasInfo" data-id="${producto.id}">ℹ️ Más información</button>
+                            <button class="btnCarrito" data-id="${producto.id}">🛒 Añadir al carrito</button>
+                        </div>
+                    `;
+
+                    // Agregar eventos a los botones
+                    const btnMasInfo = divProducto.querySelector('.btnMasInfo');
+                    btnMasInfo.addEventListener('click', () => {
+                        window.location.href = `/producto/${producto.id}`;
+                    });
+
+                    const btnCarrito = divProducto.querySelector('.btnCarrito');
+                    btnCarrito.addEventListener('click', async () => {
+                        agregarAlCarrito(producto.id);
+                    });
+
+                    carruselItems.appendChild(divProducto);
+                }
+            }
+
+            btnLupa.textContent = '↩️'; // Cambiar el texto del botón a "volver"
+            
         } catch (error) {
-            console.error('Error en el evento de búsqueda:', error);
+            console.error('Error al buscar productos:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de búsqueda',
+                text: 'Hubo un error al buscar los productos. Inténtalo de nuevo.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000
+            });
         } finally {
             ocultarLoader();
         }
-    });
+    }
+
+    // Función para restablecer la vista normal
+    function restablecerVista() {
+        if (campoBusqueda) campoBusqueda.value = '';
+        if (btnLupa) btnLupa.textContent = '🔍';
+        cargarProductos(); // Recargar todos los productos
+    }
+
+    // Hacer la función global para poder usarla desde el HTML
+    window.restablecerVista = restablecerVista;
 
     // --- Carrusel normal (16 productos por página, paginación con botones) ---
     let paginaActual = 0;
@@ -927,22 +1068,39 @@ function openCRUD() {
             mostrandoCarrito = false;
             ocultarLoader();
         }
-    });    document.getElementById('btnPreferencias').addEventListener('click', () => {
+    });    document.getElementById('btnPreferencias').addEventListener('click', async () => {
         showModal(formPreferenciasContainer, modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer);
         cargarMonedas();
+        
+        // Cargar temas dinámicos desde la base de datos
+        await cargarTemasEnPreferencias();
+        
         // Establecer el tema actual en el selector cuando se abre el modal
         if (temasManager) {
             temasManager.establecerTemaEnSelector();
         }
     });    // Función para guardar las preferencias del usuario (temas y monedas)
-    document.getElementById('formPreferencias').addEventListener('submit', (event) => {
+    document.getElementById('formPreferencias').addEventListener('submit', async (event) => {
         event.preventDefault();
         mostrarLoader();
         try {
-            // Guardar tema
-            const temaPreferido = document.getElementById('temaPreferido').value;
-            if (temaPreferido && temasManager) {
-                temasManager.aplicarTema(temaPreferido);
+            // Guardar tema usando la función global
+            const temaSeleccionado = document.getElementById('temaPreferido').value;
+            if (temaSeleccionado) {
+                if (typeof window.aplicarTemaById === 'function') {
+                    // Usar la función global para aplicar tema por ID
+                    try {
+                        await window.aplicarTemaById(temaSeleccionado);
+                    } catch (temaError) {
+                        // Fallback al gestor tradicional si falla
+                        if (temasManager) {
+                            temasManager.aplicarTema(temaSeleccionado);
+                        }
+                    }
+                } else if (temasManager) {
+                    // Fallback al gestor tradicional
+                    temasManager.aplicarTema(temaSeleccionado);
+                }
             }
 
             // Guardar moneda
@@ -1132,6 +1290,29 @@ function openCRUD() {
         procesarPago();
     });
 
+    // Inicializar tema guardado al cargar la página
+    const inicializarTemaGuardado = async () => {
+        try {
+            // Intentar aplicar tema desde localStorage primero (más rápido)
+            if (typeof window.aplicarTemaGuardado === 'function') {
+                const temaAplicado = window.aplicarTemaGuardado();
+                if (temaAplicado) {
+                    return;
+                }
+            }
+            
+            // Si no hay tema en localStorage, intentar aplicar desde la base de datos
+            const temaGuardadoId = localStorage.getItem('temaSeleccionado');
+            if (temaGuardadoId && typeof window.aplicarTemaById === 'function') {
+                await window.aplicarTemaById(temaGuardadoId);
+            }
+        } catch (error) {
+            // Error silencioso en la inicialización
+        }
+    };
+
+    // Aplicar tema guardado inmediatamente (sin delay)
+    inicializarTemaGuardado();
     
     // Función para cargar redes sociales desde el servidor
     

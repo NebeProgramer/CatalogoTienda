@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     const contenedorProductos = document.getElementById('contenedor-productos');
     const modal = document.getElementById('modal');
     const olvidoContainer = document.getElementById('formOlvidoContainer');
@@ -40,11 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const agregarFiltroContainer = document.getElementById('agregar-filtro-container');
     const nuevoFiltroInput = document.getElementById('nuevo-filtro');
     const guardarFiltroBtn = document.getElementById('guardar-filtro');
-
-
-
-
-
     // Loader functions
     function mostrarLoader() {
         const loader = document.getElementById('loader');
@@ -54,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const loader = document.getElementById('loader');
         if (loader) loader.style.display = 'none';
     }
-
     // Modificar la función cargarProductos para ocultar el botón "Comprar todo" al aplicar filtros
     const cargarProductos = async (categoria = 'Todos') => {
         mostrarLoader();
@@ -63,17 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!respuesta.ok) {
                 throw new Error('Error al cargar los productos.');
             }
-
             const productos = await respuesta.json();
             const carruselItems = document.querySelector('.carrusel-items');
             carruselItems.innerHTML = ''; // Limpiar el carrusel
             const monedaPreferida = localStorage.getItem('monedaPreferida') || 'USD';
-
             // Filtrar los productos si se selecciona una categoría específica
             const productosFiltrados = categoria === 'Todos'
                 ? productos
                 : productos.filter(producto => producto.categoria === categoria);
-
             if (productosFiltrados.length === 0) {
                 const mensajeVacio = document.createElement('p');
                 mensajeVacio.textContent = 'No se encontraron productos.';
@@ -81,14 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 carruselItems.appendChild(mensajeVacio);
             } else {
                 for (const producto of productosFiltrados) {
-
                     const divProducto = document.createElement('div');
                     divProducto.classList.add('producto');
                     divProducto.dataset.id = producto.id;
-
                     // Mostrar solo la primera imagen del producto
                     const primeraImagen = producto.imagenes.length > 0 ? producto.imagenes[0] : '/placeholder.jpg';
-
                     divProducto.innerHTML = `
                         <div class="producto-frontal">
                             <img src="${primeraImagen}" alt="${producto.nombre}" class="producto-imagen">
@@ -98,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="producto-acciones">
                                 <button class="btnEditar" data-id="${producto.id}">Actualizar</button>
                                 <button class="btnEliminar" data-id="${producto.id}">Eliminar</button>
-                                
                             </div>
                             <div class="estado-switch">
             <label class="switch">
@@ -109,10 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
                         </div>
                     `;
-
                     // Agregar el div del producto al carrusel
                     carruselItems.appendChild(divProducto);
-
                     document.getElementById(`estado-${producto.id}`).addEventListener('change', async (event) => {
                         const labelEstado = divProducto.querySelector('.estado-label');
                         const nuevoEstado = event.target.checked ? 'disponible' : 'no disponible';
@@ -138,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     btnEditar.addEventListener('click', () => {
                         window.location.href = `/admin/producto/${producto.id}`;
                     });
-
                     const btnCarrito = divProducto.querySelector('.btnEliminar');
                     btnCarrito.addEventListener('click', async () => {
                         const confirmar = await Swal.fire({
@@ -153,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const respuesta = await fetch(`/api/productos/${producto.id}`, {
                                     method: 'DELETE',
                                 });
-
                                 if (respuesta.ok) {
                                     Swal.fire({
                                         icon: 'success',
@@ -184,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         }
                     });
-
                 }
             }
         } catch (error) {
@@ -194,20 +175,14 @@ document.addEventListener('DOMContentLoaded', () => {
             ocultarLoader();
         }
     };
-
     cargarProductos();
-
     document.getElementById('btnvolver').addEventListener('click', () => {
         window.location.href = '/';
     });
-
     const usuario = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
-
     if (usuario) {
-        console.log('Sesión activa:', usuario);
         // Obtener el ul donde se agregarán los elementos
         const listaSesion = document.querySelector('.iniciosesion');
-
         // Crear el elemento <li> para "Perfil"
         const perfilLi = document.createElement('li');
         const perfilLink = document.createElement('a');
@@ -219,147 +194,223 @@ document.addEventListener('DOMContentLoaded', () => {
         perfilLink.id = 'perfilBtn';
         perfilLink.href = '#';
         perfilLi.appendChild(perfilLink);
-
-
         // Agregar ambos elementos al <ul>
         listaSesion.innerHTML = '';
         listaSesion.appendChild(perfilLi);
     } else {
-        console.log('No hay sesión activa.');
     }
-
-    document.querySelector('.btn-lupa').addEventListener('click', async (event) => {
-        event.preventDefault();
-        const campoBusqueda = document.getElementById('buscar');
-        const btnLupa = document.querySelector('.btn-lupa');
-        const carruselItems = document.querySelector('.carrusel-items');
-        const terminoBusqueda = campoBusqueda.value.trim().toLowerCase();
-        const monedaPreferida = localStorage.getItem('monedaPreferida') || 'USD';
-
-        if (btnLupa.textContent === '🔍') {
-            // Modo búsqueda
-            try {
-                const respuesta = await fetch('/api/productos');
-                if (!respuesta.ok) {
-                    throw new Error('Error al cargar los productos.');
-                }
-
-                const productos = await respuesta.json();
-
-                // Filtrar productos por coincidencia
-                const productosFiltrados = productos.filter((producto) =>
-                    producto.nombre.toLowerCase().includes(terminoBusqueda) ||
-                    producto.id.toString().includes(terminoBusqueda)
-                );
-
-                carruselItems.innerHTML = ''; // Limpiar el carrusel
-
-                if (productosFiltrados.length === 0) {
-                    const mensajeVacio = document.createElement('p');
-                    mensajeVacio.textContent = 'No se encontraron productos.';
-                    mensajeVacio.classList.add('mensaje-vacio');
-                    carruselItems.appendChild(mensajeVacio);
-                } else {
-                    for (const producto of productosFiltrados) {
-
-                        const divProducto = document.createElement('div');
-                        divProducto.classList.add('producto');
-                        divProducto.dataset.id = producto.id;
-
-                        // Mostrar solo la primera imagen del producto
-                        const primeraImagen = producto.imagenes.length > 0 ? producto.imagenes[0] : '/placeholder.jpg';
-
-                        divProducto.innerHTML = `
-                            <img src="${primeraImagen}" alt="${producto.nombre}" class="producto-imagen">
-                            <h3 class="producto-nombre">${producto.nombre}</h3>
-                            <p class="producto-precio">💰 ${producto.moneda} ${producto.precio}</p>
-                            <p class="producto-stock">📦 Stock: ${producto.stock}</p>
-                            <div class="producto-acciones">
-                                <button class="btnEditar" data-id="${producto.id}">Actualizar</button>
-                                <button class="btnEliminar" data-id="${producto.id}">Eliminar</button>
-                            </div>
-                        `;
-
-                        // Agregar eventos a los botones
-                        const btnEditar = divProducto.querySelector('.btnEditar');
-                        btnEditar.addEventListener('click', () => {
-                            window.location.href = `/admin/producto/${producto.id}`;
-                        });
-
-                        const btnCarrito = divProducto.querySelector('.btnEliminar');
-                        btnCarrito.addEventListener('click', async () => {
-                            const confirmar = await Swal.fire({
-                                title: '¿Estás seguro de que deseas eliminar este producto?',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonText: 'Sí, eliminar',
-                                cancelButtonText: 'Cancelar'
-                            });
-                            if (confirmar.isConfirmed) {
-                                try {
-                                    const respuesta = await fetch(`/api/productos/${producto.id}`, {
-                                        method: 'DELETE',
-                                    });
-
-                                    if (respuesta.ok) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Producto eliminado',
-                                            text: 'Producto eliminado exitosamente.',
-                                            toast: true,
-                                            position: 'top-end'
-                                        });
-                                        cargarProductos(); // Recargar los productos después de eliminar
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Error',
-                                            text: 'Error al eliminar el producto.',
-                                            toast: true,
-                                            position: 'top-end'
-                                        });
-                                    }
-                                } catch (error) {
-                                    console.error('Error al eliminar el producto:', error);
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: 'Hubo un error al eliminar el producto.',
-                                        toast: true,
-                                        position: 'top-end'
-                                    });
-                                }
-                            }
-                        });
-
-                        carruselItems.appendChild(divProducto);
-                    }
-                }
-
-                btnLupa.textContent = '↩️'; // Cambiar el texto del botón a "volver"
-            } catch (error) {
-                console.error('Error al buscar productos:', error);
-                alert('Hubo un error al buscar los productos.');
-            } finally {
-                ocultarLoader();
+    
+    // === FUNCIONALIDAD DE BÚSQUEDA MEJORADA PARA ADMIN ===
+    const campoBusqueda = document.getElementById('buscar');
+    const btnLupa = document.querySelector('.btn-lupa');
+    
+    // Búsqueda en tiempo real (debounced)
+    let timeoutBusqueda = null;
+    campoBusqueda?.addEventListener('input', () => {
+        clearTimeout(timeoutBusqueda);
+        timeoutBusqueda = setTimeout(() => {
+            const termino = campoBusqueda.value.trim();
+            if (termino.length >= 2) {
+                realizarBusquedaAdmin(termino);
+            } else if (termino.length === 0) {
+                restablecerVistaAdmin();
             }
+        }, 300); // Esperar 300ms después de que el usuario deje de escribir
+    });
+
+    // Búsqueda al hacer clic en el botón lupa
+    btnLupa?.addEventListener('click', async (event) => {
+        event.preventDefault();
+        
+        if (btnLupa.textContent === '🔍') {
+            const termino = campoBusqueda.value.trim();
+            if (termino.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Búsqueda vacía',
+                    text: 'Por favor, ingresa un término de búsqueda.',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                return;
+            }
+            await realizarBusquedaAdmin(termino);
         } else {
-            // Modo volver atrás
-            campoBusqueda.value = '';
-            cargarProductos(); // Recargar todos los productos
-            btnLupa.textContent = '🔍'; // Cambiar el texto del botón a "buscar"
+            restablecerVistaAdmin();
         }
     });
 
+    // Función para realizar la búsqueda de administrador
+    async function realizarBusquedaAdmin(terminoBusqueda) {
+        if (!terminoBusqueda || terminoBusqueda.length < 1) return;
+        
+        mostrarLoader();
+        try {
+            const respuesta = await fetch('/api/productos');
+            if (!respuesta.ok) {
+                throw new Error('Error al cargar los productos.');
+            }
+
+            const productos = await respuesta.json();
+            const carruselItems = document.querySelector('.carrusel-items');
+
+            // Filtrar productos por coincidencia (nombre, descripción, categoría, ID)
+            const productosFiltrados = productos.filter((producto) => {
+                const nombre = producto.nombre?.toLowerCase() || '';
+                const descripcion = producto.descripcion?.toLowerCase() || '';
+                const categoria = producto.categoria?.toLowerCase() || '';
+                const id = producto.id?.toString() || '';
+                const busqueda = terminoBusqueda.toLowerCase();
+                
+                return nombre.includes(busqueda) || 
+                       descripcion.includes(busqueda) || 
+                       categoria.includes(busqueda) ||
+                       id.includes(busqueda);
+            });
+
+            carruselItems.innerHTML = ''; // Limpiar el carrusel
+
+            if (productosFiltrados.length === 0) {
+                const mensajeVacio = document.createElement('div');
+                mensajeVacio.className = 'mensaje-vacio';
+                mensajeVacio.innerHTML = `
+                    <h3>🔍 No se encontraron productos</h3>
+                    <p>No hay productos que coincidan con "${terminoBusqueda}"</p>
+                    <button onclick="restablecerVistaAdmin()" class="btn-secondary">Ver todos los productos</button>
+                `;
+                carruselItems.appendChild(mensajeVacio);
+            } else {
+                // Mostrar resultados de búsqueda
+                const resultadosHeader = document.createElement('div');
+                resultadosHeader.className = 'resultados-header';
+                resultadosHeader.innerHTML = `
+                    <h3>🔍 Resultados de búsqueda para "${terminoBusqueda}"</h3>
+                    <p>Se encontraron ${productosFiltrados.length} producto(s)</p>
+                `;
+                carruselItems.appendChild(resultadosHeader);
+
+                for (const producto of productosFiltrados) {
+                    const divProducto = document.createElement('div');
+                    divProducto.classList.add('carrusel-item');
+                    divProducto.dataset.id = producto.id;
+
+                    // Mostrar solo la primera imagen del producto
+                    const primeraImagen = producto.imagenes?.length > 0 ? producto.imagenes[0] : '/img/placeholder.jpg';
+
+                    divProducto.innerHTML = `
+                        <img src="${primeraImagen}" alt="${producto.nombre}" class="producto-imagen">
+                        <div class="producto-info">
+                            <h3 class="producto-nombre">${producto.nombre}</h3>
+                            <p class="producto-id"><strong>ID:</strong> ${producto.id}</p>
+                            <p class="producto-precio">💰 ${producto.moneda} ${producto.precio}</p>
+                            <p class="producto-stock">📦 Stock: ${producto.stock}</p>
+                            <p class="producto-categoria">🏷️ ${producto.categoria || 'Sin categoría'}</p>
+                        </div>
+                        <div class="producto-acciones">
+                            <button class="btnEditar" data-id="${producto.id}">✏️ Editar</button>
+                            <button class="btnEliminar" data-id="${producto.id}">🗑️ Eliminar</button>
+                        </div>
+                    `;
+
+                    // Agregar eventos a los botones
+                    const btnEditar = divProducto.querySelector('.btnEditar');
+                    btnEditar.addEventListener('click', () => {
+                        window.location.href = `/admin/producto/${producto.id}`;
+                    });
+
+                    const btnEliminar = divProducto.querySelector('.btnEliminar');
+                    btnEliminar.addEventListener('click', async () => {
+                        const confirmar = await Swal.fire({
+                            title: '¿Eliminar producto?',
+                            text: `¿Estás seguro de que deseas eliminar "${producto.nombre}"?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí, eliminar',
+                            cancelButtonText: 'Cancelar',
+                            reverseButtons: true
+                        });
+
+                        if (confirmar.isConfirmed) {
+                            try {
+                                const respuesta = await fetch(`/api/productos/${producto.id}`, {
+                                    method: 'DELETE',
+                                });
+
+                                if (respuesta.ok) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Producto eliminado',
+                                        text: `"${producto.nombre}" fue eliminado exitosamente.`,
+                                        toast: true,
+                                        position: 'top-end',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
+                                    // Volver a realizar la búsqueda para actualizar resultados
+                                    if (campoBusqueda.value.trim()) {
+                                        realizarBusquedaAdmin(campoBusqueda.value.trim());
+                                    } else {
+                                        cargarProductos();
+                                    }
+                                } else {
+                                    throw new Error('Error en la respuesta del servidor');
+                                }
+                            } catch (error) {
+                                console.error('Error al eliminar el producto:', error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error al eliminar',
+                                    text: 'Hubo un error al eliminar el producto. Inténtalo de nuevo.',
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 4000
+                                });
+                            }
+                        }
+                    });
+
+                    carruselItems.appendChild(divProducto);
+                }
+            }
+
+            btnLupa.textContent = '↩️'; // Cambiar el texto del botón a "volver"
+            
+        } catch (error) {
+            console.error('Error al buscar productos:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de búsqueda',
+                text: 'Hubo un error al buscar los productos. Inténtalo de nuevo.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000
+            });
+        } finally {
+            ocultarLoader();
+        }
+    }
+
+    // Función para restablecer la vista normal de administrador
+    function restablecerVistaAdmin() {
+        if (campoBusqueda) campoBusqueda.value = '';
+        if (btnLupa) btnLupa.textContent = '🔍';
+        cargarProductos(); // Recargar todos los productos
+    }
+
+    // Hacer las funciones globales para poder usarlas desde el HTML
+    window.restablecerVistaAdmin = restablecerVistaAdmin;
+    window.realizarBusquedaAdmin = realizarBusquedaAdmin;
     const burguerButton = document.getElementById('Burguer');
     const menuHamburguesa = document.querySelector('.menuHamburguesa');
-
     // Abrir el menú
     burguerButton.addEventListener('click', () => {
         menuHamburguesa.classList.toggle('activo');
         burguerButton.classList.toggle('activo');
     });
-
     // Cerrar el menú al hacer clic fuera de él
     document.addEventListener('click', (event) => {
         if (!menuHamburguesa.contains(event.target) && event.target !== burguerButton) {
@@ -367,16 +418,13 @@ document.addEventListener('DOMContentLoaded', () => {
             burguerButton.classList.remove('activo');
         }
     });
-
     btnCrear.addEventListener('click', () => {
         window.location.href = '/admin/producto/crear';
     });
-
     btnAgregarFiltro.addEventListener('click', () => {
         agregarFiltroContainer.style.display = 'block';
         btnAgregarFiltro.style.display = 'none'; // Ocultar el botón "Agregar Filtro"
     });
-
     // Guardar un nuevo filtro
     guardarFiltroBtn.addEventListener('click', async () => {
         const filtroNombre = nuevoFiltroInput.value.trim();
@@ -390,7 +438,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     body: JSON.stringify({ nombre: filtroNombre }),
                 });
-
                 if (!respuesta.ok) {
                     swal.fire({
                         icon: 'error',
@@ -401,9 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     return;
                 }
-
                 const nuevaCategoria = await respuesta.json();
-
                 // Crear el elemento de la lista
                 const li = document.createElement('li');
                 const a = document.createElement('a');
@@ -415,20 +460,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     history.pushState(null, '', `?categoria=${encodeURIComponent(nuevaCategoria.nombre)}`);
                 });
                 li.appendChild(a);
-
                 // Crear botón de eliminar
                 const btnEliminar = document.createElement('button');
                 btnEliminar.textContent = '🗑️';
                 btnEliminar.classList.add('btn-eliminar');
                 btnEliminar.style.display = 'none';
-
                 li.addEventListener('mouseenter', () => {
                     btnEliminar.style.display = 'inline';
                 });
                 li.addEventListener('mouseleave', () => {
                     btnEliminar.style.display = 'none';
                 });
-
                 btnEliminar.addEventListener('click', async () => {
                     const confirmar = await Swal.fire({
                         title: `¿Estás seguro de que deseas eliminar la categoría "${nuevaCategoria.nombre}"?`,
@@ -442,7 +484,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             const respuesta = await fetch(`/api/categorias/${nuevaCategoria.id}`, {
                                 method: 'DELETE',
                             });
-
                             if (respuesta.ok) {
                                 Swal.fire({
                                     icon: 'success',
@@ -473,10 +514,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
                 });
-
                 li.appendChild(btnEliminar);
                 filtroLista.appendChild(li);
-
                 // Limpiar el input y ocultar el contenedor
                 nuevoFiltroInput.value = '';
                 agregarFiltroContainer.style.display = 'none';
@@ -500,7 +539,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-
     // Función para cargar los filtros existentes desde la tabla Categoria
     const cargarFiltros = async () => {
         mostrarLoader();
@@ -509,13 +547,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!respuesta.ok) {
                 throw new Error('Error al cargar las categorías.');
             }
-
             const categorias = await respuesta.json();
             // Limpiar la lista de filtros antes de agregar los nuevos
             categorias.innerHTML= '';
             const filtroLista = document.getElementById('filtro-lista');
             filtroLista.innerHTML = '<li><a id="todos" style="cursor:pointer;">Todos</a></li>'; // Reiniciar lista
-            
             categorias.forEach(categoria => {
                 const li = document.createElement('li');
                 const a = document.createElement('a');
@@ -527,23 +563,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     history.pushState(null, '', `?categoria=${encodeURIComponent(categoria.nombre)}`);
                 });
                 li.appendChild(a);
-
                 // Crear botón de eliminar
                 const btnEliminar = document.createElement('button');
                 btnEliminar.textContent = '🗑️';
                 btnEliminar.classList.add('btn-eliminar');
                 btnEliminar.style.display = 'none';
-
                 // Mostrar el botón al pasar el mouse
                 li.addEventListener('mouseenter', () => {
                     btnEliminar.style.display = 'inline';
                 });
-
                 // Ocultar el botón al salir del mouse
                 li.addEventListener('mouseleave', () => {
                     btnEliminar.style.display = 'none';
                 });
-
                 // Eliminar el filtro al hacer clic en el botón
                 btnEliminar.addEventListener('click', async () => {
                     const confirmar = await Swal.fire({
@@ -558,7 +590,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             const respuesta = await fetch(`/api/categorias/${categoria.id}`, {
                                 method: 'DELETE',
                             });
-
                             if (respuesta.ok) {
                                 Swal.fire({
                                     icon: 'success',
@@ -589,11 +620,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
                 });
-
                 li.appendChild(btnEliminar);
                 filtroLista.appendChild(li);
             });
-
             // Asignar evento al filtro "Todos"
             document.getElementById('todos').addEventListener('click', (e) => {
                 e.preventDefault();
@@ -607,33 +636,23 @@ document.addEventListener('DOMContentLoaded', () => {
             ocultarLoader();
         }
     };
-
     // Llamar a la función para cargar los filtros al cargar la página
     cargarFiltros();
-
     const modalPreferencias = document.getElementById('modal-preferencias');
     const closeModalPreferencias = document.getElementById('closeModalPreferencias');
     const tablaMonedas = document.getElementById('tablaMonedas').querySelector('tbody');
     const formNuevaMoneda = document.getElementById('formNuevaMoneda');
-
-    // Abrir el modal de preferencias
-    document.getElementById('preferencias').addEventListener('click', (e) => {
-        e.preventDefault();
-        cargarMonedas();
-        modalPreferencias.style.display = 'block';
-    });
-
+    // NOTA: El event listener para abrir el modal de preferencias está definido más abajo
+    // para incluir la carga de temas
     // Cerrar el modal de preferencias
     closeModalPreferencias.addEventListener('click', () => {
         modalPreferencias.style.display = 'none';
     });
-
     window.addEventListener('click', (event) => {
         if (event.target === modalPreferencias) {
             modalPreferencias.style.display = 'none';
         }
     });
-
     // Cargar monedas en la tabla
     async function cargarMonedas() {
         mostrarLoader();
@@ -642,10 +661,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!respuesta.ok) {
                 throw new Error('Error al cargar las monedas.');
             }
-
             const monedas = await respuesta.json();
             tablaMonedas.innerHTML = '';
-
             monedas.forEach(moneda => {
                 const fila = document.createElement('tr');
                 fila.innerHTML = `
@@ -658,8 +675,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 tablaMonedas.appendChild(fila);
             });
-
-
             document.querySelectorAll('.btnEliminarMoneda').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
                     const idMoneda = e.target.dataset.id;
@@ -712,17 +727,14 @@ document.addEventListener('DOMContentLoaded', () => {
             ocultarLoader();
         }
     }
-
     // Manejar el envío del formulario para agregar una nueva moneda
     formNuevaMoneda.addEventListener('submit', async (e) => {
         e.preventDefault();
-
         const nuevaMoneda = {
             nombre: document.getElementById('nombreMoneda').value,
             moneda: document.getElementById('prefijoMoneda').value,
             valor_en_usd: parseFloat(document.getElementById('valorUSD').value),
         };
-
         try {
             const respuesta = await fetch('/api/monedas', {
                 method: 'POST',
@@ -731,11 +743,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify(nuevaMoneda),
             });
-
             if (!respuesta.ok) {
                 throw new Error('Error al agregar la moneda.');
             }
-
             Swal.fire({
                 icon: 'success',
                 title: 'Moneda agregada',
@@ -756,10 +766,341 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-
+    // ===== GESTIÓN DE TEMAS DINÁMICOS =====
+    // Función para cargar temas en la tabla (si es que existe una tabla separada)
+    async function cargarTemasEnTabla() {
+        try {
+            const respuesta = await fetch('/api/temas');
+            if (!respuesta.ok) {
+                throw new Error('Error al cargar los temas.');
+            }
+            const temas = await respuesta.json();
+            // Si existe una tabla específica para temas (además del editor)
+            const tablaTemasBody = document.querySelector('#tablaTemasAdmin tbody');
+            if (tablaTemasBody) {
+                tablaTemasBody.innerHTML = '';
+                temas.forEach(tema => {
+                    const fila = document.createElement('tr');
+                    fila.innerHTML = `
+                        <td>${tema.nombre}</td>
+                        <td>
+                            <div style="display: flex; gap: 5px;">
+                                ${Object.entries(tema.colores).slice(0, 5).map(([key, color]) => 
+                                    `<div style="width: 20px; height: 20px; background: ${color}; border: 1px solid #ccc; border-radius: 3px;" title="${key}: ${color}"></div>`
+                                ).join('')}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge ${tema.activo ? 'badge-success' : 'badge-secondary'}">
+                                ${tema.activo ? '✓ Activo' : 'Inactivo'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn-tema-editar" data-tema-id="${tema._id}" title="Editar tema">
+                                ✏️ Editar
+                            </button>
+                            <button class="btn-tema-aplicar" data-tema-id="${tema._id}" ${tema.activo ? 'disabled' : ''} title="Aplicar tema">
+                                ${tema.activo ? '✓ Activo' : '🎨 Aplicar'}
+                            </button>
+                            <button class="btn-tema-eliminar" data-tema-id="${tema._id}" ${tema.activo ? 'disabled' : ''} title="Eliminar tema">
+                                🗑️
+                            </button>
+                        </td>
+                    `;
+                    tablaTemasBody.appendChild(fila);
+                });
+                // Agregar event listeners para los botones
+                agregarEventListenersTemasTabla();
+            }
+            return temas;
+        } catch (error) {
+            console.error('❌ Error al cargar temas en tabla:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudieron cargar los temas.',
+                toast: true,
+                position: 'top-end'
+            });
+        }
+    }
+    // Función para agregar event listeners a los botones de la tabla de temas
+    function agregarEventListenersTemasTabla() {
+        // Botones de editar
+        document.querySelectorAll('.btn-tema-editar').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const temaId = e.target.dataset.temaId;
+                editarTemaDesdeTabla(temaId);
+            });
+        });
+        // Botones de aplicar
+        document.querySelectorAll('.btn-tema-aplicar').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const temaId = e.target.dataset.temaId;
+                aplicarTemaDesdeTabla(temaId);
+            });
+        });
+        // Botones de eliminar
+        document.querySelectorAll('.btn-tema-eliminar').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const temaId = e.target.dataset.temaId;
+                eliminarTemaDesdeTabla(temaId);
+            });
+        });
+    }
+    // Función para editar tema desde la tabla
+    async function editarTemaDesdeTabla(temaId) {
+        try {
+            // Si existe el editor de temas, usarlo
+            if (window.editorTemas) {
+                window.editorTemas.editarTema(temaId);
+            } else {
+                // Alternativa: abrir modal de edición simple
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Editor de temas',
+                    text: 'Para editar temas, usa el editor visual en la sección "Personalizar Temas"',
+                    toast: true,
+                    position: 'top-end'
+                });
+            }
+        } catch (error) {
+            console.error('❌ Error al editar tema:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo abrir el editor de tema.',
+                toast: true,
+                position: 'top-end'
+            });
+        }
+    }
+    // Función para aplicar tema desde la tabla
+    async function aplicarTemaDesdeTabla(temaId) {
+        try {
+            const respuesta = await fetch(`/api/temas/${temaId}/aplicar`, {
+                method: 'POST'
+            });
+            if (!respuesta.ok) {
+                throw new Error('Error al aplicar el tema');
+            }
+            const resultado = await respuesta.json();
+            
+            // Actualizar localStorage con los colores del tema aplicado
+            if (resultado.tema && resultado.tema.colores) {
+                localStorage.setItem('coloresTema', JSON.stringify(resultado.tema.colores));
+                localStorage.setItem('nombreTemaSeleccionado', resultado.tema.nombre);
+                localStorage.setItem('tema', resultado.tema.nombre.toLowerCase());
+            }
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Tema aplicado',
+                text: `El tema "${resultado.tema.nombre}" se ha aplicado exitosamente`,
+                toast: true,
+                position: 'top-end',
+                timer: 2000
+            });
+            
+            // Recargar la tabla para actualizar el estado
+            await cargarTemasEnTabla();
+            
+            // Notificar al sistema de temas dinámicos
+            if (window.temaDinamicoManager) {
+                await window.temaDinamicoManager.cargarTemas();
+                await window.temaDinamicoManager.aplicarTemaActivo();
+            }
+            
+            // Disparar evento personalizado para notificar cambio de tema
+            document.dispatchEvent(new CustomEvent('temaAplicado', {
+                detail: { tema: resultado.tema }
+            }));
+            
+            // Aplicar tema inmediatamente usando la función del tema-global
+            if (typeof aplicarTemaInmediato === 'function') {
+                aplicarTemaInmediato();
+            } else {
+                // Fallback: aplicar manualmente
+                const root = document.documentElement;
+                const mapeoVariables = {
+                    bgPrimary: 'bg-primary',
+                    bgSecondary: 'bg-secondary', 
+                    bgTertiary: 'bg-tertiary',
+                    textPrimary: 'text-primary',
+                    textSecondary: 'text-secondary',
+                    textAccent: 'text-accent',
+                    borderPrimary: 'border-primary',
+                    borderSecondary: 'border-secondary',
+                    shadowLight: 'shadow-light',
+                    shadowMedium: 'shadow-medium',
+                    success: 'success',
+                    warning: 'warning',
+                    error: 'error',
+                    info: 'info',
+                    modalBg: 'modal-bg',
+                    hoverOverlay: 'hover-overlay'
+                };
+                
+                Object.entries(resultado.tema.colores).forEach(([clave, valor]) => {
+                    const cssVar = mapeoVariables[clave] || clave.replace(/([A-Z])/g, '-$1').toLowerCase();
+                    const propiedadCSS = '--' + cssVar;
+                    root.style.setProperty(propiedadCSS, valor);
+                });
+            }
+            
+        } catch (error) {
+            console.error('❌ Error al aplicar tema:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo aplicar el tema.',
+                toast: true,
+                position: 'top-end'
+            });
+        }
+    }
+    // Función para eliminar tema desde la tabla
+    async function eliminarTemaDesdeTabla(temaId) {
+        try {
+            // Confirmar eliminación
+            const resultado = await Swal.fire({
+                title: '¿Eliminar tema?',
+                text: 'Esta acción no se puede deshacer',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#dc3545'
+            });
+            if (!resultado.isConfirmed) return;
+            const respuesta = await fetch(`/api/temas/${temaId}`, {
+                method: 'DELETE'
+            });
+            if (!respuesta.ok) {
+                const error = await respuesta.json();
+                throw new Error(error.error || 'Error al eliminar el tema');
+            }
+            Swal.fire({
+                icon: 'success',
+                title: 'Tema eliminado',
+                text: 'El tema se ha eliminado exitosamente',
+                toast: true,
+                position: 'top-end'
+            });
+            // Recargar la tabla
+            await cargarTemasEnTabla();
+        } catch (error) {
+            console.error('❌ Error al eliminar tema:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'No se pudo eliminar el tema.',
+                toast: true,
+                position: 'top-end'
+            });
+        }
+    }
+    // Función para crear nuevo tema desde la tabla
+    async function crearNuevoTemaDesdeTabla() {
+        try {
+            const { value: nombreTema } = await Swal.fire({
+                title: 'Crear nuevo tema',
+                input: 'text',
+                inputLabel: 'Nombre del tema',
+                inputPlaceholder: 'Ej: Mi tema personalizado',
+                showCancelButton: true,
+                confirmButtonText: 'Crear',
+                cancelButtonText: 'Cancelar',
+                inputValidator: (value) => {
+                    if (!value || value.trim() === '') {
+                        return 'El nombre del tema es requerido';
+                    }
+                }
+            });
+            if (!nombreTema) return;
+            const respuesta = await fetch('/api/temas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombre: nombreTema.trim() })
+            });
+            if (!respuesta.ok) {
+                const error = await respuesta.json();
+                throw new Error(error.error || 'Error al crear el tema');
+            }
+            const nuevoTema = await respuesta.json();
+            Swal.fire({
+                icon: 'success',
+                title: 'Tema creado',
+                text: `El tema "${nombreTema}" se ha creado exitosamente`,
+                toast: true,
+                position: 'top-end'
+            });
+            // Recargar la tabla
+            await cargarTemasEnTabla();
+            // Opcionalmente, abrir el editor para el tema recién creado
+            if (window.editorTemas) {
+                setTimeout(() => {
+                    window.editorTemas.editarTema(nuevoTema._id);
+                }, 500);
+            }
+        } catch (error) {
+            console.error('❌ Error al crear tema:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'No se pudo crear el tema.',
+                toast: true,
+                position: 'top-end'
+            });
+        }
+    }
+    // Función para sincronizar temas cuando se abre el modal de preferencias
+    async function sincronizarTemas() {
+        try {
+            // Cargar en la tabla si existe
+            await cargarTemasEnTabla();
+            // Cargar en el editor si existe
+            if (window.editorTemas) {
+                await window.editorTemas.cargarTemas();
+            }
+        } catch (error) {
+            console.error('❌ Error al sincronizar temas:', error);
+        }
+    }
+    // Modificar el event listener del modal de preferencias para cargar temas
+    document.getElementById('preferencias').addEventListener('click', async (e) => {
+        e.preventDefault();
+        mostrarLoader();
+        try {
+            // Cargar monedas (función existente)
+            await cargarMonedas();
+            // Cargar temas
+            await sincronizarTemas();
+            modalPreferencias.style.display = 'block';
+        } catch (error) {
+            console.error('Error al cargar preferencias:', error);
+        } finally {
+            ocultarLoader();
+        }
+    });
+    // Agregar botón para crear nuevo tema si no existe
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnCrearTema = document.getElementById('btnCrearNuevoTema');
+        if (btnCrearTema) {
+            btnCrearTema.addEventListener('click', crearNuevoTemaDesdeTabla);
+        }
+    });
+    // Exponer funciones globalmente para uso desde otros scripts
+    window.temasAdminFunctions = {
+        cargarTemasEnTabla,
+        editarTemaDesdeTabla,
+        aplicarTemaDesdeTabla,
+        eliminarTemaDesdeTabla,
+        crearNuevoTemaDesdeTabla,
+        sincronizarTemas
+    };
     // Modelo para redes sociales
     const redesSociales = [];
-
     // Función para cargar redes sociales desde el servidor
     async function cargarRedesSociales() {
         mostrarLoader();
@@ -768,14 +1109,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!respuesta.ok) {
                 throw new Error('Error al cargar las redes sociales.');
             }
-
             const redes = await respuesta.json();
             const listaRedes = document.querySelector('.redes-sociales');
             listaRedes.innerHTML = '';
-
             redes.forEach(red => {
                 const li = document.createElement('li');
-
                 // Verificar si el enlace tiene un esquema completo
                 let enlaceCompleto = red.enlace;
                 if (!/^https?:\/\//i.test(enlaceCompleto)) {
@@ -785,11 +1123,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     enlaceCompleto = `https://${enlaceCompleto}`;
                 } else if (enlaceCompleto.startsWith('www.')) {
                     enlaceCompleto = `https://${enlaceCompleto}`;
-
                 } else if (!enlaceCompleto.startsWith('http://') && !enlaceCompleto.startsWith('https://')) {
                     enlaceCompleto = `https://${enlaceCompleto}`; // Corregido para usar https  
                 }
-
                 li.innerHTML = `
                     <a href="${enlaceCompleto}" target="_blank">
                     <img src="https://cdn.simpleicons.org/${red.nombre}" alt="${red.nombre}" width="24" height="24">
@@ -798,7 +1134,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="btnEliminarRed" data-id="${red._id}" style="display:none">🗑️</button>
                 `;
                 listaRedes.appendChild(li);
-
                 li.addEventListener('mouseenter', () => {
                     li.querySelector('.btnEliminarRed').style.display = 'inline';
                 });
@@ -809,8 +1144,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnEliminarRed.addEventListener('click', () => {
                     eliminarRedSocial(red._id);
                 });
-
-
             });
         } catch (error) {
             console.error('Error al cargar las redes sociales:', error);
@@ -818,7 +1151,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ocultarLoader();
         }
     }
-
     eliminarRedSocial = async (id) => {
         Swal.fire({
             title: '¿Estás seguro de que deseas eliminar esta red social?',
@@ -836,7 +1168,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         alert('Error al eliminar la red social.');
                         return;
                     }
-
                     Swal.fire({
                         icon: 'success',
                         title: 'Red social eliminada',
@@ -858,72 +1189,58 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     };
-
     // Manejar el botón para agregar red social
     document.getElementById('btn-agregar-red').addEventListener('click', async () => {
         const contenedor = document.querySelector('.redes-sociales');
         contenedor.innerHTML = ''; // Limpiar el contenedor para preparar la edición
         contenedor.style.flexDirection = 'column'; // Cambia a columna en modo edición
-
         try {
             const respuesta = await fetch('/api/redes-sociales');
             if (!respuesta.ok) {
                 throw new Error('Error al cargar las redes sociales.');
             }
-
             const redes = await respuesta.json();
-
             // Crear campos editables para las redes existentes
             redes.forEach(red => {
                 const li = document.createElement('li');
-
                 const inputNombre = document.createElement('input');
                 inputNombre.type = 'text';
                 inputNombre.value = red.nombre;
                 inputNombre.className = `nombre`; // ID basado en el ID de la red
-
                 const inputEnlace = document.createElement('input');
                 inputEnlace.type = 'text';
                 inputEnlace.value = red.enlace;
                 inputEnlace.className = `enlace`; // ID basado en el ID de la red
-
                 const inputId = document.createElement('input');
                 inputId.type = 'hidden';
                 inputId.value = red._id;
                 inputId.className = `id`; // ID único para el campo oculto
-
                 const btnEliminar = document.createElement('button');
                 btnEliminar.textContent = '🗑️';
                 btnEliminar.addEventListener('click', () => {
                     eliminarRedSocial(red._id);
                 });
-
                 li.appendChild(inputNombre);
                 li.appendChild(inputEnlace);
                 li.appendChild(inputId);
                 li.appendChild(btnEliminar);
                 contenedor.appendChild(li);
             });
-
             // Agregar un campo vacío para una nueva red social
             const liNuevaRed = document.createElement('li');
-
             const inputNuevoNombre = document.createElement('input');
             inputNuevoNombre.type = 'text';
             inputNuevoNombre.placeholder = 'Nombre de la red social';
             inputNuevoNombre.className = 'nombre';
-
             const inputNuevoEnlace = document.createElement('input');
             inputNuevoEnlace.type = 'text';
             inputNuevoEnlace.placeholder = 'Enlace completo';
             inputNuevoEnlace.className = 'enlace';
-
             const btnEliminar = document.createElement('button');
             btnEliminar.textContent = '🗑️';
             btnEliminar.addEventListener('click', () => {
                 liNuevaRed.remove(); // Eliminar el campo de nueva red social
             });
-
             liNuevaRed.appendChild(inputNuevoNombre);
             liNuevaRed.appendChild(inputNuevoEnlace);
             liNuevaRed.appendChild(btnEliminar);
@@ -934,20 +1251,16 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error al preparar las redes sociales para edición:', error);
         }
     });
-
     document.getElementById('btn-guardar-red').addEventListener('click', async () => {
         const contenedor = document.querySelector('.redes-sociales');
         contenedor.style.flexDirection = 'row'; // Vuelve a fila al guardar
         const items = contenedor.querySelectorAll('li');
-
         for (const item of items) {
             const inputId = item.querySelector('.id');
             const inputNombre = item.querySelector('.nombre');
             const inputEnlace = item.querySelector('.enlace');
-
             const nombre = inputNombre ? inputNombre.value.trim() : '';
             const enlace = inputEnlace ? inputEnlace.value.trim() : '';
-
             if (!nombre || !enlace) {
                 Swal.fire({
                     icon: 'warning',
@@ -958,7 +1271,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 return;
             }
-
             if (inputId && inputId.value) {
                 // Editar red existente
                 const id = inputId.value;
@@ -994,7 +1306,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         }
-
         Swal.fire({
             icon: 'success',
             title: 'Redes sociales guardadas',
@@ -1006,7 +1317,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-guardar-red').style.display = 'none'; // Ocultar el botón de guardar
         document.getElementById('Cancelar').style.display = 'none'; // Ocultar el botón de cancelar
     });
-
     document.getElementById('Cancelar').addEventListener('click', () => {
         cargarRedesSociales(); // Recargar las redes sociales
         document.getElementById('btn-guardar-red').style.display = 'none'; // Ocultar el botón de guardar
@@ -1014,15 +1324,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const contenedor = document.querySelector('.redes-sociales');
         contenedor.style.flexDirection = 'row'; // Vuelve a fila al cancelar
     });
-
-
     // Cargar redes sociales al cargar la página
     cargarRedesSociales();
-
     const listaUbicaciones = document.getElementById('listaUbicaciones');
-
     // --- UBICACIONES ---
-
     // Cargar ubicaciones en tabla plana
     async function cargarUbicacionesTabla() {
         mostrarLoader();
@@ -1081,7 +1386,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-
     document.getElementById('btnAgregarUbicacion').addEventListener('click', async (e) => {
         e.preventDefault();
         mostrarLoader();
@@ -1091,7 +1395,6 @@ document.addEventListener('DOMContentLoaded', () => {
         await crearUbicacion(pais, departamento, ciudad);
         ocultarLoader();
     });
-
     // Crear nueva ubicación
     async function crearUbicacion(pais, departamento, ciudad) {
         mostrarLoader();
@@ -1130,10 +1433,8 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarUbicacionesTabla();
         ocultarLoader();
     }
-
     // Llama cargarUbicacionesTabla() donde lo necesites para mostrar la tabla
     cargarUbicacionesTabla();
-
     // --- MAPA FOOTER ---
     // Usar API para guardar la ubicación del mapa en el backend
     const footerMapa = document.getElementById('footer-mapa');
@@ -1214,7 +1515,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         renderMapaFooter();
     }
-
     cargarIpsPermitidas = async () => {
         mostrarLoader();
         try {
@@ -1281,13 +1581,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 listaIps.appendChild(tr);
             });
-
             // Agregar evento de eliminación a los botones
             const botonesEliminar = document.querySelectorAll('.btn-eliminar-ip');
             botonesEliminar.forEach(boton => {
                 boton.addEventListener('click', async (event) => {
                     const ip = event.target.dataset.ip;
-
                     if (ip === ipData.ip) {
                         Swal.fire({
                             icon: 'error',
@@ -1297,7 +1595,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             position: 'top-end'
                         });
                         return;
-
                     }
                     const confirmar = await Swal.fire({
                         icon: 'warning',
@@ -1338,10 +1635,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ocultarLoader();
         }
     };
-
     // Cargar las IPs permitidas al cargar la página
     cargarIpsPermitidas();
-
     // Al cargar la página, filtrar si hay categoría en la URL
     const params = new URLSearchParams(window.location.search);
     const categoriaURL = params.get('categoria');
@@ -1351,5 +1646,3 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarProductos('Todos');
     }
 });
-
-

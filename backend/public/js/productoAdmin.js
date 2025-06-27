@@ -3,12 +3,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
     const idParam = window.location.pathname.split('/').pop();
     const usuario = JSON.parse(localStorage.getItem('usuario'));
-    
-
-
 const formularioProducto = document.getElementById('formularioProducto');
         formularioProducto.style.display = 'block';
-    
 // Loader functions
 function mostrarLoader() {
     const loader = document.getElementById('loader');
@@ -18,7 +14,6 @@ function ocultarLoader() {
     const loader = document.getElementById('loader');
     if (loader) loader.style.display = 'none';
 }
-
 async function cargarMonedas() {
     mostrarLoader();
     try {
@@ -26,18 +21,15 @@ async function cargarMonedas() {
         if (!respuesta.ok) {
             throw new Error('Error al cargar las monedas.');
         }
-
         const monedas = await respuesta.json();
         const selectorMonedas = document.getElementById('monedas');
         selectorMonedas.innerHTML = ''; // Limpiar las opciones existentes
-
         monedas.forEach((moneda) => {
             const opcion = document.createElement('option');
             opcion.value = moneda.moneda;
             opcion.textContent = `${moneda.nombre} (${moneda.moneda})`;
             selectorMonedas.appendChild(opcion);
         });
-
         // Seleccionar la moneda del producto si está definida
         const productoMoneda = document.getElementById('monedas').dataset.moneda;
         if (productoMoneda) {
@@ -50,7 +42,6 @@ async function cargarMonedas() {
         ocultarLoader();
     }
 }
-
 async function cargarCategorias() {
     mostrarLoader();
     try {
@@ -58,18 +49,15 @@ async function cargarCategorias() {
         if (!respuesta.ok) {
             throw new Error('Error al cargar las categorías.');
         }
-
         const categorias = await respuesta.json();
         const selectorCategorias = document.getElementById('categorias');
         selectorCategorias.innerHTML = ''; // Limpiar las opciones existentes
-
         categorias.forEach((categoria) => {
             const opcion = document.createElement('option');
             opcion.value = categoria.nombre;
             opcion.textContent = categoria.nombre;
             selectorCategorias.appendChild(opcion);
         });
-
         // Seleccionar la categoría del producto si está definida
         const productoCategoria = document.getElementById('categorias').dataset.categoria;
         if (productoCategoria) {
@@ -82,7 +70,6 @@ async function cargarCategorias() {
         ocultarLoader();
     }
 }
-
     await cargarMonedas();
     await cargarCategorias();
 if (idParam === 'crear') {
@@ -108,17 +95,14 @@ if (idParam === 'crear') {
         window.location.href = '/admin';
         return;
     }
-
     try {
         // Obtener los datos del producto desde el servidor
         const respuesta = await fetch('/api/productos');
         if (!respuesta.ok) {
             throw new Error('Error al cargar los productos.');
         }
-
         const productos = await respuesta.json();
         const producto = productos.find(p => p.id === productoId);
-
         if (!producto) {
             Swal.fire({
                 icon: 'error',
@@ -130,7 +114,6 @@ if (idParam === 'crear') {
             window.location.href = '/admin';
             return;
         }
-
         // Mostrar la información del producto en formularioProducto
         document.getElementById('nombre').value = producto.nombre;
         document.getElementById('descripcion').value = producto.descripcion;
@@ -138,22 +121,17 @@ if (idParam === 'crear') {
         document.getElementById('precio').value = producto.precio;
         document.getElementById('monedas').value = producto.moneda;
         document.getElementById('stock').value = producto.stock;
-
         const carruselItemsModal = document.querySelector('.carrusel-itemsModal');
         carruselItemsModal.innerHTML = ''; // Limpiar el carrusel modal
         imagenesSeleccionadas = []; // Limpiar el arreglo global de imágenes seleccionadas
-
         producto.imagenes.forEach((imagen, index) => {
             imagenesSeleccionadas.push(imagen); // Agregar la imagen al arreglo global
-
             const item = document.createElement('div');
             item.classList.add('carrusel-itemModal');
-
             const img = document.createElement('img');
             img.classList.add('Preview-image');
             img.src = imagen; // Usar la ruta de la imagen
             img.alt = `Imagen ${index + 1}`;
-            console.log(imagenesSeleccionadas);
             // Botón para eliminar la imagen del carrusel
             const btnEliminar = document.createElement('button');
             btnEliminar.textContent = '❌';
@@ -164,26 +142,20 @@ if (idParam === 'crear') {
                 imagenesSeleccionadas.splice(index, 1);
                 actualizarCarrusel();
             });
-
             item.appendChild(img);
             item.appendChild(btnEliminar);
             carruselItemsModal.appendChild(item);
         });
-
         carruselItemsModal.innerHTML = ''; // Limpiar el carrusel modal
         imagenesSeleccionadas = []; // Limpiar el arreglo global de imágenes seleccionadas
-
         producto.imagenes.forEach((imagen, index) => {
             imagenesSeleccionadas.push(imagen); // Agregar la imagen al arreglo global
-
             const item = document.createElement('div');
             item.classList.add('carrusel-itemModal');
-
             const img = document.createElement('img');
             img.classList.add('Preview-image');
             img.src = imagen; // Usar la ruta de la imagen
             img.alt = `Imagen ${index + 1}`;
-
             // Botón para eliminar la imagen del carrusel
             const btnEliminar = document.createElement('button');
             btnEliminar.textContent = '❌';
@@ -193,29 +165,19 @@ if (idParam === 'crear') {
                 imagenesSeleccionadas.splice(index, 1);
                 actualizarCarrusel();
             });
-
             item.appendChild(img);
             item.appendChild(btnEliminar);
             carruselItemsModal.appendChild(item);
         });
-
-
-
     } catch (error) {
         console.error('Error al cargar el producto:', error);
         alert('Hubo un error al cargar el producto. Intenta nuevamente.');
         window.location.href = '/admin';
     }
 }
-
-    
     if (usuario) {
-
-        console.log('Sesión activa:', usuario);
-
         // Obtener el ul donde se agregarán los elementos
         const listaSesion = document.querySelector('.iniciosesion');
-
         // Crear el elemento <li> para "Perfil"
         const perfilLi = document.createElement('li');
         const perfilLink = document.createElement('a');
@@ -227,24 +189,15 @@ if (idParam === 'crear') {
         perfilLink.id = 'perfilBtn';
         perfilLink.href = '#'; // Agregar href para que sea clickeable
         perfilLi.appendChild(perfilLink); // Agregar el <a> dentro del <li>
-
-        
-
         // Agregar ambos elementos al <ul>
         listaSesion.innerHTML = ''; // Limpiar cualquier contenido previo
         listaSesion.appendChild(perfilLi);
-        
-        
     } else {
-        console.log('No hay sesión activa.');
-}
-
-
+        }
     const guardarProducto = async () => {
         mostrarLoader();
         try {
         const usuario = JSON.parse(localStorage.getItem('usuario'));
-
         if (!usuario) {
             Swal.fire({
                 icon: 'warning',
@@ -255,14 +208,12 @@ if (idParam === 'crear') {
             });
             return;
         }
-
         const nombre = document.getElementById('nombre').value.trim();
         const descripcion = document.getElementById('descripcion').value.trim();
         const categoria = document.getElementById('categorias').value.trim();
         const precio = document.getElementById('precio').value.trim();
         const moneda = document.getElementById('monedas').value.trim();
         const stock = document.getElementById('stock').value.trim();
-
         if (!nombre || !descripcion || !categoria || !precio || !moneda || !stock) {
             Swal.fire({
                 icon: 'warning',
@@ -273,7 +224,6 @@ if (idParam === 'crear') {
             });
             return;
         }
-
         const formData = new FormData();
         formData.append('nombre', nombre);
         formData.append('descripcion', descripcion);
@@ -282,17 +232,14 @@ if (idParam === 'crear') {
         formData.append('moneda', moneda);
         formData.append('stock', stock);
         formData.append('correo', usuario.correo); // Asociar el producto al usuario
-
         // Agregar las imágenes seleccionadas al FormData
         imagenesSeleccionadas.forEach((archivo) => {
             formData.append('imagenes', archivo);
         });
-
             const respuesta = await fetch('/api/productos', {
                 method: 'POST',
                 body: formData,
             });
-
             const data = await respuesta.json();
             if (respuesta.ok) {
                 Swal.fire({
@@ -302,7 +249,6 @@ if (idParam === 'crear') {
                     toast: true,
                     position: 'top-end'
                 });
-                console.log(data);
                 imagenesSeleccionadas = [];
                 window.location.href = '/admin';
             } else {
@@ -327,7 +273,6 @@ if (idParam === 'crear') {
             ocultarLoader();
         }
     };
-
     // Función para actualizar un producto
     const actualizarProducto = async () => {
         mostrarLoader();
@@ -343,10 +288,8 @@ if (idParam === 'crear') {
             });
             return;
         }
-
         const params = new URLSearchParams(window.location.search);
         const productoId = parseInt(params.get('id'), 10);
-
         if (Number.isNaN(productoId) || productoId <= 0) {
             Swal.fire({
                 icon: 'error',
@@ -357,14 +300,12 @@ if (idParam === 'crear') {
             });
             return;
         }
-
         const nombre = document.getElementById('nombre').value.trim();
         const descripcion = document.getElementById('descripcion').value.trim();
         const categoria = document.getElementById('categorias').value.trim();
         const precio = document.getElementById('precio').value.trim();
         const moneda = document.getElementById('monedas').value.trim();
         const stock = document.getElementById('stock').value.trim();
-
         if (!nombre || !descripcion || !categoria || !precio || !moneda || !stock) {
             Swal.fire({
                 icon: 'warning',
@@ -375,7 +316,6 @@ if (idParam === 'crear') {
             });
             return;
         }
-
         const formData = new FormData();
         formData.append('nombre', nombre);
         formData.append('descripcion', descripcion);
@@ -384,18 +324,15 @@ if (idParam === 'crear') {
         formData.append('moneda', moneda);
         formData.append('stock', stock);
         formData.append('correo', usuario.correo);
-
         // Procesar imágenes seleccionadas
         imagenesSeleccionadas.forEach((archivo) => {
                 formData.append('imagenes', archivo);
             }
         );
-
             const respuesta = await fetch(`/api/productos/${productoId}`, {
                 method: 'PUT',
                 body: formData,
             });
-
             const data = await respuesta.json();
             if (respuesta.ok) {
                 Swal.fire({
@@ -429,12 +366,10 @@ if (idParam === 'crear') {
             ocultarLoader();
         }
     };
-
     // Asignar evento al botón "Guardar"
     document.getElementById('btnGuardar').addEventListener('click', (event) => {
         event.preventDefault();
         const productoId = parseInt(window.location.pathname.split('/').pop(), 10); // Obtener el ID del producto de la URL
-
         if (productoId > 0) {
             // Si hay un ID de producto, se trata de una actualización
             actualizarProducto();
@@ -445,25 +380,19 @@ if (idParam === 'crear') {
 const carruselItems = document.querySelector('.carrusel-itemsModal');
         carruselItems.innerHTML = '';
     });
-
-    
     function moveCarrusel(direction) {
         const carruselItems = document.querySelector('.carrusel-itemsModal');
         const items = carruselItems.querySelectorAll('.carrusel-itemModal');
         const currentTransform = getComputedStyle(carruselItems).transform;
         const matrixValues = currentTransform !== 'none' ? currentTransform.split(',') : [0];
         const currentTranslateX = parseFloat(matrixValues[4]) || 0;
-
         const itemWidth = carruselItems.offsetWidth;
         const maxTranslateX = -(itemWidth * (items.length - 1));
         let newTranslateX = currentTranslateX + direction * itemWidth;
-
         if (newTranslateX > 0) newTranslateX = maxTranslateX; // Ir al último
         if (newTranslateX < maxTranslateX) newTranslateX = 0; // Ir al primero
-
         carruselItems.style.transform = `translateX(${newTranslateX}px)`;
     }
-
     // Asignar eventos a los botones del carrusel
     document.querySelector('.carrusel-prevModal').addEventListener('click', (e) => {
         e.preventDefault();
@@ -473,13 +402,9 @@ const carruselItems = document.querySelector('.carrusel-itemsModal');
         e.preventDefault();
         moveCarrusel(-1)
     });
-
-
-
 // Evento para manejar la selección de imágenes y convertirlas a base64
 const manejarSubidaDeImagenes = () => {
         const archivos = Array.from(document.getElementById('imagen').files);
-
         if (archivos.length === 0) {
             Swal.fire({
                 icon: 'warning',
@@ -490,9 +415,7 @@ const manejarSubidaDeImagenes = () => {
             });
             return;
         }
-
         const maxSize = 5 * 1024 * 1024; // Tamaño máximo permitido: 5 MB
-
         archivos.forEach((archivo) => {
             if (archivo.size > maxSize) {
                 Swal.fire({
@@ -504,18 +427,14 @@ const manejarSubidaDeImagenes = () => {
                 });
                 return;
             }
-
             imagenesSeleccionadas.push(archivo);
-
             // Crear un elemento de vista previa para la imagen
             const item = document.createElement('div');
             item.classList.add('carrusel-itemModal');
-
             const img = document.createElement('img');
             img.classList.add('Preview-image');
             img.src = URL.createObjectURL(archivo); // Crear una URL para la vista previa
             img.alt = archivo.name;
-
             // Botón para eliminar la imagen
             const btnEliminar = document.createElement('button');
             btnEliminar.textContent = '❌';
@@ -527,22 +446,17 @@ const manejarSubidaDeImagenes = () => {
                     actualizarCarrusel();
                 }
             });
-
             item.appendChild(img);
             item.appendChild(btnEliminar);
             document.querySelector('.carrusel-itemsModal').appendChild(item);
         });
-        
     };
-
 document.getElementById('imagen').addEventListener('change', manejarSubidaDeImagenes);
-
 // Función para eliminar la imagen activa del carrusel
 // Cambiar la lógica para buscar el índice de la imagen activa usando un ID
 function eliminarImagenActiva() {
     const carruselItems = document.querySelector('.carrusel-itemsModal');
     const items = carruselItems.querySelectorAll('.carrusel-itemModal');
-
     // Buscar el índice de la imagen activa usando un ID
     let activeIndex = -1;
     items.forEach((item, index) => {
@@ -550,7 +464,6 @@ function eliminarImagenActiva() {
             activeIndex = index;
         }
     });
-
     if (activeIndex !== -1) {
         imagenesSeleccionadas.splice(activeIndex, 1);
         actualizarCarrusel();
@@ -564,31 +477,26 @@ function eliminarImagenActiva() {
         });
     }
 }
-
 // Actualizar el carrusel para marcar la primera imagen como activa
 function actualizarCarrusel() {
     const carruselItems = document.querySelector('.carrusel-itemsModal');
     const items = carruselItems.querySelectorAll('.carrusel-itemModal');
-
     // Limpiar todos los IDs "active"
     items.forEach((item) => item.removeAttribute('id'));
     // Si hay imágenes seleccionadas, marcar la primera como activa
     if (imagenesSeleccionadas.length > 0) {
         items[0].id = 'active';
     }
-
     // Renderizar el carrusel nuevamente si es necesario
     carruselItems.innerHTML = ''; // Limpia el carrusel
     imagenesSeleccionadas.forEach((imagen, index) => {
         const item = document.createElement('div');
         item.classList.add('carrusel-itemModal');
         if (index === 0) item.id = 'active'; // Marcar la primera como activa
-
         const img = document.createElement('img');
         img.classList.add('Preview-image');
         img.src = typeof imagen === 'string' ? imagen : URL.createObjectURL(imagen);
         img.alt = `Imagen ${index + 1}`;
-
         const btnEliminar = document.createElement('button');
         btnEliminar.textContent = '❌';
         btnEliminar.classList.add('btnEliminarImagen');
@@ -596,24 +504,16 @@ function actualizarCarrusel() {
             imagenesSeleccionadas.splice(index, 1);
             actualizarCarrusel();
         });
-
         item.appendChild(img);
         item.appendChild(btnEliminar);
         carruselItems.appendChild(item);
     });
 }
-
 // Asignar evento al botón de eliminar imagen
-
-
 // Asignar evento al botón de subir imágenes
 document.getElementById('subirImg').addEventListener('click', (e) => {
     e.preventDefault();
     document.getElementById('imagen').click(); // Simular clic en el input de archivo
 });
-
 // Asignar evento al botón de eliminar imagen
-
-
-
 });

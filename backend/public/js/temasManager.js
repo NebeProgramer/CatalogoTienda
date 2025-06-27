@@ -13,11 +13,20 @@ class TemasManager {
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
                 this.configurarEventListenersTemas();
-                this.mostrarIndicadorTema();
+                this.inicializarIndicadorTema();
             });
         } else {
             this.configurarEventListenersTemas();
-            this.mostrarIndicadorTema();
+            this.inicializarIndicadorTema();
+        }
+    }
+    
+    inicializarIndicadorTema() {
+        // Verificar si el usuario ha optado por ocultar el indicador
+        const indicadorOculto = localStorage.getItem('indicadorTemaOculto') === 'true';
+        
+        if (!indicadorOculto) {
+            this.crearIndicadorTema();
         }
     }
 
@@ -30,8 +39,26 @@ class TemasManager {
         this.actualizarIndicadorTema();
     }
 
+    // Función para ocultar el indicador de tema
+    ocultarIndicadorTema() {
+        const indicador = document.getElementById('theme-indicator');
+        if (indicador) {
+            indicador.style.display = 'none';
+        }
+    }
+    
+    // Función para mostrar el indicador de tema
     mostrarIndicadorTema() {
-        // Crear indicador de tema si no existe
+        const indicador = document.getElementById('theme-indicator');
+        if (indicador) {
+            indicador.style.display = 'block';
+        } else {
+            this.crearIndicadorTema();
+        }
+    }
+    
+    // Función para crear el indicador si no existe
+    crearIndicadorTema() {
         let indicador = document.getElementById('theme-indicator');
         if (!indicador) {
             indicador = document.createElement('div');
@@ -47,14 +74,32 @@ class TemasManager {
         const indicador = document.getElementById('theme-indicator');
         if (!indicador) return;
 
-        const temaIconos = {
-            'light': '🌞',
-            'dark': '🌙',
-            'blue': '🌊',
-            'green': '🌿'
-        };
+        // Primero intentar obtener el tema dinámico actual
+        let nombreTema = '';
+        let iconoTema = '🎨';
         
-        indicador.textContent = `${temaIconos[this.temaActual] || '🎨'} ${this.temaActual.charAt(0).toUpperCase() + this.temaActual.slice(1)}`;
+        if (typeof window.obtenerTemaActual === 'function') {
+            const temaActual = window.obtenerTemaActual();
+            if (temaActual && temaActual.nombre) {
+                nombreTema = temaActual.nombre;
+                iconoTema = temaActual.icono || '🎨';
+            }
+        }
+        
+        // Si no hay tema dinámico, usar los temas estáticos como fallback
+        if (!nombreTema) {
+            const temaIconos = {
+                'light': '🌞',
+                'dark': '🌙',
+                'blue': '🌊',
+                'green': '🌿'
+            };
+            
+            iconoTema = temaIconos[this.temaActual] || '🎨';
+            nombreTema = this.temaActual.charAt(0).toUpperCase() + this.temaActual.slice(1);
+        }
+        
+        indicador.textContent = `${iconoTema} ${nombreTema}`;
         
         // Hacer clickeable el indicador para abrir preferencias
         indicador.style.cursor = 'pointer';
@@ -138,7 +183,26 @@ class TemasManager {
     establecerTemaEnSelector() {
         const temaSelect = document.getElementById('temaPreferido');
         if (temaSelect) {
-            temaSelect.value = this.temaActual;
+            // Primero intentar con el ID del tema guardado directamente
+            const temaGuardadoId = localStorage.getItem('temaSeleccionado');
+            if (temaGuardadoId && temaSelect.querySelector(`option[value="${temaGuardadoId}"]`)) {
+                temaSelect.value = temaGuardadoId;
+                return;
+            }
+            
+            // Intentar usar la función global para obtener el tema actual
+            if (typeof window.obtenerTemaActual === 'function') {
+                const temaActual = window.obtenerTemaActual();
+                if (temaActual && temaActual.id && temaSelect.querySelector(`option[value="${temaActual.id}"]`)) {
+                    temaSelect.value = temaActual.id;
+                    return;
+                }
+            }
+            
+            // Fallback al tema tradicional
+            if (temaSelect.querySelector(`option[value="${this.temaActual}"]`)) {
+                temaSelect.value = this.temaActual;
+            }
         }
     }
 
@@ -152,3 +216,29 @@ window.temasManager = new TemasManager();
 
 // Exponer la clase globalmente por si se necesita crear instancias adicionales
 window.TemasManager = TemasManager;
+
+// Funciones globales para controlar el indicador de tema
+window.ocultarIndicadorTema = function() {
+    if (window.temasManager && typeof window.temasManager.ocultarIndicadorTema === 'function') {
+        window.temasManager.ocultarIndicadorTema();
+        localStorage.setItem('indicadorTemaOculto', 'true');
+    }
+};
+
+window.mostrarIndicadorTema = function() {
+    if (window.temasManager && typeof window.temasManager.mostrarIndicadorTema === 'function') {
+        window.temasManager.mostrarIndicadorTema();
+        localStorage.removeItem('indicadorTemaOculto');
+    }
+};
+
+window.toggleIndicadorTema = function() {
+    const indicador = document.getElementById('theme-indicator');
+    const estaOculto = !indicador || indicador.style.display === 'none';
+    
+    if (estaOculto) {
+        window.mostrarIndicadorTema();
+    } else {
+        window.ocultarIndicadorTema();
+    }
+};

@@ -26,6 +26,7 @@ const TermsAndConditions = require('./models/termsAndConditions'); // Importando
 const Moneda = require('./models/Moneda'); // Importar modelo Moneda con la ruta correcta
 const Ubicacion = require('./models/Ubicacion'); // Importar modelo Ubicacion con la ruta correcta
 const Categoria = require('./models/categoria'); // Importar el modelo de categorías
+const Tema = require('./models/Tema'); // Importar modelo de Temas
 const { v4: uuidv4 } = require('uuid'); // Import uuid for unique ID generation
 const RedSocial = require('./models/redSocial'); // Import the RedSocial model
 const IPPermitida = require('./models/ipPermitida'); // Importa el modelo de IP permitida
@@ -1767,6 +1768,175 @@ app.delete('/api/redes-sociales/:id', async (req, res) => {
     } catch (error) {
         console.error('Error deleting social media link:', error);
         res.status(500).json({ error: 'Error deleting social media link.' });
+    }
+});
+
+// ===== RUTAS PARA GESTIÓN DE TEMAS =====
+
+// Obtener todos los temas
+app.get('/api/temas', async (req, res) => {
+    try {
+        const temas = await Tema.find().sort({ fechaCreacion: -1 });
+        res.json(temas);
+    } catch (error) {
+        console.error('Error al obtener temas:', error);
+        res.status(500).json({ error: 'Error al obtener los temas' });
+    }
+});
+
+// Obtener un tema específico
+app.get('/api/temas/:id', async (req, res) => {
+    try {
+        console.log('📋 [API] GET /api/temas/:id - ID recibido:', req.params.id);
+        
+        // Validar que el ID sea un ObjectId válido
+        if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+            console.log('❌ [API] ID no es válido ObjectId:', req.params.id);
+            return res.status(400).json({ error: 'ID de tema no válido' });
+        }
+        
+        const tema = await Tema.findById(req.params.id);
+        if (!tema) {
+            console.log('❌ [API] Tema no encontrado con ID:', req.params.id);
+            return res.status(404).json({ error: 'Tema no encontrado' });
+        }
+        
+        console.log('✅ [API] Tema encontrado:', tema.nombre);
+        res.json(tema);
+    } catch (error) {
+        console.error('❌ [API] Error al obtener tema:', error);
+        res.status(500).json({ error: 'Error al obtener el tema' });
+    }
+});
+
+// Crear un nuevo tema
+app.post('/api/temas', async (req, res) => {
+    try {
+        const { nombre, colores } = req.body;
+        
+        if (!nombre) {
+            return res.status(400).json({ error: 'El nombre del tema es requerido' });
+        }
+
+        // Verificar que el nombre no esté duplicado
+        const temaExistente = await Tema.findOne({ nombre });
+        if (temaExistente) {
+            return res.status(400).json({ error: 'Ya existe un tema con ese nombre' });
+        }
+
+        const nuevoTema = new Tema({
+            nombre,
+            colores: colores || {},
+            activo: false
+        });
+
+        await nuevoTema.save();
+        res.status(201).json(nuevoTema);
+    } catch (error) {
+        console.error('Error al crear tema:', error);
+        res.status(500).json({ error: 'Error al crear el tema' });
+    }
+});
+
+// Actualizar un tema
+app.put('/api/temas/:id', async (req, res) => {
+    try {
+        console.log('🔄 [API] PUT /api/temas/:id - ID recibido:', req.params.id);
+        console.log('📝 [API] Body recibido:', req.body);
+        
+        // Validar que el ID sea un ObjectId válido
+        if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+            console.log('❌ [API] ID no es válido ObjectId:', req.params.id);
+            return res.status(400).json({ error: 'ID de tema no válido' });
+        }
+        
+        const { nombre, colores } = req.body;
+        
+        const tema = await Tema.findById(req.params.id);
+        if (!tema) {
+            console.log('❌ [API] Tema no encontrado con ID:', req.params.id);
+            return res.status(404).json({ error: 'Tema no encontrado' });
+        }
+
+        console.log('📋 [API] Tema encontrado:', tema.nombre);
+
+        // Si se cambia el nombre, verificar que no esté duplicado
+        if (nombre && nombre !== tema.nombre) {
+            const temaExistente = await Tema.findOne({ nombre });
+            if (temaExistente) {
+                return res.status(400).json({ error: 'Ya existe un tema con ese nombre' });
+            }
+            tema.nombre = nombre;
+        }
+
+        if (colores) {
+            console.log('🎨 [API] Actualizando colores del tema');
+            tema.colores = { ...tema.colores, ...colores };
+        }
+
+        await tema.save();
+        console.log('✅ [API] Tema actualizado exitosamente');
+        res.json(tema);
+    } catch (error) {
+        console.error('❌ [API] Error al actualizar tema:', error);
+        res.status(500).json({ error: 'Error al actualizar el tema' });
+    }
+});
+
+// Eliminar un tema
+app.delete('/api/temas/:id', async (req, res) => {
+    try {
+        const tema = await Tema.findById(req.params.id);
+        if (!tema) {
+            return res.status(404).json({ error: 'Tema no encontrado' });
+        }
+
+        // No permitir eliminar el tema activo
+        if (tema.activo) {
+            return res.status(400).json({ error: 'No se puede eliminar el tema activo' });
+        }
+
+        await Tema.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Tema eliminado exitosamente' });
+    } catch (error) {
+        console.error('Error al eliminar tema:', error);
+        res.status(500).json({ error: 'Error al eliminar el tema' });
+    }
+});
+
+// Aplicar un tema (marcar como activo)
+app.post('/api/temas/:id/aplicar', async (req, res) => {
+    try {
+        const tema = await Tema.findById(req.params.id);
+        if (!tema) {
+            return res.status(404).json({ error: 'Tema no encontrado' });
+        }
+
+        // Desactivar todos los temas
+        await Tema.updateMany({}, { activo: false });
+        
+        // Activar el tema seleccionado
+        tema.activo = true;
+        await tema.save();
+
+        res.json({ message: 'Tema aplicado exitosamente', tema });
+    } catch (error) {
+        console.error('Error al aplicar tema:', error);
+        res.status(500).json({ error: 'Error al aplicar el tema' });
+    }
+});
+
+// Obtener el tema activo
+app.get('/api/temas/activo/actual', async (req, res) => {
+    try {
+        const temaActivo = await Tema.findOne({ activo: true });
+        if (!temaActivo) {
+            return res.status(404).json({ error: 'No hay tema activo configurado' });
+        }
+        res.json(temaActivo);
+    } catch (error) {
+        console.error('Error al obtener tema activo:', error);
+        res.status(500).json({ error: 'Error al obtener el tema activo' });
     }
 });
 

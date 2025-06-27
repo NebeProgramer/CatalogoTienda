@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         ]
     };
-
     if (!usuario.correo) {
         Swal.fire({
             icon: 'warning',
@@ -40,12 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const btnEditarPerfil = document.getElementById('iniciarSesion'); // Botón "Editar perfil"
     const btnCerrarSesion = document.getElementById('crearCuenta'); // Botón "Cerrar sesión"
-
     if (usuario && usuario.correo) {
         // Cambiar el texto del botón "Editar perfil" al nombre del usuario
         btnEditarPerfil.textContent = usuario.nombre || 'Editar Perfil';
         btnEditarPerfil.href = 'datos-perfil.html'; // Redirigir a la misma página
-
         // Asignar la función de cerrar sesión al botón "Cerrar sesión"
         btnCerrarSesion.addEventListener('click', () => {
             localStorage.clear(); // Limpiar el localStorage
@@ -62,20 +59,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Si no hay una cuenta iniciada, redirigir a la página de inicio de sesión
         btnEditarPerfil.textContent = 'Iniciar Sesión';
         btnEditarPerfil.href = '/'; // Redirigir al index para iniciar sesión
-
         btnCerrarSesion.style.display = 'none'; // Ocultar el botón "Cerrar sesión"
         Swal.fire({
             icon: 'warning',
             title: 'No hay sesión iniciada',
             text: 'Por favor, inicia sesión para acceder a tu perfil.',
-            
         }).then(() => {
             window.location.href = '/'; // Redirigir al index
         });
     }
-
-    
-
     // Elementos del DOM
     const nombrePerfil = document.getElementById('nombrePerfil');
     const apellidoPerfil = document.getElementById('apellidoPerfil');
@@ -99,38 +91,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const ciudadSelect = document.getElementById('ciudad');
     const departamentoSelect = document.getElementById('departamento');
     const eliminarCuenta = document.getElementById('btnEliminarCuenta');
-
     let direccionSeleccionada = null;
     let tarjetaSeleccionada = null;
-
-
     // Función para actualizar el localStorage
     const actualizarLocalStorage = () => {
         localStorage.setItem('usuario', JSON.stringify(usuario));
-        console.log(usuario);
     };
-
     // Actualizar el perfil en el localStorage al escribir en los campos
     nombrePerfil.addEventListener('input', (event) => {
         usuario.nombre = event.target.value;
         actualizarLocalStorage();
     });
-
     apellidoPerfil.addEventListener('input', (event) => {
         usuario.apellido = event.target.value;
         actualizarLocalStorage();
     });
-
     telefono.addEventListener('input', (event) => {
         usuario.telefono = event.target.value;
         actualizarLocalStorage();
     });
-
     descripcionPerfil.addEventListener('input', (event) => {
         usuario.descripcion = event.target.value;
         actualizarLocalStorage();
     });
-
     // Función para cargar el perfil en el DOM
     const cargarPerfil = () => {
         nombrePerfil.value = usuario.nombre || '';
@@ -139,15 +122,12 @@ document.addEventListener('DOMContentLoaded', () => {
         emailPerfil.value = usuario.correo || '';
         emailPerfil.disabled = true; // Hacer el correo no modificable
         descripcionPerfil.value = usuario.descripcion || '';
-
         // Cargar direcciones
         const tablaDirecciones = document.querySelector('#tablaDirecciones tbody');
     tablaDirecciones.innerHTML = ''; // Limpiar la tabla antes de cargar las direcciones
-
     usuario.direccion.forEach((direccion, index) => {
         const fila = document.createElement('tr');
         fila.dataset.index = index;
-
         fila.innerHTML = `
             <td>${direccion.Calle}</td>
             <td>${direccion.Carrera}</td>
@@ -158,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <td>${direccion.Ciudad}</td>
             <td>${direccion.Pais}</td>
         `;
-
         fila.addEventListener('click', () => {
             // Si la fila ya está seleccionada, deseleccionarla
             if (fila.classList.contains('selected')) {
@@ -173,29 +152,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 direccionSeleccionada.classList.add('selected');
             }
         });
-
         tablaDirecciones.appendChild(fila);
     });
-
     document.getElementById('inicio').addEventListener('click', () => {
         window.location.href = '/'; // Redirigir a la página de inicio
     });
-
-    
-
-        
-
         // Cargar tarjetas
         const tablaTarjetas = document.querySelector('#tablaTarjetas tbody');
     tablaTarjetas.innerHTML = ''; // Limpiar la tabla antes de cargar las tarjetas
-
     usuario.tarjeta.forEach((tarjeta, index) => {
         const fila = document.createElement('tr');
         fila.dataset.index = index;
-
         // Validar que el número de tarjeta no sea undefined antes de usar slice
         const numeroTarjeta = tarjeta.Numero ? tarjeta.Numero.slice(-4) : '****';
-
         fila.innerHTML = `
             <td>${tarjeta.Titular}</td>
             <td id="numeroCard">**** **** **** ${numeroTarjeta}</td>
@@ -205,7 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button type="button" class="btnToggleDetalles">Mostrar</button>
             </td>
         `;
-
         const btnToggleDetalles = fila.querySelector('.btnToggleDetalles');
         btnToggleDetalles.addEventListener('click', (event) => {
             event.stopPropagation(); 
@@ -221,9 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 numeroCardCell.textContent = `**** **** **** ${numeroTarjeta}`;
             }
-
         });
-
         fila.addEventListener('click', () => {
             // Si la fila ya está seleccionada, deseleccionarla
             if (fila.classList.contains('selected')) {
@@ -238,11 +204,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 tarjetaSeleccionada.classList.add('selected');
             }
         });
-
         tablaTarjetas.appendChild(fila);
     });
     };
-
     // Función para cargar países, departamentos y ciudades desde la API
     const cargarUbicaciones = () => {
         fetch('/api/ubicaciones')
@@ -256,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!data || !Array.isArray(data)) {
                     throw new Error('La estructura de los datos de ubicaciones no es válida.');
                 }
-    
                 // Poblar el selector de países
                 data.forEach(pais => {
                     const option = document.createElement('option');
@@ -264,13 +227,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     option.textContent = pais.nombre;
                     paisSelect.appendChild(option);
                 });
-    
                 // Evento para actualizar departamentos al seleccionar un país
                 paisSelect.addEventListener('change', () => {
                     const paisSeleccionado = data.find(pais => pais.nombre === paisSelect.value);
                     departamentoSelect.innerHTML = '<option value="">Seleccione un departamento</option>';
                     ciudadSelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
-    
                     if (paisSeleccionado) {
                         paisSeleccionado.departamentos.forEach(departamento => {
                             const option = document.createElement('option');
@@ -278,11 +239,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             option.textContent = departamento.nombre;
                             departamentoSelect.appendChild(option);
                         });
-    
                         departamentoSelect.addEventListener('change', () => {
                             const departamentoSeleccionado = paisSeleccionado.departamentos.find(departamento => departamento.nombre === departamentoSelect.value);
                             ciudadSelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
-    
                             if (departamentoSeleccionado) {
                                 departamentoSeleccionado.ciudades.forEach(ciudad => {
                                     const option = document.createElement('option');
@@ -307,7 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const departamento = document.getElementById('departamento').value.trim();
         const ciudad = document.getElementById('ciudad').value.trim();
         const pais = document.getElementById('pais').value.trim();
-
         // Validaciones
         const soloLetrasNumEsp = /^[A-Za-z0-9\s#-]+$/;
         if (!calle || !carrera || !casa || !piso || !codigoPostal || !departamento || !ciudad || !pais) {
@@ -352,7 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
             Swal.fire({ icon: 'warning', title: 'País requerido', text: 'Selecciona un país.', toast: true, position: 'top-end' });
             return;
         }
-
         const nuevaDireccion = {
             Calle: calle,
             Carrera: carrera,
@@ -368,14 +325,12 @@ document.addEventListener('DOMContentLoaded', () => {
         ocultarModalUnico();
         cargarPerfil();
     };
-
     // Función para guardar una nueva tarjeta
     const guardarTarjeta = () => {
         const titular = document.getElementById('nombreTarjeta').value;
         const numero = document.getElementById('numeroTarjeta').value;
         const cvc = document.getElementById('cvc').value;
         const fechaVencimiento = document.getElementById('fechaExpiracion').value;
-
         // Validar que todos los campos estén llenos
         if (!titular || !numero || !cvc || !fechaVencimiento) {
             Swal.fire({
@@ -389,10 +344,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }        // Validar el formato del número de tarjeta según el tipo
         const numeroTarjetaSinEspacios = numero.replace(/\s+/g, '');
         const tipoTarjeta = detectCardType(numeroTarjetaSinEspacios);
-        
         let longitudValida = false;
         let mensajeError = '';
-        
         switch(tipoTarjeta) {
             case 'amex':
                 longitudValida = /^\d{15}$/.test(numeroTarjetaSinEspacios);
@@ -413,7 +366,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 longitudValida = /^\d{13,19}$/.test(numeroTarjetaSinEspacios);
                 mensajeError = 'El número de tarjeta debe tener entre 13 y 19 dígitos.';
         }
-        
         if (!longitudValida) {
             Swal.fire({
                 icon: 'warning',
@@ -468,13 +420,11 @@ document.addEventListener('DOMContentLoaded', () => {
             CVC: cvc.trim(),
             FechaVencimiento: fechaVencimiento.trim() // Cambiar "Fecha" a "FechaVencimiento" para coincidir con el esquema
         };
-
         usuario.tarjeta.push(nuevaTarjeta);
         actualizarLocalStorage();
         ocultarModalUnico();
         cargarPerfil();
     };
-
     // Función para borrar la dirección seleccionada
     const borrarDireccion = () => {
         if (direccionSeleccionada) {
@@ -493,7 +443,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     };
-
     // Función para borrar la tarjeta seleccionada
     const borrarTarjeta = () => {
         if (tarjetaSeleccionada) {
@@ -512,13 +461,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     };
-
-
-
     // Ajustar el envío de datos para que todos los campos de la tarjeta se envíen correctamente
     const subirPerfilAlServidor = async () => {
         const usuario = JSON.parse(localStorage.getItem('usuario'));
-
         if (!usuario || !usuario.correo) {
             Swal.fire({
                 icon: 'warning',
@@ -529,7 +474,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             return;
         }
-
         mostrarLoader();
         try {
             const datosParaEnviar = {
@@ -547,9 +491,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 })),
                 carrito: usuario.carrito || []
             };
-
-            console.log('Datos que se enviarán al servidor:', datosParaEnviar);
-
             const respuesta = await fetch('/api/perfil', {
                 method: 'PUT',
                 headers: {
@@ -557,20 +498,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify(datosParaEnviar)
             });
-
             if (!respuesta.ok) {
                 const error = await respuesta.json();
                 console.error('Error en la respuesta del servidor:', error);
                 throw new Error(error.error || 'Error al subir el perfil al servidor.');
             }
-
             const data = await respuesta.json();
             Swal.fire({
                 icon: 'success',
                 title: 'Perfil subido',
                 text: 'Perfil subido actualizado correctamente.'
             });
-            console.log('Respuesta del servidor:', data);
         } catch (error) {
             console.error('Error al subir el perfil al servidor:', error);
             Swal.fire({
@@ -586,10 +524,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ocultarLoader();
         }
     };
-
     // Obtener todas las direcciones
     const direcciones = document.querySelectorAll('.direccion-item');
-
     // Iterar sobre cada dirección y obtener sus valores
     direcciones.forEach((direccion) => {
         const calle = direccion.querySelector('.calle').textContent;
@@ -601,20 +537,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const ciudad = direccion.querySelector('.ciudad').textContent;
         const pais = direccion.querySelector('.pais').textContent;
     });
-
     // Obtener todas las tarjetas
     const tarjetas = document.querySelectorAll('.tarjeta-item');
-
     // Iterar sobre cada tarjeta y obtener sus valores
     tarjetas.forEach((tarjeta) => {
         const titular = tarjeta.querySelector('.titular').textContent;
         const numero = tarjeta.querySelector('.numero').textContent;
         const cvc = tarjeta.querySelector('.cvc').textContent;
         const fechaVencimiento = tarjeta.querySelector('.fecha-vencimiento').textContent;
-
-        console.log({ titular, numero, cvc, fechaVencimiento });
     });
-
     // Asignar eventos a los botones
     btnGuardarCambios.addEventListener('click', () => {
         subirPerfilAlServidor();
@@ -632,22 +563,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });    cargarPerfil();
     cargarUbicaciones(); // Cargar países, ciudades y departamentos
-
     const inputNumeroTarjeta = document.getElementById('numeroTarjeta');    inputNumeroTarjeta.addEventListener('input', (event) => {
         let valor = event.target.value;
-
         // Eliminar todos los espacios existentes
         valor = valor.replace(/\s+/g, '');
-
         // Detectar tipo de tarjeta y actualizar logo
         const tipoTarjeta = detectCardType(valor);
         updateCardLogo(tipoTarjeta);
-
         // Si no hay valor, ocultar el logo
         if (!valor) {
             updateCardLogo('unknown');
         }
-
         // Determinar longitud máxima según el tipo de tarjeta
         let maxLength = 16; // Por defecto 16 dígitos
         if (tipoTarjeta === 'amex') {
@@ -655,10 +581,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (tipoTarjeta === 'diners') {
             maxLength = 14; // Diners Club usa 14 dígitos
         }
-
         // Limitar según la longitud máxima del tipo de tarjeta
         valor = valor.slice(0, maxLength);
-
         // Agregar espacios según el tipo de tarjeta
         if (tipoTarjeta === 'amex') {
             // Amex: 4-6-5 (XXXX XXXXXX XXXXX)
@@ -672,45 +596,35 @@ document.addEventListener('DOMContentLoaded', () => {
             // Visa, Mastercard, Discover, etc.: 4-4-4-4 (XXXX XXXX XXXX XXXX)
             valor = valor.replace(/(\d{4})(?=\d)/g, '$1 ');
         }
-
         // Actualizar el valor del input
         event.target.value = valor;
     });
-
     // Evitar que se ingresen caracteres no numéricos
     inputNumeroTarjeta.addEventListener('keypress', (event) => {
         if (!/[0-9]/.test(event.key)) {
             event.preventDefault();
         }
     });
-
     const inputFechaExpiracion = document.getElementById('fechaExpiracion');
-
     inputFechaExpiracion.addEventListener('input', (event) => {
         let valor = event.target.value;
-
         // Eliminar cualquier carácter no numérico
         valor = valor.replace(/[^0-9]/g, '');
-
         // Agregar el "/" automáticamente después de los primeros 2 dígitos
         if (valor.length > 2) {
             valor = valor.slice(0, 2) + '/' + valor.slice(2);
         }
-
         // Limitar a un máximo de 5 caracteres (MM/YY)
         valor = valor.slice(0, 5);
-
         // Actualizar el valor del input
         event.target.value = valor;
     });
-
     // Evitar que se ingresen caracteres no numéricos o más de 5 caracteres
     inputFechaExpiracion.addEventListener('keypress', (event) => {
         if (!/[0-9]/.test(event.key) || inputFechaExpiracion.value.length >= 5) {
             event.preventDefault();
         }
     });
-
     eliminarCuenta.addEventListener('click', async () => {
         const confirmacion = await Swal.fire({
             title: '¿Estás seguro?',
@@ -720,7 +634,6 @@ document.addEventListener('DOMContentLoaded', () => {
             confirmButtonText: 'Sí, eliminar',
             cancelButtonText: 'Cancelar'
         });
-
         if (confirmacion.isConfirmed) {
             try {
                 const respuesta = await fetch(`/api/usuarios/${usuario.correo}`, {
@@ -729,7 +642,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!respuesta.ok) {
                     throw new Error('Error al eliminar la cuenta.');
                 }
-
                 localStorage.removeItem('usuario');
                 Swal.fire({
                     icon: 'success',
@@ -753,29 +665,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-
     // Llamadas a funciones globales de loader, redes y mapa
     cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
     renderMapaFooter(); // Llamar a la función para renderizar el mapa en el footer
-
     function mostrarModalUnico(formularioAMostrar) {
         const modal = document.getElementById('modal');
         const formTarjetaContainer = document.getElementById('formTarjetaContainer');
         const formDireccionContainer = document.getElementById('formDireccionContainer');
-
         // Oculta ambos formularios
         formTarjetaContainer.style.display = 'none';
         formDireccionContainer.style.display = 'none';
-
         // Muestra solo el formulario recibido
         if (formularioAMostrar) {
             formularioAMostrar.style.display = 'block';
         }
-
         // Muestra el modal
         modal.style.display = 'block';
     }
-
     function ocultarModalUnico() {
         const modal = document.getElementById('modal');
         const formTarjetaContainer = document.getElementById('formTarjetaContainer');
@@ -784,13 +690,11 @@ document.addEventListener('DOMContentLoaded', () => {
         formTarjetaContainer.style.display = 'none';
         formDireccionContainer.style.display = 'none';
     }
-
     // Elementos del avatar
     const avatarPreview = document.getElementById('avatarPreview');
     const avatarInput = document.getElementById('avatarInput');
     const btnCambiarAvatar = document.getElementById('btnCambiarAvatar');
     const btnEliminarAvatar = document.getElementById('btnEliminarAvatar');
-
     // Funcionalidad del avatar    const inicializarAvatar = () => {
         // Mostrar la imagen actual del usuario
         if (usuario.fotoGoogle && usuario.fotoGoogle.trim() !== "") {
@@ -800,30 +704,24 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             avatarPreview.src = '/img/default-avatar.svg';
         }
-        
         // Agregar manejo de errores para imágenes que no cargan
         avatarPreview.onerror = function() {
             this.src = '/img/default-avatar.svg';
         };
-        
         // Asegurar que las dimensiones se mantengan
         avatarPreview.onload = function() {            this.style.width = '120px';
             this.style.height = '120px';
             this.style.objectFit = 'cover';
             this.style.borderRadius = '50%';
         };
-    
-
     // Event listener para cambiar avatar
     btnCambiarAvatar.addEventListener('click', () => {
         avatarInput.click();
     });
-
     // Event listener para eliminar avatar
     btnEliminarAvatar.addEventListener('click', async () => {
         try {
             mostrarLoader();
-            
             const result = await Swal.fire({
                 title: '¿Eliminar foto de perfil?',
                 text: "Se establecerá la imagen por defecto",
@@ -834,7 +732,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar'
             });
-            
             if (result.isConfirmed) {
                 // Actualizar en la base de datos
                 const response = await fetch('/api/perfil', {
@@ -845,12 +742,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         fotoPerfil: ""
                     })
                 });
-                
                 if (response.ok) {
                     usuario.fotoPerfil = "";
                     actualizarLocalStorage();
                     avatarPreview.src = '/img/default-avatar.svg';
-                    
                     Swal.fire({
                         icon: 'success',
                         title: 'Foto eliminada',
@@ -876,12 +771,10 @@ document.addEventListener('DOMContentLoaded', () => {
             ocultarLoader();
         }
     });
-
     // Event listener para subir nueva imagen
     avatarInput.addEventListener('change', async (event) => {
         const file = event.target.files[0];
         if (!file) return;
-
         // Validar tipo de archivo
         if (!file.type.startsWith('image/')) {
             Swal.fire({
@@ -893,7 +786,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             return;
         }
-
         // Validar tamaño (máximo 5MB)
         if (file.size > 5 * 1024 * 1024) {
             Swal.fire({
@@ -905,30 +797,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             return;
         }
-
         try {
             mostrarLoader();
-            
             // Crear FormData para enviar la imagen
             const formData = new FormData();
             formData.append('fotoPerfil', file);
             formData.append('correo', usuario.correo);
-
             const response = await fetch('/api/perfil/foto', {
                 method: 'POST',
                 body: formData
             });
-
             const data = await response.json();
-
             if (response.ok) {
                 // Actualizar la imagen en el preview
                 avatarPreview.src = data.fotoPerfil;
-                
                 // Actualizar el usuario y localStorage
                 usuario.fotoPerfil = data.fotoPerfil;
                 actualizarLocalStorage();
-
                 Swal.fire({
                     icon: 'success',
                     title: 'Foto actualizada',
@@ -952,16 +837,13 @@ document.addEventListener('DOMContentLoaded', () => {
         } finally {
             ocultarLoader();
         }
-        
         // Limpiar el input
         avatarInput.value = '';
     });    // Inicializar avatar al cargar la página
     inicializarAvatar();
-
     // Llamadas a funciones globales de loader, redes y mapa
     cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
     renderMapaFooter(); // Llamar a la función para renderizar el mapa en el footer
-
     // ===== FUNCIONALIDAD DE DETECCIÓN DE TARJETAS DE CRÉDITO =====
       /**
      * Detecta el tipo de tarjeta de crédito basado en el número
@@ -970,7 +852,6 @@ document.addEventListener('DOMContentLoaded', () => {
      */    function detectCardType(cardNumber) {
         // Eliminar espacios y caracteres no numéricos
         const number = cardNumber.replace(/\D/g, '');
-        
         // Si no hay número o es muy corto, retornar unknown
         if (!number || number.length < 2) {
             return 'unknown';
@@ -1000,7 +881,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cardPatterns.mastercard.test(number)) return 'mastercard';
         if (cardPatterns.maestro.test(number)) return 'maestro';
         if (cardPatterns.discover.test(number)) return 'discover';
-        
         return 'unknown';
     }    /**
      * Actualiza el logo de la tarjeta en la interfaz
@@ -1009,7 +889,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateCardLogo(cardType) {
         const cardLogo = document.getElementById('cardLogo');
         const numeroTarjetaInput = document.getElementById('numeroTarjeta');
-        
         // Mapeo de tipos de tarjeta a rutas de imagen
         const logoSources = {
             'visa': '/img/visa-logo.svg',
@@ -1020,12 +899,10 @@ document.addEventListener('DOMContentLoaded', () => {
             'jcb': '/img/jcb-logo.svg',
             'maestro': '/img/maestro-logo.svg'
         };
-        
         // Mostrar el logo correspondiente o ocultarlo si es desconocido
         if (cardType !== 'unknown' && logoSources[cardType]) {
             cardLogo.src = logoSources[cardType];
             cardLogo.style.display = 'block';
-            
             // Actualizar placeholder según el tipo de tarjeta
             switch(cardType) {
                 case 'amex':
@@ -1066,9 +943,7 @@ document.addEventListener('DOMContentLoaded', () => {
             numeroTarjetaInput.maxLength = 23; // Máximo para cualquier tipo
         }
     }
-
     // ===== EVENTOS DE FORMULARIOS =====
-
     // Evento para detectar cambios en el número de tarjeta y actualizar el logo
     formTarjeta.addEventListener('input', (event) => {
         const numeroTarjeta = document.getElementById('numeroTarjeta').value;

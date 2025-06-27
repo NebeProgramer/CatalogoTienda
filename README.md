@@ -1,53 +1,374 @@
-# CatalogoTienda
-Sistema completo de catálogo de productos con autenticación, gestión de usuarios y administración
+# 🛍️ CatalogoTienda - Sistema de E-commerce Completo
+
+Sistema integral de catálogo de productos con autenticación avanzada, gestión de usuarios, panel de administración y sistema de temas dinámicos.
 
 ## 📋 Tabla de Contenidos
 - [Descripción del Proyecto](#-descripción-del-proyecto)
-- [Características](#-características)
+- [Características Principales](#-características-principales)
 - [Tecnologías Utilizadas](#-tecnologías-utilizadas)
+- [Sistema de Temas Dinámicos](#-sistema-de-temas-dinámicos)
 - [Configuración del Proyecto](#-configuración-del-proyecto)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [API Endpoints](#-api-endpoints)
 - [Sistema de Autenticación](#-sistema-de-autenticación)
-- [Gestión de Archivos](#-gestión-de-archivos)
-- [Seguridad](#-seguridad)
-- [Manual de Desarrollador](#-manual-de-desarrollador)
+- [Manual de Desarrollo](#-manual-de-desarrollo)
 - [Despliegue](#-despliegue)
-- [Contribución](#-contribución)
 
 ## 🎯 Descripción del Proyecto
 
-CatalogoTienda es una aplicación web completa de e-commerce que permite:
-- **Usuarios**: Navegar productos, gestionar perfil, carrito de compras
-- **Administradores**: Gestión completa de productos, usuarios y contenido del sitio
-- **Autenticación**: Login tradicional y Google OAuth
-- **Seguridad**: Rate limiting, cifrado de contraseñas, validación de IPs para admins
+CatalogoTienda es una plataforma completa de e-commerce construida con Node.js y MongoDB que ofrece:
 
-## ✨ Características
+### 👥 **Para Usuarios**
+- Navegación y búsqueda de productos
+- Sistema de carrito y compras
+- Gestión de perfil con avatares
+- Múltiples métodos de pago
+- Historial de compras detallado
 
-### Para Usuarios
-- 🔐 Registro e inicio de sesión (tradicional + Google OAuth)
-- 👤 Gestión de perfil con foto de avatar
-- 🛒 Carrito de compras persistente
-- 🔍 Búsqueda y filtrado de productos
-- ⭐ Sistema de calificaciones y comentarios
-- 💳 Gestión de métodos de pago
-- 📦 Historial de compras
+### 🔧 **Para Administradores**
+- Panel de administración completo
+- Editor visual de temas y colores
+- Gestión CRUD de productos, usuarios y contenido
+- Sistema de monedas y ubicaciones
+- Control de acceso por IP
 
-### Para Administradores
-- 📊 Panel de administración completo
-- 🏪 CRUD de productos con imágenes múltiples
-- 👥 Gestión de usuarios y roles
-- 📝 Gestión de contenido (Sobre Nosotros, Términos)
-- 💰 Gestión de monedas y categorías
-- 🌍 Gestión de ubicaciones geográficas
-- 🔗 Gestión de redes sociales
-- 🛡️ Control de IPs permitidas
+## ✨ Características Principales
+
+### 🔐 **Autenticación Avanzada**
+- ✅ Registro e inicio de sesión tradicional
+- ✅ Google OAuth 2.0 integrado
+- ✅ Verificación por correo electrónico
+- ✅ Recuperación de contraseñas segura
+- ✅ Validación de IPs para administradores
+
+### 🎨 **Sistema de Temas Dinámicos**
+- ✅ Editor visual de colores en tiempo real
+- ✅ Creación y gestión de temas personalizados
+- ✅ Aplicación automática en todas las páginas
+- ✅ Persistencia global mediante localStorage
+- ✅ Preview inmediato de cambios
+
+### 🛒 **E-commerce Completo**
+- ✅ Catálogo con imágenes múltiples
+- ✅ Sistema de categorías y filtros
+- ✅ Carrito persistente entre sesiones
+- ✅ Gestión de stock automática
+- ✅ Múltiples monedas con conversión
+
+### 🌍 **Internacionalización**
+- ✅ Soporte para múltiples monedas
+- ✅ Gestión de ubicaciones geográficas
+- ✅ Mapas integrados (Leaflet)
+- ✅ Redes sociales configurables
 
 ## 🛠 Tecnologías Utilizadas
 
-### Backend
-- **Node.js** - Runtime de JavaScript
+### **Backend**
+- ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white) **Node.js** - Runtime de JavaScript
+- ![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white) **Express.js** - Framework web
+- ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white) **MongoDB** - Base de datos NoSQL
+- ![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=json-web-tokens&logoColor=white) **JSON Web Tokens** - Autenticación
+
+### **Frontend**
+- ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) **HTML5** - Estructura
+- ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white) **CSS3** - Estilos con variables CSS
+- ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) **JavaScript ES6+** - Lógica del cliente
+- ![SweetAlert2](https://img.shields.io/badge/SweetAlert2-ff6b6b?style=flat) **SweetAlert2** - Notificaciones
+
+### **Servicios Externos**
+- ![Google](https://img.shields.io/badge/Google_OAuth-4285F4?style=flat&logo=google&logoColor=white) **Google OAuth 2.0** - Autenticación social
+- ![Leaflet](https://img.shields.io/badge/Leaflet-199900?style=flat&logo=leaflet&logoColor=white) **Leaflet** - Mapas interactivos
+
+## 🎨 Sistema de Temas Dinámicos
+
+### **Arquitectura del Sistema**
+
+```
+┌─────────────────────────────────────────────┐
+│                Frontend                     │
+├─────────────────┬───────────────────────────┤
+│   index.html    │     indexAdmin.html       │
+│ (Preferencias)  │   (Editor de Temas)       │
+├─────────────────┼───────────────────────────┤
+│   script.js     │    editor-temas.js        │
+│ (Modal Prefs)   │  (Editor Visual)          │
+├─────────────────┼───────────────────────────┤
+│         tema-global.js (Universal)          │
+│      (Aplicación automática en todas       │
+│           las páginas)                      │
+├─────────────────┼───────────────────────────┤
+│      sweetalert-tema.js (Nuevo)             │
+│  (SweetAlert2 con temas dinámicos)          │
+├─────────────────┴───────────────────────────┤
+│             localStorage                    │
+│  - temaSeleccionado (ID)                   │
+│  - nombreTemaSeleccionado                  │
+│  - coloresTema (JSON)                      │
+│  - iconicoTema                             │
+└─────────────────────────────────────────────┘
+                       ↕
+┌─────────────────────────────────────────────┐
+│                Backend                      │
+├─────────────────────────────────────────────┤
+│            MongoDB Atlas                    │
+│         Colección: temas                    │
+│                                             │
+│  {                                          │
+│    _id: ObjectId,                           │
+│    nombre: "Tema Oscuro",                   │
+│    icono: "🌙",                             │
+│    colores: {                               │
+│      bgPrimary: "#1a1a1a",                  │
+│      textPrimary: "#ffffff",                │
+│      success: "#4caf50",                    │
+│      error: "#f44336",                      │
+│      warning: "#ff9800",                    │
+│      info: "#2196f3",                       │
+│      ...                                    │
+│    },                                       │
+│    activo: boolean                          │
+│  }                                          │
+└─────────────────────────────────────────────┘
+```
+
+### **Características Principales**
+
+#### 🎨 **Editor Visual de Temas**
+- ✅ Editor de colores RGB con sliders interactivos
+- ✅ Input hexadecimal para colores precisos
+- ✅ Canal Alpha para transparencias
+- ✅ Previsualización en tiempo real
+- ✅ Aplicación inmediata de cambios
+
+#### 🎯 **Sistema de Variables CSS**
+- ✅ 16 variables CSS personalizables:
+  - `--bg-primary`, `--bg-secondary`, `--bg-tertiary`
+  - `--text-primary`, `--text-secondary`, `--text-accent`
+  - `--border-primary`, `--border-secondary`
+  - `--shadow-light`, `--shadow-medium`
+  - `--success`, `--warning`, `--error`, `--info`
+  - `--modal-bg`, `--hover-overlay`
+
+#### 🔄 **Sincronización Automática**
+- ✅ Persistencia en localStorage
+- ✅ Aplicación automática al cargar páginas
+- ✅ Sincronización entre pestañas del navegador
+- ✅ Eventos personalizados para comunicación entre componentes
+
+#### 🎭 **SweetAlert2 Integrado**
+- ✅ **Configuración automática** con variables CSS del tema
+- ✅ **4 mixins personalizados**:
+  - `SwalToast` - Notificaciones toast
+  - `SwalConfirm` - Modales de confirmación
+  - `SwalAlert` - Alertas simples
+  - `SwalSuccess/Error/Warning` - Alertas tipificadas
+- ✅ **Actualización automática** al cambiar tema
+- ✅ **Funciones de utilidad** globales
+
+### **Flujo de Funcionamiento**
+
+#### 1. **Creación de Temas** (Admin):
+```javascript
+// En indexAdmin.html - Editor visual
+EditorTemas.crearNuevoTema() → 
+API POST /api/temas → 
+MongoDB → 
+Renderización inmediata → 
+Editor visual abierto
+```
+
+#### 2. **Edición de Temas** (Admin):
+```javascript
+// Editor visual con sliders RGB
+EditorTemas.editarTema(id) →
+Sliders RGB + Input HEX →
+Previsualización en vivo →
+Guardado en MongoDB →
+Aplicación inmediata
+```
+
+#### 3. **Aplicación de Temas** (Usuario/Admin):
+```javascript
+// Aplicar tema seleccionado
+EditorTemas.aplicarTema(id) →
+Variables CSS actualizadas →
+localStorage sincronizado →
+SweetAlert2 reconfigurado →
+Evento 'temaAplicado' emitido
+```
+
+#### 4. **Carga Automática** (Todas las páginas):
+```javascript
+// Al cargar cualquier página
+tema-global.js ejecutado →
+localStorage consultado →
+Variables CSS aplicadas →
+sweetalert-tema.js configurado →
+Tema listo para usar
+```
+
+### **Configuración de SweetAlert2**
+
+#### **Mixins Disponibles**:
+
+```javascript
+// Toast notifications (esquina superior derecha)
+window.SwalToast.fire({
+    icon: 'success',
+    title: 'Operación exitosa',
+    text: 'Los datos se guardaron correctamente'
+});
+
+// Modal de confirmación
+const resultado = await window.SwalConfirm.fire({
+    title: '¿Eliminar elemento?',
+    text: 'Esta acción no se puede deshacer'
+});
+
+// Alerta simple
+window.SwalAlert.fire({
+    icon: 'info',
+    title: 'Información',
+    text: 'Datos actualizados correctamente'
+});
+```
+
+#### **Funciones de Utilidad**:
+
+```javascript
+// Toast rápido
+mostrarToast('success', 'Guardado exitoso');
+
+// Confirmación rápida
+const confirmado = await mostrarConfirmacion(
+    '¿Continuar?', 
+    'Se aplicarán los cambios'
+);
+
+// Alerta rápida
+mostrarAlerta('error', 'Error', 'No se pudo conectar al servidor');
+```
+
+### **Archivos del Sistema**
+
+| Archivo | Propósito | Ubicación |
+|---------|-----------|-----------|
+| `editor-temas.js` | Editor visual de temas (Admin) | `/js/editor-temas.js` |
+| `tema-global.js` | Aplicación automática (Universal) | `/js/tema-global.js` |
+| `sweetalert-tema.js` | **[NUEVO]** SweetAlert2 con temas | `/js/sweetalert-tema.js` |
+| `style.css` | Variables CSS y estilos SweetAlert2 | `/css/style.css` |
+
+### **Variables CSS Personalizables**
+
+```css
+:root {
+    /* Fondos */
+    --bg-primary: #ffffff;      /* Fondo principal */
+    --bg-secondary: #f8f9fa;    /* Fondo secundario */
+    --bg-tertiary: #e9ecef;     /* Fondo terciario */
+    
+    /* Textos */
+    --text-primary: #212529;    /* Texto principal */
+    --text-secondary: #6c757d;  /* Texto secundario */
+    --text-accent: #007bff;     /* Texto de acento */
+    
+    /* Bordes */
+    --border-primary: #dee2e6;  /* Borde principal */
+    --border-secondary: #ced4da; /* Borde secundario */
+    
+    /* Sombras */
+    --shadow-light: rgba(0,0,0,0.1);  /* Sombra suave */
+    --shadow-medium: rgba(0,0,0,0.2); /* Sombra media */
+    
+    /* Estados */
+    --success: #28a745;         /* Color de éxito */
+    --warning: #ffc107;         /* Color de advertencia */
+    --error: #dc3545;           /* Color de error */
+    --info: #17a2b8;            /* Color de información */
+    
+    /* Especiales */
+    --modal-bg: rgba(0,0,0,0.5); /* Fondo de modales */
+    --hover-overlay: rgba(0,0,0,0.05); /* Overlay hover */
+}
+```
+
+## 🚀 Configuración del Proyecto
+
+### **Prerequisitos**
+- Node.js 16+ 
+- MongoDB Atlas o local
+- Cuenta de Google Cloud (para OAuth)
+
+### **Instalación**
+
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/tu-usuario/CatalogoTienda.git
+   cd CatalogoTienda
+   ```
+
+2. **Instalar dependencias**
+   ```bash
+   npm install
+   cd backend
+   npm install
+   ```
+
+3. **Configurar variables de entorno**
+   ```bash
+   # backend/.env
+   MONGODB_URI=mongodb+srv://usuario:password@cluster.mongodb.net/catalogo
+   JWT_SECRET=tu_jwt_secret_muy_seguro
+   GOOGLE_CLIENT_ID=tu_google_client_id.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=tu_google_client_secret
+   EMAIL_USER=tu_email@gmail.com
+   EMAIL_PASS=tu_app_password
+   PORT=3000
+   ```
+
+4. **Inicializar la base de datos**
+   ```bash
+   node init-idiomas.js  # Crear monedas y ubicaciones iniciales
+   ```
+
+5. **Ejecutar el proyecto**
+   ```bash
+   npm start
+   # o para desarrollo:
+   npm run dev
+   ```
+
+## 📁 Estructura del Proyecto
+
+```
+CatalogoTienda/
+├── backend/
+│   ├── models/           # Modelos de MongoDB
+│   │   ├── productos.js
+│   │   ├── perfil.js
+│   │   ├── categoria.js
+│   │   └── ...
+│   ├── routes/           # Rutas de la API
+│   │   └── routes.js
+│   ├── public/           # Frontend estático
+│   │   ├── index.html    # Página principal
+│   │   ├── indexAdmin.html # Panel admin
+│   │   ├── css/
+│   │   │   ├── style.css      # Estilos principales
+│   │   │   └── editor-temas.css # Estilos del editor
+│   │   ├── js/
+│   │   │   ├── script.js      # Lógica principal
+│   │   │   ├── editor-temas.js # Editor de temas
+│   │   │   ├── tema-global.js  # Sistema global
+│   │   │   └── ...
+│   │   └── img/          # Imágenes estáticas
+│   ├── data/             # Datos iniciales
+│   ├── server.js         # Servidor principal
+│   ├── init-idiomas.js   # Script inicialización
+│   └── package.json
+├── README.md
+└── package.json
+```
 - **Express.js** - Framework web
 - **MongoDB** con **Mongoose** - Base de datos NoSQL
 - **Passport.js** - Autenticación

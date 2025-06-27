@@ -12,6 +12,7 @@ scale=1.0">
 
 <title>Catálogo de Productos</title>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/tema-global.js"></script>
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -166,10 +167,8 @@ scale=1.0">
                     <div class="preference-group">
                         <label for="temaPreferido">Selecciona tu tema:</label>
                         <select id="temaPreferido" name="temaPreferido" required>
-                            <option value="light">🌞 Claro</option>
-                            <option value="dark">🌙 Oscuro</option>
-                            <option value="blue">🌊 Azul</option>
-                            <option value="green">🌿 Verde</option>
+                            <!-- Las opciones se cargarán dinámicamente desde la base de datos -->
+                            <option value="">Cargando temas...</option>
                         </select>
                     </div>
                     
@@ -228,6 +227,8 @@ scale=1.0">
 <script src="/js/Mapa.js"></script>
 <script src="/js/Redes.js"></script>
 <script src="/js/Sesion.js"></script>
+<script src="/js/editor-temas.js"></script>
+<script src="/js/temasDB.js"></script>
 <script src="/js/temasManager.js"></script>
 <script src="/js/script.js"></script>
 </body>

@@ -47,14 +47,32 @@ class TemasManager {
         const indicador = document.getElementById('theme-indicator');
         if (!indicador) return;
 
-        const temaIconos = {
-            'light': '🌞',
-            'dark': '🌙',
-            'blue': '🌊',
-            'green': '🌿'
-        };
+        // Primero intentar obtener el tema dinámico actual
+        let nombreTema = '';
+        let iconoTema = '🎨';
         
-        indicador.textContent = `${temaIconos[this.temaActual] || '🎨'} ${this.temaActual.charAt(0).toUpperCase() + this.temaActual.slice(1)}`;
+        if (typeof window.obtenerTemaActual === 'function') {
+            const temaActual = window.obtenerTemaActual();
+            if (temaActual && temaActual.nombre) {
+                nombreTema = temaActual.nombre;
+                iconoTema = temaActual.icono || '🎨';
+            }
+        }
+        
+        // Si no hay tema dinámico, usar los temas estáticos como fallback
+        if (!nombreTema) {
+            const temaIconos = {
+                'light': '🌞',
+                'dark': '🌙',
+                'blue': '🌊',
+                'green': '🌿'
+            };
+            
+            iconoTema = temaIconos[this.temaActual] || '🎨';
+            nombreTema = this.temaActual.charAt(0).toUpperCase() + this.temaActual.slice(1);
+        }
+        
+        indicador.textContent = `${iconoTema} ${nombreTema}`;
         
         // Hacer clickeable el indicador para abrir preferencias
         indicador.style.cursor = 'pointer';

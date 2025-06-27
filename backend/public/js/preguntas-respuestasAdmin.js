@@ -35,15 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const carrito = document.getElementById('carrito');
     let Actualizar = false
     let eliminar = false;
-
     const usuario = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
-
     if (usuario) {
-        console.log('Sesión activa:', usuario);
-
         // Obtener el ul donde se agregarán los elementos
         const listaSesion = document.querySelector('.iniciosesion');
-
         // Crear el elemento <li> para "Perfil"
         const perfilLi = document.createElement('li');
         const perfilLink = document.createElement('a');
@@ -56,18 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
         perfilLink.href = '#';
         perfilLink.addEventListener('click', () => mostrarPerfil(usuario));
         perfilLi.appendChild(perfilLink);
-
-        
         // Agregar ambos elementos al <ul>
         listaSesion.innerHTML = '';
         listaSesion.appendChild(perfilLi);
-        
     } else {
-        console.log('No hay sesión activa.');
-
-
-    }
-
+        }
     // Loader functions
     function mostrarLoader() {
         const loader = document.getElementById('loader');
@@ -77,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const loader = document.getElementById('loader');
         if (loader) loader.style.display = 'none';
     }
-
     // Función para cargar mensajes en formato de lista con opción de responder
     const cargarMensajes = async () => {
         mostrarLoader();
@@ -86,11 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!respuesta.ok) {
                 throw new Error('Error al cargar los mensajes.');
             }
-
             const mensajes = await respuesta.json();
             const listaMensajes = document.querySelector('.faq-container');
             listaMensajes.innerHTML = '';
-
             if (mensajes.length === 0) {
                 const mensajeVacio = document.createElement('p');
                 mensajeVacio.textContent = 'No hay mensajes aún.';
@@ -111,16 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             <button class="guardar-respuesta-btn">Guardar</button>
                         </div>
                     `;
-
                     const responderBtn = item.querySelector('.responder-btn');
                     const respuestaContainer = item.querySelector('.respuesta-container');
                     const guardarRespuestaBtn = item.querySelector('.guardar-respuesta-btn');
                     const respuestaInput = item.querySelector('.respuesta-input');
-
                     responderBtn.addEventListener('click', () => {
                         respuestaContainer.style.display = 'block';
                     });
-
                     guardarRespuestaBtn.addEventListener('click', async () => {
                         const respuestaTexto = respuestaInput.value;
                         if (!respuestaTexto.trim()) {
@@ -133,18 +115,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                             return;
                         }
-
                         try {
                             const guardarRespuesta = await fetch(`/api/mensajes/${mensaje._id}/responder`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ respuesta: respuestaTexto })
                             });
-
                             if (!guardarRespuesta.ok) {
                                 throw new Error('Error al guardar la respuesta.');
                             }
-
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Respuesta guardada',
@@ -164,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                         }
                     });
-
                     listaMensajes.appendChild(item);
                 });
             }
@@ -181,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ocultarLoader();
         }
     };
-
     // Llamar a la función para cargar los mensajes al iniciar
     cargarMensajes();
 });

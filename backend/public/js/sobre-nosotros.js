@@ -40,15 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const reqMinus = document.getElementById('req-minus');
     const reqNum = document.getElementById('req-num');
     const reqEspecial = document.getElementById('req-especial');
-
-    
-
     olvidoContainerbtn.addEventListener('click', function (e) {
         e.preventDefault();
         formSesionContainer.style.display = 'none';
         showModal(olvidoContainer, modal, formSesionContainer, olvidoContainer, null, null);
     });
-
     iniciarSesionBtn.addEventListener('click', function (e) {
         e.preventDefault();
         setupLoginForm({
@@ -56,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer, null, null);
     });
-
     crearCuentaBtn.addEventListener('click', function (e) {
         e.preventDefault();
         setupRegisterForm({
@@ -64,15 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         showModal(formSesionContainer, modal, formSesionContainer, olvidoContainer, null, null);
     });
-
     closeModal.addEventListener('click', () => hideModal(modal, formSesionContainer, olvidoContainer, null, null));
-
     window.addEventListener('click', function (event) {
         if (event.target === modal) {
             hideModal(modal, formSesionContainer, olvidoContainer, null, null);
         }
     });
-
     passwordSesion.addEventListener('input', () => {
         validarRequisitos(passwordSesion.value, reqLength, reqMayus, reqMinus, reqNum, reqEspecial);
         validarCoincidencias(passwordSesion.value, passwordSesionC.value, passwordSesion, passwordSesionC);
@@ -84,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
             validarCorreos(emailSesion.value, emailSesionC.value, emailSesion, emailSesionC);
         }
     });
-
     btnSesion.addEventListener('click', async (e) => {
         e.preventDefault();
         if (btnSesion.textContent === 'Crear Cuenta') {
@@ -134,12 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-
     usuarioActivo(Swal, mostrarLoader, ocultarLoader);
-
-    
 });
-
 document.addEventListener("DOMContentLoaded", async () => {
     const equipoContainer = document.getElementById("equipoContainer");
     mostrarLoader();
@@ -155,9 +142,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
             return;
         }
-
         const data = await response.json();
-        console.log(data); // Verifica la estructura de los datos recibidos
+        // Verifica la estructura de los datos recibidos
         // Mostrar los datos directamente
         equipoContainer.innerHTML = data.map((member, index) => `
             <div class="team-member ${index % 2 === 0 ? 'reverse' : ''}">
@@ -183,10 +169,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     } finally {
         ocultarLoader();
     }
-
     // Función para cargar redes sociales desde el servidor
     cargarRedesSociales(); // Llamar a la función para cargar redes sociales al iniciar
-
     // Mostrar el minimapa en el footer si existe
     const footerMapa = document.getElementById('footer-mapa');
     if (footerMapa) {
@@ -194,10 +178,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         footerMapa.innerHTML = mapaHTML;
     }
 });
-
-
 document.addEventListener('DOMContentLoaded', renderMapaFooter);
-    
 document.addEventListener('DOMContentLoaded', async () => {
     // Cargar historia
     const historiaContainer = document.getElementById('historiaContainer');
