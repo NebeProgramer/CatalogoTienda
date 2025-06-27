@@ -55,7 +55,8 @@ const reqEspecial = document.getElementById('req-especial');
                     title: 'Error',
                     text: 'No se pudieron cargar las monedas.',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    timer: 3000
                 });
             }
     
@@ -770,7 +771,8 @@ function openCRUD() {
                         title: 'Stock insuficiente',
                         text: 'No hay suficiente stock disponible para este producto.',
                         toast: true,
-                        position: 'top-end'
+                        position: 'top-end',
+                        timer: 3000
                     });
                     return;
                 }
@@ -783,7 +785,8 @@ function openCRUD() {
                         title: 'Stock insuficiente',
                         text: 'No hay suficiente stock disponible para este producto.',
                         toast: true,
-                        position: 'top-end'
+                        position: 'top-end',
+                        timer: 3000
                     });
                     return;
                 }
@@ -812,7 +815,8 @@ function openCRUD() {
                 title: 'Producto agregado',
                 text: 'Producto agregado al carrito.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                timer: 3000
             });
         } catch (error) {
             console.error('Error al actualizar el carrito:', error);
@@ -821,7 +825,8 @@ function openCRUD() {
                 title: 'Error',
                 text: 'Hubo un error al actualizar el carrito. Intenta nuevamente.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                timer: 3000
             });
         }
     };
@@ -875,7 +880,8 @@ function openCRUD() {
                 title: 'Error',
                 text: 'Hubo un error al eliminar el producto del carrito. Intenta nuevamente.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                timer: 3000
             });
         }
     };

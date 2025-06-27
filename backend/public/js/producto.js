@@ -359,6 +359,9 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
                     title: 'Stock insuficiente',
                     text: 'No hay suficiente stock disponible para este producto.',
                     toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    toast: true,
                     position: 'top-end'
                 });
                 return;

@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'No hay datos de sesión',
             text: 'Por favor, inicia sesión.',
             toast: true,
-            position: 'top-end'
+            position: 'top-end',
+            timer: 3000
         });
         window.location.href = '/';
         return;
@@ -507,7 +508,10 @@ document.addEventListener('DOMContentLoaded', () => {
             Swal.fire({
                 icon: 'success',
                 title: 'Perfil subido',
-                text: 'Perfil subido actualizado correctamente.'
+                text: 'Perfil subido actualizado correctamente.',
+                toast: true,
+                position: 'top-end',
+                timer: 3000
             });
         } catch (error) {
             console.error('Error al subir el perfil al servidor:', error);
