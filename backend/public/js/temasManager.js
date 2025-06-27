@@ -13,20 +13,11 @@ class TemasManager {
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
                 this.configurarEventListenersTemas();
-                this.inicializarIndicadorTema();
+                this.mostrarIndicadorTema();
             });
         } else {
             this.configurarEventListenersTemas();
-            this.inicializarIndicadorTema();
-        }
-    }
-    
-    inicializarIndicadorTema() {
-        // Verificar si el usuario ha optado por ocultar el indicador
-        const indicadorOculto = localStorage.getItem('indicadorTemaOculto') === 'true';
-        
-        if (!indicadorOculto) {
-            this.crearIndicadorTema();
+            this.mostrarIndicadorTema();
         }
     }
 
@@ -39,26 +30,8 @@ class TemasManager {
         this.actualizarIndicadorTema();
     }
 
-    // Función para ocultar el indicador de tema
-    ocultarIndicadorTema() {
-        const indicador = document.getElementById('theme-indicator');
-        if (indicador) {
-            indicador.style.display = 'none';
-        }
-    }
-    
-    // Función para mostrar el indicador de tema
     mostrarIndicadorTema() {
-        const indicador = document.getElementById('theme-indicator');
-        if (indicador) {
-            indicador.style.display = 'block';
-        } else {
-            this.crearIndicadorTema();
-        }
-    }
-    
-    // Función para crear el indicador si no existe
-    crearIndicadorTema() {
+        // Crear indicador de tema si no existe
         let indicador = document.getElementById('theme-indicator');
         if (!indicador) {
             indicador = document.createElement('div');
@@ -74,32 +47,14 @@ class TemasManager {
         const indicador = document.getElementById('theme-indicator');
         if (!indicador) return;
 
-        // Primero intentar obtener el tema dinámico actual
-        let nombreTema = '';
-        let iconoTema = '🎨';
+        const temaIconos = {
+            'light': '🌞',
+            'dark': '🌙',
+            'blue': '🌊',
+            'green': '🌿'
+        };
         
-        if (typeof window.obtenerTemaActual === 'function') {
-            const temaActual = window.obtenerTemaActual();
-            if (temaActual && temaActual.nombre) {
-                nombreTema = temaActual.nombre;
-                iconoTema = temaActual.icono || '🎨';
-            }
-        }
-        
-        // Si no hay tema dinámico, usar los temas estáticos como fallback
-        if (!nombreTema) {
-            const temaIconos = {
-                'light': '🌞',
-                'dark': '🌙',
-                'blue': '🌊',
-                'green': '🌿'
-            };
-            
-            iconoTema = temaIconos[this.temaActual] || '🎨';
-            nombreTema = this.temaActual.charAt(0).toUpperCase() + this.temaActual.slice(1);
-        }
-        
-        indicador.textContent = `${iconoTema} ${nombreTema}`;
+        indicador.textContent = `${temaIconos[this.temaActual] || '🎨'} ${this.temaActual.charAt(0).toUpperCase() + this.temaActual.slice(1)}`;
         
         // Hacer clickeable el indicador para abrir preferencias
         indicador.style.cursor = 'pointer';
@@ -216,29 +171,3 @@ window.temasManager = new TemasManager();
 
 // Exponer la clase globalmente por si se necesita crear instancias adicionales
 window.TemasManager = TemasManager;
-
-// Funciones globales para controlar el indicador de tema
-window.ocultarIndicadorTema = function() {
-    if (window.temasManager && typeof window.temasManager.ocultarIndicadorTema === 'function') {
-        window.temasManager.ocultarIndicadorTema();
-        localStorage.setItem('indicadorTemaOculto', 'true');
-    }
-};
-
-window.mostrarIndicadorTema = function() {
-    if (window.temasManager && typeof window.temasManager.mostrarIndicadorTema === 'function') {
-        window.temasManager.mostrarIndicadorTema();
-        localStorage.removeItem('indicadorTemaOculto');
-    }
-};
-
-window.toggleIndicadorTema = function() {
-    const indicador = document.getElementById('theme-indicator');
-    const estaOculto = !indicador || indicador.style.display === 'none';
-    
-    if (estaOculto) {
-        window.mostrarIndicadorTema();
-    } else {
-        window.ocultarIndicadorTema();
-    }
-};

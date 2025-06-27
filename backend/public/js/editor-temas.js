@@ -576,13 +576,6 @@ class EditorTemas {
                 }
             }));
             
-            // Actualizar el indicador de tema si existe
-            if (window.temasManager && typeof window.temasManager.actualizarIndicadorTema === 'function') {
-                setTimeout(() => {
-                    window.temasManager.actualizarIndicadorTema();
-                }, 200);
-            }
-            
             // Aplicar tema inmediatamente usando la función global
             if (typeof aplicarTemaInmediato === 'function') {
                 aplicarTemaInmediato();
