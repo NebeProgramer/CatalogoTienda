@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             text: 'Por favor, inicia sesión.',
             toast: true,
             position: 'top-end',
+            showConfirmButton: false,
             timer: 3000
         });
         window.location.href = '/';
@@ -275,40 +276,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Campos incompletos',
                 text: 'Por favor, completa todos los campos de la dirección.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }
         if (!soloLetrasNumEsp.test(calle) || calle.length > 50) {
-            Swal.fire({ icon: 'warning', title: 'Tipo de vía inválido', text: 'El tipo de vía solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
+            Swal.fire({ icon: 'warning', title: 'Tipo de vía inválido', text: 'El tipo de vía solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
             return;
         }
         if (!soloLetrasNumEsp.test(carrera) || carrera.length > 50) {
-            Swal.fire({ icon: 'warning', title: 'Número principal inválido', text: 'El número principal solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
+            Swal.fire({ icon: 'warning', title: 'Número principal inválido', text: 'El número principal solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
             return;
         }
         if (!soloLetrasNumEsp.test(casa) || casa.length > 50) {
-            Swal.fire({ icon: 'warning', title: 'Número secundario inválido', text: 'El número secundario solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
+            Swal.fire({ icon: 'warning', title: 'Número secundario inválido', text: 'El número secundario solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
             return;
         }
         if (!soloLetrasNumEsp.test(piso) || piso.length > 50) {
-            Swal.fire({ icon: 'warning', title: 'Complemento inválido', text: 'El complemento solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end' });
+            Swal.fire({ icon: 'warning', title: 'Complemento inválido', text: 'El complemento solo puede contener letras, números y espacios (máx 50).', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
             return;
         }
         if (!/^[0-9]{4,10}$/.test(codigoPostal)) {
-            Swal.fire({ icon: 'warning', title: 'Código Postal inválido', text: 'El código postal debe tener entre 4 y 10 dígitos numéricos.', toast: true, position: 'top-end' });
+            Swal.fire({ icon: 'warning', title: 'Código Postal inválido', text: 'El código postal debe tener entre 4 y 10 dígitos numéricos.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
             return;
         }
         if (!departamento) {
-            Swal.fire({ icon: 'warning', title: 'Departamento requerido', text: 'Selecciona un departamento.', toast: true, position: 'top-end' });
+            Swal.fire({ icon: 'warning', title: 'Departamento requerido', text: 'Selecciona un departamento.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
             return;
         }
         if (!ciudad) {
-            Swal.fire({ icon: 'warning', title: 'Ciudad requerida', text: 'Selecciona una ciudad.', toast: true, position: 'top-end' });
+            Swal.fire({ icon: 'warning', title: 'Ciudad requerida', text: 'Selecciona una ciudad.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
             return;
         }
         if (!pais) {
-            Swal.fire({ icon: 'warning', title: 'País requerido', text: 'Selecciona un país.', toast: true, position: 'top-end' });
+            Swal.fire({ icon: 'warning', title: 'País requerido', text: 'Selecciona un país.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
             return;
         }
         const nuevaDireccion = {
@@ -339,7 +342,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Campos incompletos',
                 text: 'Por favor, completa todos los campos de la tarjeta.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }        // Validar el formato del número de tarjeta según el tipo

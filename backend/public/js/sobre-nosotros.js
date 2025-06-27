@@ -138,7 +138,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 title: 'Falló la carga',
                 text: 'Error al cargar los datos del equipo.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }
@@ -164,7 +166,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             title: 'Error',
             text: 'Error al cargar los datos del equipo.',
             toast: true,
-            position: 'top-end'
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
         });
     } finally {
         ocultarLoader();

@@ -1402,35 +1402,6 @@ footer {
     height: 3px !important;
 }
 
-/* Ajustes para los iconos en toast */
-.swal2-toast .swal2-icon {
-    margin: 8px 12px 8px 8px !important;
-    width: 20px !important;
-    height: 20px !important;
-    min-width: 20px !important;
-    font-size: 16px !important;
-}
-
-.swal2-toast .swal2-icon.swal2-success {
-    border-color: var(--success) !important;
-    color: var(--success) !important;
-}
-
-.swal2-toast .swal2-icon.swal2-error {
-    border-color: var(--error) !important;
-    color: var(--error) !important;
-}
-
-.swal2-toast .swal2-icon.swal2-warning {
-    border-color: var(--warning) !important;
-    color: var(--warning) !important;
-}
-
-.swal2-toast .swal2-icon.swal2-info {
-    border-color: var(--info) !important;
-    color: var(--info) !important;
-}
-
 /* ===== TOAST SIN ICONO PREDETERMINADO ===== */
 .swal2-toast.swal2-no-icon {
     padding-left: 1rem !important;

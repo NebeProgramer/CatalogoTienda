@@ -85,7 +85,7 @@ function ocultarLoader() {
                 try {
                     const memberId = miembroDiv.querySelector('#equipo-id').value;
                     if (memberId) {
-                        const confirmacion = swal.fire({
+                        const confirmacion = Swal.fire({
                             title: '¿Estás seguro?',
                             text: "No podrás recuperar este miembro después de eliminarlo.",
                             icon: 'warning',
@@ -100,12 +100,14 @@ function ocultarLoader() {
                             if (!response.ok) {
                                 throw new Error('Error al eliminar el miembro.');
                             }
-                            swal.fire({
+                            Swal.fire({
                                 icon: 'success',
                                 title: 'Miembro eliminado',
                                 text: 'El miembro ha sido eliminado exitosamente.',
                                 toast: true,
-                                position: 'top-end'
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
                             });
                             equipoLista.removeChild(miembroDiv);
                     } else {

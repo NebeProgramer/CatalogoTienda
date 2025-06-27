@@ -11,7 +11,9 @@ const cargarDatosCompra = async () => {
                 position: 'top-end',
                 icon: 'warning',
                 title: 'Falta código de factura',
-                text: 'No se proporcionó un código de factura.'
+                text: 'No se proporcionó un código de factura.',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }
@@ -23,7 +25,9 @@ const cargarDatosCompra = async () => {
                 position: 'top-end',
                 icon: 'warning',
                 title: 'Usuario no encontrado',
-                text: 'No se encontró información del usuario.'
+                text: 'No se encontró información del usuario.',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }
@@ -45,7 +49,9 @@ const cargarDatosCompra = async () => {
                 position: 'top-end',
                 icon: 'info',
                 title: 'Sin compras',
-                text: 'No se encontraron compras registradas.'
+                text: 'No se encontraron compras registradas.',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }
@@ -59,7 +65,9 @@ const cargarDatosCompra = async () => {
                 position: 'top-end',
                 icon: 'info',
                 title: 'Sin productos',
-                text: 'No se encontraron productos para la factura proporcionada.'
+                text: 'No se encontraron productos para la factura proporcionada.',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }
@@ -104,7 +112,9 @@ const cargarDatosCompra = async () => {
             position: 'top-end',
             icon: 'error',
             title: 'Error',
-            text: 'Hubo un error al cargar los datos de la compra.'
+            text: 'Hubo un error al cargar los datos de la compra.',
+            showConfirmButton: false,
+            timer: 3000
         });
     } finally {
         ocultarLoader();

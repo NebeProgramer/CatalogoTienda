@@ -198,7 +198,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Campos incompletos',
                 text: 'Por favor, completa todos los campos.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             ocultarLoader();
             return;
@@ -219,7 +221,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: '¡Mensaje enviado!',
                     text: 'Mensaje enviado exitosamente.',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
                 mensajeContainer.innerHTML = ''; // Limpiar el mensaje
             } else {
@@ -229,7 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: 'Error',
                     text: error.error || 'Hubo un problema al enviar el mensaje.',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
             }
         } catch (error) {
@@ -239,7 +245,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Error',
                 text: 'Hubo un error al enviar el mensaje. Intenta nuevamente.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         } finally {
             ocultarLoader();

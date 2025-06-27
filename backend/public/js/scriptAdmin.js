@@ -142,7 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                         title: 'Producto eliminado',
                                         text: 'Producto eliminado exitosamente.',
                                         toast: true,
-                                        position: 'top-end'
+                                        position: 'top-end',
+                                        showConfirmButton: false,
+                                        timer: 3000
                                     });
                                     cargarProductos(); // Recargar los productos después de eliminar
                                 } else {
@@ -151,7 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                         title: 'Error',
                                         text: 'Error al eliminar el producto.',
                                         toast: true,
-                                        position: 'top-end'
+                                        position: 'top-end',
+                                        showConfirmButton: false,
+                                        timer: 3000
                                     });
                                 }
                             } catch (error) {
@@ -161,7 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                     title: 'Error',
                                     text: 'Hubo un error al eliminar el producto.',
                                     toast: true,
-                                    position: 'top-end'
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
                                 });
                             }
                         }
@@ -439,12 +445,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ nombre: filtroNombre }),
                 });
                 if (!respuesta.ok) {
-                    swal.fire({
+                    Swal.fire({
                         icon: 'error',
                         title: 'Error',
                         text: 'Error al guardar la categoría en el servidor.',
                         toast: true,
-                        position: 'top-end'
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
                     });
                     return;
                 }
@@ -490,7 +498,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                     title: 'Categoría eliminada',
                                     text: 'Categoría eliminada exitosamente.',
                                     toast: true,
-                                    position: 'top-end'
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
                                 });
                                 cargarFiltros();
                             } else {
@@ -499,7 +509,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                     title: 'Error',
                                     text: 'Error al eliminar la categoría.',
                                     toast: true,
-                                    position: 'top-end'
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
                                 });
                             }
                         } catch (error) {
@@ -525,7 +537,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: 'Categoría guardada',
                     text: 'La categoría se ha guardado exitosamente.',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
             } catch (error) {
                 console.error('Error al guardar la categoría:', error);
@@ -534,7 +548,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: 'Error',
                     text: 'Hubo un error al guardar la categoría.',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
             }
         }
@@ -696,7 +712,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                     title: 'Moneda eliminada',
                                     text: 'Moneda eliminada exitosamente.',
                                     toast: true,
-                                    position: 'top-end'
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
                                 });
                                 cargarMonedas();
                             } else {
@@ -705,7 +723,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                     title: 'Error',
                                     text: 'Error al eliminar la moneda.',
                                     toast: true,
-                                    position: 'top-end'
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
                                 });
                             }
                         } catch (error) {
@@ -715,7 +735,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 title: 'Error',
                                 text: 'Hubo un error al eliminar la moneda.',
                                 toast: true,
-                                position: 'top-end'
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
                             });
                         }
                     }
@@ -751,7 +773,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Moneda agregada',
                 text: 'Moneda agregada exitosamente.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             cargarMonedas(); // Recargar la tabla de monedas
             formNuevaMoneda.reset();
@@ -762,7 +786,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Error',
                 text: 'Hubo un error al agregar la moneda.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         }
     });
@@ -820,7 +846,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Error',
                 text: 'No se pudieron cargar los temas.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         }
     }
@@ -861,7 +889,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: 'Editor de temas',
                     text: 'Para editar temas, usa el editor visual en la sección "Personalizar Temas"',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
             }
         } catch (error) {
@@ -871,7 +901,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Error',
                 text: 'No se pudo abrir el editor de tema.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         }
     }
@@ -899,6 +931,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 text: `El tema "${resultado.tema.nombre}" se ha aplicado exitosamente`,
                 toast: true,
                 position: 'top-end',
+                showConfirmButton: false,
                 timer: 2000
             });
             
@@ -955,7 +988,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Error',
                 text: 'No se pudo aplicar el tema.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         }
     }
@@ -985,7 +1020,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Tema eliminado',
                 text: 'El tema se ha eliminado exitosamente',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             // Recargar la tabla
             await cargarTemasEnTabla();
@@ -996,7 +1033,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Error',
                 text: error.message || 'No se pudo eliminar el tema.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         }
     }
@@ -1033,7 +1072,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Tema creado',
                 text: `El tema "${nombreTema}" se ha creado exitosamente`,
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             // Recargar la tabla
             await cargarTemasEnTabla();
@@ -1050,7 +1091,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Error',
                 text: error.message || 'No se pudo crear el tema.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         }
     }
@@ -1173,7 +1216,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         title: 'Red social eliminada',
                         text: 'Red social eliminada exitosamente.',
                         toast: true,
-                        position: 'top-end'
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
                     });
                     cargarRedesSociales(); // Recargar las redes sociales después de eliminar
                 } catch (error) {
@@ -1183,7 +1228,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         title: 'Error',
                         text: 'Hubo un error al eliminar la red social.',
                         toast: true,
-                        position: 'top-end'
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
                     });
                 }
             }
@@ -1267,7 +1314,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: 'Campos incompletos',
                     text: 'Por favor, complete todos los campos antes de guardar.',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
                 return;
             }
@@ -1289,7 +1338,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         title: 'Campos incompletos',
                         text: 'Por favor, complete todos los campos antes de guardar.',
                         toast: true,
-                        position: 'top-end'
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
                     });
                     return;
                 }
@@ -1311,7 +1362,9 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Redes sociales guardadas',
             text: 'Las redes sociales se han guardado exitosamente.',
             toast: true,
-            position: 'top-end'
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
         });
         cargarRedesSociales();
         document.getElementById('btn-guardar-red').style.display = 'none'; // Ocultar el botón de guardar
@@ -1406,12 +1459,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         const data = await respuesta.json();
         if (respuesta.status === 200) {
-            swal.fire({
+            Swal.fire({
                 icon: 'success',
                 title: 'Ubicación Existente',
                 text: data.message || 'La ubicación ya existe.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         } else if (respuesta.status === 201) {
             Swal.fire({
@@ -1419,7 +1474,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Ubicación creada',
                 text: data.message || 'Ubicación creada correctamente.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         } else {
             Swal.fire({
@@ -1427,7 +1484,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Error',
                 text: data.error || 'Error al crear la ubicación.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         }
         cargarUbicacionesTabla();
@@ -1493,7 +1552,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: 'URL no válida',
                     text: 'Por favor, ingrese un iframe o un enlace válido de Google Maps.',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
                 return;
             }
@@ -1509,7 +1570,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Mapa actualizado',
                 text: 'La dirección del mapa se ha guardado correctamente.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             renderMapaFooter();
         }
@@ -1592,7 +1655,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             title: 'No puedes eliminar tu propia IP',
                             text: 'No puedes eliminar la IP que estás utilizando actualmente.',
                             toast: true,
-                            position: 'top-end'
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
                         });
                         return;
                     }
@@ -1614,7 +1679,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 title: 'IP eliminada',
                                 text: `La IP ${ip} ha sido eliminada correctamente.`,
                                 toast: true,
-                                position: 'top-end'
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
                             });
                             cargarIpsPermitidas();
                         } else {
@@ -1623,7 +1690,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 title: 'Error al eliminar IP',
                                 text: `No se pudo eliminar la IP ${ip}.`,
                                 toast: true,
-                                position: 'top-end'
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
                             });
                         }
                     }

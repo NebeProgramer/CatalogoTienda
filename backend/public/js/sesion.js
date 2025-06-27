@@ -1,3 +1,5 @@
+const { default: Swal } = require("sweetalert2");
+
 // Funciones de sesión reutilizables
 function showModal(container, modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer) {
     modal.style.display = 'block';
@@ -189,11 +191,11 @@ async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultar
         return;
     }
     if (!validarRequisitos(contrasena, reqLength, reqMayus, reqMinus, reqNum, reqEspecial, )) {
-        Swal.fire({ icon: 'error', title: 'Contraseña insegura', text: 'La contraseña no cumple los requisitos.', toast: true, position: 'top-end', timer: 3000 });
+        Swal.fire({ icon: 'error', title: 'Contraseña insegura', text: 'La contraseña no cumple los requisitos.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
         return;
     }
     if (contrasena !== confirmCon) {
-        Swal.fire({ icon: 'error', title: 'Contraseñas no coinciden', text: 'Las contraseñas no son iguales.', toast: true, position: 'top-end', timer: 3000 });
+        Swal.fire({ icon: 'error', title: 'Contraseñas no coinciden', text: 'Las contraseñas no son iguales.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
         return;
     }
     if (!validarCorreos(correo, confirmCo, emailSesion, emailSesionC)) {
@@ -353,7 +355,7 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                                 text: 'No tienes permiso para iniciar sesión como administrador desde esta IP.',
                                 toast: true,
                                 position: 'top-end',
-                                timer: 4000,
+                                timer: 3000,
                                 showConfirmButton: false
                             });
                         }, 100);
@@ -368,7 +370,7 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
                             text: 'No tienes permiso para iniciar sesión como administrador desde esta IP.',
                             toast: true,
                             position: 'top-end',
-                            timer: 4000,
+                            timer: 3000,
                             showConfirmButton: false
                         });
                     }, 100);
@@ -519,6 +521,15 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
 function cerrarSesion() {
     localStorage.removeItem('usuario');
     location.reload();
+    Swal.fire({
+        icon: 'success',
+        title: 'Sesión Cerrada',
+        text: 'Has cerrado sesión correctamente.',
+        toast: true,
+        position: 'top-end',
+        timer: 3000,
+        showConfirmButton: false
+    });
 }
 async function mostrarPerfil(user, Swal, mostrarLoader, ocultarLoader) {
     mostrarLoader();

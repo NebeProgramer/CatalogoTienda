@@ -50,12 +50,13 @@ const reqEspecial = document.getElementById('req-especial');
         try {
             const respuesta = await fetch('/api/monedas');
             if (!respuesta.ok) {
-                swal.fire({
+                Swal.fire({
                     icon: 'error',
                     title: 'Error',
                     text: 'No se pudieron cargar las monedas.',
                     toast: true,
                     position: 'top-end',
+                    showConfirmButton: false,
                     timer: 3000
                 });
             }
@@ -875,12 +876,13 @@ function openCRUD() {
                 cargarCarrito(); // Recargar el carrito
             }
         } catch (error) {
-            swal.fire({
+            Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 text: 'Hubo un error al eliminar el producto del carrito. Intenta nuevamente.',
                 toast: true,
                 position: 'top-end',
+                showConfirmButton: false,
                 timer: 3000
             });
         }

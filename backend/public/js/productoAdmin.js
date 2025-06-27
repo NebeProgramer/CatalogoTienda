@@ -90,7 +90,9 @@ if (idParam === 'crear') {
             title: 'Producto inexistente',
             text: 'No se encontró el producto.',
             toast: true,
-            position: 'top-end'
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
         });
         window.location.href = '/admin';
         return;
@@ -109,7 +111,9 @@ if (idParam === 'crear') {
                 title: 'Producto no encontrado',
                 text: 'Producto no encontrado.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             window.location.href = '/admin';
             return;
@@ -204,7 +208,9 @@ if (idParam === 'crear') {
                 title: 'Sesión requerida',
                 text: 'Por favor, inicia sesión para realizar esta acción.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }
@@ -247,7 +253,9 @@ if (idParam === 'crear') {
                     title: 'Producto creado',
                     text: 'Producto creado exitosamente.',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
                 imagenesSeleccionadas = [];
                 window.location.href = '/admin';
@@ -257,7 +265,9 @@ if (idParam === 'crear') {
                     title: 'Error',
                     text: data.error || 'Error al crear el producto.',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
             }
         } catch (error) {
@@ -267,7 +277,9 @@ if (idParam === 'crear') {
                 title: 'Error',
                 text: 'Hubo un error al guardar el producto.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         } finally {
             ocultarLoader();
@@ -284,7 +296,9 @@ if (idParam === 'crear') {
                 title: 'Sesión requerida',
                 text: 'Por favor, inicia sesión para realizar esta acción.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }
@@ -296,7 +310,9 @@ if (idParam === 'crear') {
                 title: 'Producto inexistente',
                 text: 'No se ha seleccionado ningún producto para actualizar.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }
@@ -340,7 +356,9 @@ if (idParam === 'crear') {
                     title: 'Producto actualizado',
                     text: 'Producto actualizado exitosamente.',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
                 imagenesSeleccionadas = [];
                 window.location.href = '/admin'; // Redirigir a la página principal
@@ -350,7 +368,9 @@ if (idParam === 'crear') {
                     title: 'Error',
                     text: data.error || 'Error al actualizar el producto.',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
             }
         } catch (error) {

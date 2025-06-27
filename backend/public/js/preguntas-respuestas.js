@@ -192,7 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Error',
                 text: 'Hubo un error al cargar los mensajes.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         } finally {
             ocultarLoader();

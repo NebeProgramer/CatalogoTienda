@@ -1708,138 +1708,47 @@ button.eliminar-termino-btn:hover {
   font-size: 13px !important;
 }
 
-/* Iconos con colores del tema - CORREGIDO */
-.swal2-icon {
-    position: relative !important;
-    box-sizing: content-box !important;
-    justify-content: center !important;
-    width: 5em !important;
-    height: 5em !important;
-    margin: 2.5em auto 0.6em !important;
-    border: 0.25em solid transparent !important;
-    border-radius: 50% !important;
-    font-family: inherit !important;
-    line-height: 5em !important;
-    cursor: default !important;
-}
 
-/* Icono de éxito */
+
+/* Icono de éxito - Solo colores, mantener iconos originales */
 .swal2-icon.swal2-success {
     border-color: var(--success) !important;
     color: var(--success) !important;
 }
 
 .swal2-icon.swal2-success [class^="swal2-success-line"] {
-    position: absolute !important;
-    z-index: 2 !important;
-    height: 0.3125em !important;
-    border-radius: 0.125em !important;
     background-color: var(--success) !important;
 }
 
-.swal2-icon.swal2-success .swal2-success-line-tip {
-    left: 1.75em !important;
-    top: 2.8125em !important;
-    width: 1.5625em !important;
-    transform: rotate(45deg) !important;
-}
-
-.swal2-icon.swal2-success .swal2-success-line-long {
-    right: 1em !important;
-    top: 2.375em !important;
-    width: 2.9375em !important;
-    transform: rotate(-45deg) !important;
-}
-
 .swal2-icon.swal2-success .swal2-success-ring {
-    position: absolute !important;
-    z-index: 2 !important;
-    top: -0.25em !important;
-    left: -0.25em !important;
-    box-sizing: content-box !important;
-    width: 100% !important;
-    height: 100% !important;
-    border: 0.25em solid rgba(var(--success-rgb, 40, 167, 69), 0.3) !important;
-    border-radius: 50% !important;
+    border-color: rgba(var(--success-rgb, 40, 167, 69), 0.3) !important;
 }
 
-.swal2-icon.swal2-success .swal2-success-fix {
-    position: absolute !important;
-    z-index: 1 !important;
-    top: 0.5em !important;
-    left: 1.625em !important;
-    width: 0.4375em !important;
-    height: 5.625em !important;
-    transform: rotate(-45deg) !important;
-}
-
-/* Icono de error */
+/* Icono de error - Solo colores, mantener iconos originales */
 .swal2-icon.swal2-error {
     border-color: var(--error) !important;
     color: var(--error) !important;
 }
 
-.swal2-icon.swal2-error .swal2-x-mark {
-    position: relative !important;
-    display: block !important;
-}
-
 .swal2-icon.swal2-error [class^="swal2-x-mark-line"] {
-    position: absolute !important;
-    top: 2.3125em !important;
-    width: 2.9375em !important;
-    height: 0.3125em !important;
-    border-radius: 0.125em !important;
     background-color: var(--error) !important;
 }
 
-.swal2-icon.swal2-error .swal2-x-mark-line-left {
-    left: 1.0625em !important;
-    transform: rotate(45deg) !important;
-}
-
-.swal2-icon.swal2-error .swal2-x-mark-line-right {
-    right: 1em !important;
-    transform: rotate(-45deg) !important;
-}
-
-/* Icono de advertencia */
+/* Icono de advertencia - Solo colores, mantener iconos originales */
 .swal2-icon.swal2-warning {
     border-color: var(--warning) !important;
     color: var(--warning) !important;
-    font-size: 3.75em !important;
 }
 
-.swal2-icon.swal2-warning::before {
-    content: "!" !important;
-    font-weight: 600 !important;
-    color: var(--warning) !important;
-}
-
-/* Icono de información */
+/* Icono de información - Solo colores, mantener iconos originales */
 .swal2-icon.swal2-info {
     border-color: var(--info) !important;
     color: var(--info) !important;
-    font-size: 3.75em !important;
 }
 
-.swal2-icon.swal2-info::before {
-    content: "i" !important;
-    font-weight: 600 !important;
-    font-style: italic !important;
-    color: var(--info) !important;
-}
-
-/* Icono de pregunta */
+/* Icono de pregunta - Solo colores, mantener iconos originales */
 .swal2-icon.swal2-question {
     border-color: var(--info) !important;
-    color: var(--info) !important;
-    font-size: 3.75em !important;
-}
-
-.swal2-icon.swal2-question::before {
-    content: "?" !important;
-    font-weight: 600 !important;
     color: var(--info) !important;
 }
 
@@ -2374,100 +2283,9 @@ button.eliminar-termino-btn:hover {
     height: 3px !important;
 }
 
-/* Ajustes para los iconos en toast - CORREGIDO */
-.swal2-toast .swal2-icon {
-    margin: 8px 12px 8px 8px !important;
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 32px !important;
-    border-width: 2px !important;
-    font-size: 20px !important;
-    line-height: 32px !important;
-}
 
-.swal2-toast .swal2-icon.swal2-success {
-    border-color: var(--success) !important;
-    color: var(--success) !important;
-}
 
-.swal2-toast .swal2-icon.swal2-success [class^="swal2-success-line"] {
-    height: 2px !important;
-    background-color: var(--success) !important;
-}
 
-.swal2-toast .swal2-icon.swal2-success .swal2-success-line-tip {
-    left: 9px !important;
-    top: 18px !important;
-    width: 10px !important;
-}
-
-.swal2-toast .swal2-icon.swal2-success .swal2-success-line-long {
-    right: 6px !important;
-    top: 15px !important;
-    width: 18px !important;
-}
-
-.swal2-toast .swal2-icon.swal2-success .swal2-success-ring {
-    border-width: 2px !important;
-    border-color: rgba(var(--success-rgb, 40, 167, 69), 0.3) !important;
-}
-
-.swal2-toast .swal2-icon.swal2-error {
-    border-color: var(--error) !important;
-    color: var(--error) !important;
-}
-
-.swal2-toast .swal2-icon.swal2-error [class^="swal2-x-mark-line"] {
-    top: 15px !important;
-    width: 18px !important;
-    height: 2px !important;
-    background-color: var(--error) !important;
-}
-
-.swal2-toast .swal2-icon.swal2-error .swal2-x-mark-line-left {
-    left: 7px !important;
-}
-
-.swal2-toast .swal2-icon.swal2-error .swal2-x-mark-line-right {
-    right: 7px !important;
-}
-
-.swal2-toast .swal2-icon.swal2-warning {
-    border-color: var(--warning) !important;
-    color: var(--warning) !important;
-    font-size: 24px !important;
-}
-
-.swal2-toast .swal2-icon.swal2-warning::before {
-    content: "!" !important;
-    font-weight: 600 !important;
-    color: var(--warning) !important;
-}
-
-.swal2-toast .swal2-icon.swal2-info {
-    border-color: var(--info) !important;
-    color: var(--info) !important;
-    font-size: 24px !important;
-}
-
-.swal2-toast .swal2-icon.swal2-info::before {
-    content: "i" !important;
-    font-weight: 600 !important;
-    font-style: italic !important;
-    color: var(--info) !important;
-}
-
-.swal2-toast .swal2-icon.swal2-question {
-    border-color: var(--info) !important;
-    color: var(--info) !important;
-    font-size: 24px !important;
-}
-
-.swal2-toast .swal2-icon.swal2-question::before {
-    content: "?" !important;
-    font-weight: 600 !important;
-    color: var(--info) !important;
-}
 
 /* ===== TOAST SIN ICONO PREDETERMINADO ===== */
 .swal2-toast.swal2-no-icon {

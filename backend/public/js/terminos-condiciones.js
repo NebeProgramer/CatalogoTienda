@@ -185,7 +185,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 title: 'Error',
                 text: 'No se pudieron cargar los términos y condiciones.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         } finally {
             ocultarLoader();

@@ -111,7 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 position: 'top-end',
                                 icon: 'warning',
                                 title: 'Campo vacío',
-                                text: 'Por favor, escribe una respuesta.'
+                                text: 'Por favor, escribe una respuesta.',
+                                showConfirmButton: false,
+                                timer: 3000
                             });
                             return;
                         }
@@ -129,7 +131,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 title: 'Respuesta guardada',
                                 text: 'Respuesta guardada exitosamente.',
                                 toast: true,
-                                position: 'top-end'
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
                             });
                             cargarMensajes(); // Recargar la lista de mensajes
                         } catch (error) {
@@ -139,7 +143,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 title: 'Error',
                                 text: 'Hubo un error al guardar la respuesta.',
                                 toast: true,
-                                position: 'top-end'
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
                             });
                         }
                     });

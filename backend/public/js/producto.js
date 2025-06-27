@@ -23,7 +23,9 @@ const id = params.get('id');
             position: 'top-end',
             icon: 'error',
             title: 'Producto inexistente',
-            text: 'No se encontró el producto.'
+            text: 'No se encontró el producto.',
+            showConfirmButton: false,
+            timer: 3000
         });
         window.location.href = '/';
         return;

@@ -105,7 +105,9 @@ class TemasManager {
                         title: 'Preferencias guardadas',
                         text: 'El tema se ha aplicado correctamente.',
                         toast: true,
-                        position: 'top-end'
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
                     });
                 }
             });

@@ -55,7 +55,9 @@ function ocultarLoader() {
                                 title: 'Término eliminado',
                                 text: 'Término eliminado exitosamente.',
                                 toast: true,
-                                position: 'top-end'
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
                             });
                             terminosLista.removeChild(terminoDiv);
                         } else {
@@ -68,7 +70,9 @@ function ocultarLoader() {
                             title: 'Error',
                             text: 'No se pudo eliminar el término.',
                             toast: true,
-                            position: 'top-end'
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
                         });
                     }
                 });
@@ -82,7 +86,9 @@ function ocultarLoader() {
                 title: 'Error',
                 text: 'No se pudieron cargar los términos y condiciones.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         } finally {
             ocultarLoader();
@@ -144,7 +150,9 @@ function ocultarLoader() {
                     title: 'Sin términos válidos',
                     text: 'No hay términos válidos para guardar.',
                     toast: true,
-                    position: 'top-end'
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
                 return;
             }
@@ -166,7 +174,9 @@ function ocultarLoader() {
                 title: 'Términos guardados',
                 text: 'Términos y condiciones guardados exitosamente.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             await cargarTerminosParaEditar(); // Recargar los términos después de guardarlos
         } catch (error) {
@@ -176,7 +186,9 @@ function ocultarLoader() {
                 title: 'Error',
                 text: 'No se pudieron guardar los términos y condiciones.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         } finally {
             ocultarLoader();

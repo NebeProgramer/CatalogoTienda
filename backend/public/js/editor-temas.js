@@ -326,7 +326,9 @@ class EditorTemas {
                 title: 'Error al Cargar Tema',
                 text: error.message || 'No se pudo cargar el tema para edición',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         }
     }

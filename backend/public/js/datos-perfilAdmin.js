@@ -166,7 +166,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     title: 'Usuario eliminado',
                                     text: 'El usuario ha sido eliminado exitosamente.',
                                     toast: true,
-                                    position: 'top-end'
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
                                 });
                                 cargarUsuarios(); // Recargar la lista de usuarios
                             } catch (error) {
@@ -175,7 +177,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     title: 'Error',
                                     text: 'Hubo un error al eliminar el usuario.',
                                     toast: true,
-                                    position: 'top-end'
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
                                 });
                             }
                         }
