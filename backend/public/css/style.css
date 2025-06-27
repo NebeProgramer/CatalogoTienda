@@ -1630,6 +1630,12 @@ button.eliminar-termino-btn:hover {
   --swal2-input-color: var(--text-primary);
   --swal2-input-border: 1px solid var(--border-primary);
   --swal2-input-border-radius: 6px;
+  
+  /* Variables RGB para efectos de transparencia */
+  --success-rgb: 40, 167, 69;
+  --error-rgb: 220, 53, 69;
+  --warning-rgb: 255, 193, 7;
+  --info-rgb: 23, 162, 184;
 }
 
 /* Estilos personalizados para botones */
@@ -1702,28 +1708,139 @@ button.eliminar-termino-btn:hover {
   font-size: 13px !important;
 }
 
-/* Iconos con colores del tema */
+/* Iconos con colores del tema - CORREGIDO */
+.swal2-icon {
+    position: relative !important;
+    box-sizing: content-box !important;
+    justify-content: center !important;
+    width: 5em !important;
+    height: 5em !important;
+    margin: 2.5em auto 0.6em !important;
+    border: 0.25em solid transparent !important;
+    border-radius: 50% !important;
+    font-family: inherit !important;
+    line-height: 5em !important;
+    cursor: default !important;
+}
+
+/* Icono de éxito */
+.swal2-icon.swal2-success {
+    border-color: var(--success) !important;
+    color: var(--success) !important;
+}
+
 .swal2-icon.swal2-success [class^="swal2-success-line"] {
-  background-color: var(--success) !important;
+    position: absolute !important;
+    z-index: 2 !important;
+    height: 0.3125em !important;
+    border-radius: 0.125em !important;
+    background-color: var(--success) !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-line-tip {
+    left: 1.75em !important;
+    top: 2.8125em !important;
+    width: 1.5625em !important;
+    transform: rotate(45deg) !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-line-long {
+    right: 1em !important;
+    top: 2.375em !important;
+    width: 2.9375em !important;
+    transform: rotate(-45deg) !important;
 }
 
 .swal2-icon.swal2-success .swal2-success-ring {
-  border-color: var(--success) !important;
+    position: absolute !important;
+    z-index: 2 !important;
+    top: -0.25em !important;
+    left: -0.25em !important;
+    box-sizing: content-box !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: 0.25em solid rgba(var(--success-rgb, 40, 167, 69), 0.3) !important;
+    border-radius: 50% !important;
 }
 
+.swal2-icon.swal2-success .swal2-success-fix {
+    position: absolute !important;
+    z-index: 1 !important;
+    top: 0.5em !important;
+    left: 1.625em !important;
+    width: 0.4375em !important;
+    height: 5.625em !important;
+    transform: rotate(-45deg) !important;
+}
+
+/* Icono de error */
 .swal2-icon.swal2-error {
-  border-color: var(--error) !important;
-  color: var(--error) !important;
+    border-color: var(--error) !important;
+    color: var(--error) !important;
 }
 
+.swal2-icon.swal2-error .swal2-x-mark {
+    position: relative !important;
+    display: block !important;
+}
+
+.swal2-icon.swal2-error [class^="swal2-x-mark-line"] {
+    position: absolute !important;
+    top: 2.3125em !important;
+    width: 2.9375em !important;
+    height: 0.3125em !important;
+    border-radius: 0.125em !important;
+    background-color: var(--error) !important;
+}
+
+.swal2-icon.swal2-error .swal2-x-mark-line-left {
+    left: 1.0625em !important;
+    transform: rotate(45deg) !important;
+}
+
+.swal2-icon.swal2-error .swal2-x-mark-line-right {
+    right: 1em !important;
+    transform: rotate(-45deg) !important;
+}
+
+/* Icono de advertencia */
 .swal2-icon.swal2-warning {
-  border-color: var(--warning) !important;
-  color: var(--warning) !important;
+    border-color: var(--warning) !important;
+    color: var(--warning) !important;
+    font-size: 3.75em !important;
 }
 
+.swal2-icon.swal2-warning::before {
+    content: "!" !important;
+    font-weight: 600 !important;
+    color: var(--warning) !important;
+}
+
+/* Icono de información */
 .swal2-icon.swal2-info {
-  border-color: var(--info) !important;
-  color: var(--info) !important;
+    border-color: var(--info) !important;
+    color: var(--info) !important;
+    font-size: 3.75em !important;
+}
+
+.swal2-icon.swal2-info::before {
+    content: "i" !important;
+    font-weight: 600 !important;
+    font-style: italic !important;
+    color: var(--info) !important;
+}
+
+/* Icono de pregunta */
+.swal2-icon.swal2-question {
+    border-color: var(--info) !important;
+    color: var(--info) !important;
+    font-size: 3.75em !important;
+}
+
+.swal2-icon.swal2-question::before {
+    content: "?" !important;
+    font-weight: 600 !important;
+    color: var(--info) !important;
 }
 
 /* Inputs y formularios dentro de SweetAlert2 */
@@ -1751,6 +1868,38 @@ button.eliminar-termino-btn:hover {
 
 .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step {
   background-color: var(--text-accent) !important;
+}
+
+/* Estilos principales del popup SweetAlert2 */
+.swal2-popup {
+  background-color: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-primary) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 30px var(--shadow-medium) !important;
+}
+
+.swal2-title {
+  color: var(--text-primary) !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+.swal2-html-container {
+  color: var(--text-secondary) !important;
+  font-size: 1rem !important;
+}
+
+.swal2-close {
+  color: var(--text-secondary) !important;
+}
+
+.swal2-close:hover {
+  color: var(--text-primary) !important;
+}
+
+/* Footer del popup */
+.swal2-actions {
+  margin: 1.25em auto 0 !important;
 }
 
 #loader {
@@ -2225,13 +2374,15 @@ button.eliminar-termino-btn:hover {
     height: 3px !important;
 }
 
-/* Ajustes para los iconos en toast */
+/* Ajustes para los iconos en toast - CORREGIDO */
 .swal2-toast .swal2-icon {
     margin: 8px 12px 8px 8px !important;
-    width: 20px !important;
-    height: 20px !important;
-    min-width: 20px !important;
-    font-size: 16px !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    border-width: 2px !important;
+    font-size: 20px !important;
+    line-height: 32px !important;
 }
 
 .swal2-toast .swal2-icon.swal2-success {
@@ -2239,18 +2390,82 @@ button.eliminar-termino-btn:hover {
     color: var(--success) !important;
 }
 
+.swal2-toast .swal2-icon.swal2-success [class^="swal2-success-line"] {
+    height: 2px !important;
+    background-color: var(--success) !important;
+}
+
+.swal2-toast .swal2-icon.swal2-success .swal2-success-line-tip {
+    left: 9px !important;
+    top: 18px !important;
+    width: 10px !important;
+}
+
+.swal2-toast .swal2-icon.swal2-success .swal2-success-line-long {
+    right: 6px !important;
+    top: 15px !important;
+    width: 18px !important;
+}
+
+.swal2-toast .swal2-icon.swal2-success .swal2-success-ring {
+    border-width: 2px !important;
+    border-color: rgba(var(--success-rgb, 40, 167, 69), 0.3) !important;
+}
+
 .swal2-toast .swal2-icon.swal2-error {
     border-color: var(--error) !important;
     color: var(--error) !important;
 }
 
+.swal2-toast .swal2-icon.swal2-error [class^="swal2-x-mark-line"] {
+    top: 15px !important;
+    width: 18px !important;
+    height: 2px !important;
+    background-color: var(--error) !important;
+}
+
+.swal2-toast .swal2-icon.swal2-error .swal2-x-mark-line-left {
+    left: 7px !important;
+}
+
+.swal2-toast .swal2-icon.swal2-error .swal2-x-mark-line-right {
+    right: 7px !important;
+}
+
 .swal2-toast .swal2-icon.swal2-warning {
     border-color: var(--warning) !important;
+    color: var(--warning) !important;
+    font-size: 24px !important;
+}
+
+.swal2-toast .swal2-icon.swal2-warning::before {
+    content: "!" !important;
+    font-weight: 600 !important;
     color: var(--warning) !important;
 }
 
 .swal2-toast .swal2-icon.swal2-info {
     border-color: var(--info) !important;
+    color: var(--info) !important;
+    font-size: 24px !important;
+}
+
+.swal2-toast .swal2-icon.swal2-info::before {
+    content: "i" !important;
+    font-weight: 600 !important;
+    font-style: italic !important;
+    color: var(--info) !important;
+}
+
+.swal2-toast .swal2-icon.swal2-question {
+    border-color: var(--info) !important;
+    color: var(--info) !important;
+    font-size: 24px !important;
+}
+
+.swal2-toast .swal2-icon.swal2-question::before {
+    content: "?" !important;
+    font-weight: 600 !important;
     color: var(--info) !important;
 }
 
