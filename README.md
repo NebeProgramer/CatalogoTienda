@@ -1,6 +1,610 @@
-# riables de entorno en .env🛍️ CatalogoTienda - Sistema de E-commerce Completo
+# 🛍️ CatalogoTienda - Sistema de E-commerce Completo
 
-Sistema integral de catálogo de productos con autenticación avanzada, gestión de usuarios, panel de administración, sistema de temas dinámicos y notificaciones inteligentes.
+Sistema integral de catálogo de productos con autenticación avanzada, gestión de usuarios, panel de administración y **sistema de temas dinámicos revolucionario**.
+
+![Estado del Proyecto](https://img.shields.io/badge/Estado-Producción%20Estable-brightgreen)
+![Versión](https://img.shields.io/badge/Versión-4.0.0-blue)
+![Node.js](https://img.shields.io/badge/Node.js-18+-green)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green)
+
+## 📋 Tabla de Contenidos
+
+- [Características Principales](#-características-principales)
+- [Sistema de Temas Revolucionario](#-sistema-de-temas-revolucionario)
+- [Tecnologías Utilizadas](#-tecnologías-utilizadas)
+- [Configuración del Proyecto](#-configuración-del-proyecto)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [API Endpoints](#-api-endpoints)
+- [Manual de Desarrollo](#-manual-de-desarrollo)
+- [Manual de Usuario](#-manual-de-usuario)
+- [Despliegue](#-despliegue)
+
+## ✨ Características Principales
+
+### 🎨 **Sistema de Temas Dinámicos 4.0** ⭐ NUEVO ⭐
+
+- ✅ **Editor visual completo** con sliders RGB y input hexadecimal
+- ✅ **16 variables CSS personalizables** para control total de la apariencia
+- ✅ **Previsualización en tiempo real** sin necesidad de recarga
+- ✅ **Aplicación automática** en todas las páginas del sistema
+- ✅ **Persistencia local por usuario** usando localStorage
+- ✅ **SweetAlert2 integrado** que se adapta automáticamente al tema
+- ✅ **Sistema unificado** entre usuario y administrador
+
+### 🔐 **Autenticación Avanzada**
+
+- ✅ Registro e inicio de sesión tradicional
+- ✅ **Google OAuth 2.0** integrado
+- ✅ Verificación por correo electrónico
+- ✅ Recuperación de contraseñas segura
+- ✅ **Control de acceso por IP** para administradores
+
+### 🛒 **E-commerce Completo**
+
+- ✅ Catálogo con **múltiples imágenes** por producto
+- ✅ Sistema de **categorías y filtros** dinámicos
+- ✅ **Carrito persistente** entre sesiones
+- ✅ Gestión automática de **stock e inventario**
+- ✅ **Múltiples monedas** con conversión
+- ✅ **Historial de compras** completo
+
+### 🔔 **Sistema de Notificaciones Inteligentes**
+
+- ✅ **Toast notifications** no intrusivas (esquina superior derecha)
+- ✅ **Modales de confirmación** para acciones críticas
+- ✅ **Timer automático** de 3 segundos para feedback
+- ✅ **Integración completa** con el sistema de temas
+- ✅ **Criterios inteligentes** de clasificación de notificaciones
+
+### � **Gestión de Usuarios**
+
+- ✅ **Panel de administración** completo
+- ✅ Gestión de **roles y permisos**
+- ✅ **Perfiles con avatares** personalizables
+- ✅ **Registro de actividades** y compras
+
+## 🎨 Sistema de Temas Revolucionario
+
+### **Arquitectura del Sistema**
+
+El sistema de temas utiliza una arquitectura **completamente local** que elimina la dependencia de un estado global en la base de datos, permitiendo que cada usuario/dispositivo tenga su propia preferencia de tema.
+
+```
+┌─────────────────────────────────────────────┐
+│                FRONTEND                     │
+├─────────────────┬───────────────────────────┤
+│   Usuario       │      Administrador        │
+│  (index.html)   │   (indexAdmin.html)       │
+├─────────────────┼───────────────────────────┤
+│ Selector Temas  │    Editor Completo        │
+│ (Preferencias)  │  (Creación/Edición)       │
+├─────────────────┴───────────────────────────┤
+│         tema-global.js (Universal)          │
+│      Aplicación automática del tema         │
+│    activo en TODAS las páginas              │
+├─────────────────────────────────────────────┤
+│       sweetalert-tema.js (Nuevo)            │
+│    SweetAlert2 con adaptación automática    │
+│           al tema seleccionado              │
+├─────────────────────────────────────────────┤
+│            localStorage                     │
+│  ✓ temaSeleccionadoId: "tema_id"           │
+│  ✓ nombreTemaSeleccionado: "Oscuro"        │
+│  ✓ coloresTema: {...}                      │
+└─────────────────────────────────────────────┘
+                       ↕
+┌─────────────────────────────────────────────┐
+│               BACKEND/API                   │
+├─────────────────────────────────────────────┤
+│            MongoDB Atlas                    │
+│         Colección: temas                    │
+│                                             │
+│  {                                          │
+│    _id: ObjectId,                           │
+│    nombre: "Oscuro",                        │
+│    colores: {                               │
+│      bgPrimary: "#000000",                  │
+│      textPrimary: "#ffffff",                │
+│      success: "#4caf50",                    │
+│      ...16 variables CSS                    │
+│    },                                       │
+│    fechaCreacion: Date,                     │
+│    fechaModificacion: Date                  │
+│  }                                          │
+│                                             │
+│  ❌ Campo "activo" ELIMINADO                │
+│     (Ahora es preferencia local)            │
+└─────────────────────────────────────────────┘
+```
+
+### **Flujo de Funcionamiento**
+
+#### 1. **Inicialización Automática**
+```javascript
+// Al cargar cualquier página
+tema-global.js → 
+Verifica localStorage → 
+Si está vacío: aplica tema "Claro" por defecto → 
+Aplica variables CSS → 
+Configura SweetAlert2
+```
+
+#### 2. **Selección de Tema** (Usuario/Admin)
+```javascript
+// Usuario selecciona tema
+Comparación con localStorage → 
+Si es diferente: actualiza variables CSS → 
+Guarda en localStorage → 
+Reconfigura SweetAlert2 → 
+Emite evento 'temaAplicado'
+```
+
+#### 3. **Creación de Temas** (Solo Admin)
+```javascript
+// Administrador crea nuevo tema
+Editor visual → 
+Nombre + Colores por defecto → 
+POST /api/temas → 
+MongoDB → 
+Recarga lista de temas → 
+Abre editor para personalizar
+```
+
+#### 4. **Edición Visual** (Solo Admin)
+```javascript
+// Edición en tiempo real
+Sliders RGB + Input HEX → 
+Cambios inmediatos en CSS → 
+Botón "Guardar" → 
+PUT /api/temas/:id → 
+MongoDB actualizado
+```
+
+### **Variables CSS Personalizables**
+
+El sistema maneja **16 variables CSS** que controlan todos los aspectos visuales:
+
+```css
+:root {
+    /* Fondos principales */
+    --bg-primary: #ffffff;      /* Fondo principal de la aplicación */
+    --bg-secondary: #f8f9fa;    /* Fondo de secciones secundarias */
+    --bg-tertiary: #e9ecef;     /* Fondo de elementos terciarios */
+  
+    /* Textos */
+    --text-primary: #212529;    /* Texto principal (títulos, contenido) */
+    --text-secondary: #6c757d;  /* Texto secundario (subtítulos, ayuda) */
+    --text-accent: #007bff;     /* Texto de acento (enlaces, botones) */
+  
+    /* Bordes y líneas */
+    --border-primary: #dee2e6;  /* Bordes principales (tarjetas, inputs) */
+    --border-secondary: #ced4da; /* Bordes secundarios (divisores) */
+  
+    /* Sombras */
+    --shadow-light: rgba(0,0,0,0.1);  /* Sombra suave (cards, hovers) */
+    --shadow-medium: rgba(0,0,0,0.2); /* Sombra media (modales, dropdowns) */
+  
+    /* Estados y feedback */
+    --success: #28a745;         /* Color para acciones exitosas */
+    --warning: #ffc107;         /* Color para advertencias */
+    --error: #dc3545;           /* Color para errores */
+    --info: #17a2b8;            /* Color para información */
+  
+    /* Elementos especiales */
+    --modal-bg: rgba(0,0,0,0.5); /* Fondo de modales y overlays */
+    --hover-overlay: rgba(0,0,0,0.05); /* Overlay para efectos hover */
+}
+```
+
+### **Características Técnicas Avanzadas**
+
+#### ✅ **Editor RGB Completo**
+- Sliders independientes para Rojo, Verde, Azul
+- Input hexadecimal para valores precisos
+- Canal Alpha para transparencias
+- Previsualización inmediata de cambios
+
+#### ✅ **Persistencia Inteligente**
+- **localStorage**: Almacenamiento local por usuario/dispositivo
+- **Sincronización**: Entre pestañas del mismo navegador
+- **Fallback**: Tema "Claro" por defecto si no hay selección
+
+#### ✅ **Integración Universal**
+- **Aplicación automática**: En todas las páginas al cargar
+- **SweetAlert2**: Notificaciones que siguen el tema activo
+- **CSS Variables**: Sistema reactivo sin necesidad de recompilación
+
+#### ✅ **Gestión de Estados**
+- **Visual feedback**: Tarjetas muestran "Activo" según localStorage
+- **Botón Aplicar**: Solo visible si el tema no está activo
+- **Validaciones**: Nombres únicos, campos requeridos
+
+### **Archivos del Sistema de Temas**
+
+| Archivo | Propósito | Ubicación |
+|---------|-----------|-----------|
+| `editor-temas.js` | Editor visual completo (Admin) | `/js/` |
+| `tema-global.js` | Aplicación universal (Todas las páginas) | `/js/` |
+| `sweetalert-tema.js` | SweetAlert2 con temas dinámicos | `/js/` |
+| `temasDB.js` | Gestión de base de datos de temas | `/js/` |
+| `temasManager.js` | Selector de temas (Usuario) | `/js/` |
+| `Tema.js` | Modelo de MongoDB | `/models/` |
+
+## 🛠 Tecnologías Utilizadas
+
+### **Backend**
+- ![Node.js](https://img.shields.io/badge/Node.js-18+-green?logo=node.js) **Node.js** - Runtime de JavaScript
+- ![Express](https://img.shields.io/badge/Express-4.18+-black?logo=express) **Express.js** - Framework web
+- ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?logo=mongodb) **MongoDB** - Base de datos NoSQL
+- ![Mongoose](https://img.shields.io/badge/Mongoose-ODM-red) **Mongoose** - ODM para MongoDB
+
+### **Frontend**
+- ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white) **HTML5** - Estructura semántica
+- ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white) **CSS3** - Estilos con variables CSS
+- ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black) **JavaScript ES6+** - Lógica del cliente
+- ![SweetAlert2](https://img.shields.io/badge/SweetAlert2-ff6b6b) **SweetAlert2** - Notificaciones elegantes
+
+### **Servicios Externos**
+- ![Google](https://img.shields.io/badge/Google_OAuth-4285F4?logo=google&logoColor=white) **Google OAuth 2.0** - Autenticación social
+- ![Gmail](https://img.shields.io/badge/Gmail_API-EA4335?logo=gmail&logoColor=white) **Gmail SMTP** - Envío de correos
+
+### **Herramientas de Desarrollo**
+- ![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white) **Git** - Control de versiones
+- ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?logo=visualstudiocode&logoColor=white) **VS Code** - Editor de código
+- ![Postman](https://img.shields.io/badge/Postman-FF6C37?logo=postman&logoColor=white) **Postman** - Testing de API
+
+## 🚀 Configuración del Proyecto
+
+### **Prerrequisitos**
+
+- **Node.js 18+** ([Descargar](https://nodejs.org/))
+- **MongoDB Atlas** ([Crear cuenta](https://www.mongodb.com/cloud/atlas))
+- **Google Cloud Console** ([Acceder](https://console.cloud.google.com/))
+- **Gmail con contraseña de aplicación** ([Configurar](https://support.google.com/accounts/answer/185833))
+
+### **Instalación**
+
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/tu-usuario/CatalogoTienda.git
+   cd CatalogoTienda
+   ```
+
+2. **Instalar dependencias**
+   ```bash
+   cd backend
+   npm install
+   ```
+
+3. **Configurar variables de entorno**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Editar `.env` con tus credenciales:
+   ```env
+   # Base de datos
+   MONGODB_URI=mongodb+srv://usuario:password@cluster.mongodb.net/catalogo
+   
+   # Google OAuth
+   GOOGLE_CLIENT_ID=tu_client_id.apps.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=tu_client_secret
+   
+   # Email
+   EMAIL_USER=tu_email@gmail.com
+   EMAIL_PASS=tu_app_password
+   
+   # Servidor
+   PORT=3000
+   SESSION_SECRET=generar_clave_super_segura
+   JWT_SECRET=otra_clave_segura
+   ```
+
+4. **Configurar Google OAuth**
+   - Ir a [Google Cloud Console](https://console.cloud.google.com/)
+   - Crear proyecto → Habilitar Google+ API
+   - Crear credenciales OAuth 2.0:
+     - **Origen autorizado**: `http://localhost:3000`
+     - **URI de redirección**: `http://localhost:3000/auth/google/callback`
+
+5. **Ejecutar el proyecto**
+   ```bash
+   npm start
+   ```
+   
+   La aplicación estará disponible en: `http://localhost:3000`
+
+## 📁 Estructura del Proyecto
+
+```
+CatalogoTienda/
+├── backend/
+│   ├── models/                    # Modelos de MongoDB
+│   │   ├── Tema.js               # ⭐ Modelo de temas (sin campo "activo")
+│   │   ├── productos.js          # Modelo de productos
+│   │   ├── perfil.js             # Modelo de usuarios
+│   │   └── ...
+│   ├── public/                   # Frontend estático
+│   │   ├── index.html            # Página principal (usuarios)
+│   │   ├── indexAdmin.html       # Panel de administración
+│   │   ├── css/
+│   │   │   ├── style.css         # ⭐ Estilos con variables CSS
+│   │   │   └── editor-temas.css  # Estilos del editor
+│   │   ├── js/
+│   │   │   ├── tema-global.js    # ⭐ Sistema universal de temas
+│   │   │   ├── editor-temas.js   # ⭐ Editor visual (Admin)
+│   │   │   ├── sweetalert-tema.js # ⭐ SweetAlert2 con temas
+│   │   │   ├── temasDB.js        # Gestión de datos de temas
+│   │   │   ├── temasManager.js   # Selector de temas (Usuario)
+│   │   │   ├── script.js         # Lógica principal
+│   │   │   └── ...
+│   │   └── img/                  # Imágenes y avatares
+│   ├── data/                     # Datos iniciales JSON
+│   ├── server.js                 # ⭐ Servidor principal
+│   └── package.json
+├── MANUAL_USUARIO.md             # ⭐ Manual para usuarios finales
+├── README.md                     # Manual técnico (este archivo)
+└── package.json
+```
+
+### **Archivos Críticos del Sistema de Temas**
+
+| Archivo | Líneas | Función |
+|---------|--------|---------|
+| `tema-global.js` | ~150 | Aplicación universal de temas |
+| `editor-temas.js` | ~1200 | Editor visual completo |
+| `sweetalert-tema.js` | ~350 | SweetAlert2 adaptativo |
+| `Tema.js` | ~45 | Modelo de datos (sin "activo") |
+
+## 🔌 API Endpoints
+
+### **Sistema de Temas**
+```http
+GET    /api/temas          # Obtener todos los temas
+GET    /api/temas/:id      # Obtener tema específico
+POST   /api/temas          # Crear nuevo tema (Admin)
+PUT    /api/temas/:id      # Actualizar tema (Admin)
+DELETE /api/temas/:id      # Eliminar tema (Admin)
+```
+
+### **Autenticación**
+```http
+POST /api/crear-cuenta         # Registro tradicional
+POST /api/iniciar-sesion       # Login tradicional
+GET  /auth/google              # Iniciar OAuth Google
+GET  /auth/google/callback     # Callback OAuth
+POST /api/recuperar-contrasena # Solicitar reset password
+POST /api/restablecer-contrasena # Confirmar reset
+```
+
+### **Productos**
+```http
+GET    /api/productos          # Listar productos
+GET    /api/productos/:id      # Obtener producto
+POST   /api/productos          # Crear producto (Admin)
+PUT    /api/productos/:id      # Actualizar producto (Admin)
+DELETE /api/productos/:id      # Eliminar producto (Admin)
+PATCH  /api/productos/:id/disponibilidad # Cambiar estado
+```
+
+### **Gestión de Usuarios**
+```http
+GET  /api/usuarios             # Listar usuarios (Admin)
+GET  /api/perfil               # Obtener perfil propio
+PUT  /api/perfil               # Actualizar perfil
+POST /api/perfil/foto          # Subir avatar
+PUT  /api/usuarios/:correo/rol # Cambiar rol (Admin)
+```
+
+### **E-commerce**
+```http
+GET    /api/usuarios/:correo/carrito    # Obtener carrito
+PUT    /api/usuarios/:correo/carrito    # Actualizar carrito
+POST   /api/pagar                       # Procesar pago
+GET    /api/usuarios/:correo/compras    # Historial compras
+```
+
+### **Administración**
+```http
+# Gestión de contenido
+GET/POST/PUT/DELETE /api/sobre-nosotros
+GET/POST/PUT/DELETE /api/terminos-condiciones
+GET/POST/PUT/DELETE /api/categorias
+GET/POST/PUT/DELETE /api/monedas
+GET/POST/PUT/DELETE /api/ubicaciones
+GET/POST/PUT/DELETE /api/redes-sociales
+
+# Control de acceso
+GET/POST/DELETE /api/ips           # Gestión IPs permitidas
+GET/POST        /api/mensajes      # Sistema de contacto
+```
+
+## 👨‍💻 Manual de Desarrollo
+
+### **Convenciones de Código**
+
+#### **Backend (JavaScript/Node.js)**
+```javascript
+// ✅ Buenas prácticas
+app.post('/api/endpoint', async (req, res) => {
+    try {
+        // Validar parámetros
+        const { campo } = req.body;
+        if (!campo) {
+            return res.status(400).json({ error: 'Campo requerido' });
+        }
+        
+        // Lógica de negocio
+        const resultado = await Modelo.create({ campo });
+        
+        // Respuesta exitosa
+        res.status(201).json(resultado);
+    } catch (error) {
+        console.error('Error en endpoint:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+```
+
+#### **Frontend (JavaScript ES6+)**
+```javascript
+// ✅ Gestión de APIs
+async function llamarAPI(endpoint, datos = null) {
+    try {
+        const opciones = {
+            method: datos ? 'POST' : 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        };
+        
+        if (datos) opciones.body = JSON.stringify(datos);
+        
+        const response = await fetch(endpoint, opciones);
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Error en la petición');
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error en API:', error);
+        mostrarToast('error', 'Error', error.message);
+        throw error;
+    }
+}
+```
+
+#### **CSS (Variables CSS)**
+```css
+/* ✅ Uso de variables del tema */
+.mi-componente {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-primary);
+    box-shadow: 0 2px 4px var(--shadow-light);
+}
+
+.mi-componente:hover {
+    background-color: var(--bg-secondary);
+    box-shadow: 0 4px 8px var(--shadow-medium);
+}
+
+.mi-componente.success {
+    border-color: var(--success);
+    color: var(--success);
+}
+```
+
+### **Debugging y Troubleshooting**
+
+#### **Problemas Comunes**
+
+| Problema | Síntoma | Solución |
+|----------|---------|----------|
+| **Temas no se aplican** | Variables CSS no cambian | Verificar carga de `tema-global.js` |
+| **SweetAlert sin tema** | Notificaciones con colores por defecto | Verificar carga de `sweetalert-tema.js` |
+| **Editor no abre** | Click en "Editar" no responde | Verificar `editor-temas.js` y dependencias |
+| **Tema no persiste** | Se pierde al recargar | Verificar localStorage y `tema-global.js` |
+| **Google OAuth falla** | Error de redirect URI | Verificar configuración en Google Cloud |
+
+## 🚀 Despliegue
+
+### **Variables de Entorno Producción**
+
+```env
+NODE_ENV=production
+MONGODB_URI=mongodb+srv://prod-user:secure-pass@cluster.mongodb.net/prod-db
+GOOGLE_CLIENT_ID=prod_client_id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=prod_client_secret
+GOOGLE_CALLBACK_URL=https://tudominio.com/auth/google/callback
+EMAIL_USER=noreply@tudominio.com
+EMAIL_PASS=secure_app_password
+SESSION_SECRET=clave_super_segura_64_caracteres_minimo
+JWT_SECRET=otra_clave_super_segura_diferente
+PORT=443
+```
+
+> 🔒 **Importante**: En producción, usar variables de entorno del sistema operativo, no archivos `.env`
+
+### **Consideraciones de Producción**
+
+- ✅ **HTTPS obligatorio** (Let's Encrypt gratuito)
+- ✅ **Nginx** como reverse proxy
+- ✅ **PM2** para gestión de procesos
+- ✅ **MongoDB Atlas** para base de datos
+- ✅ **Cloudflare** para CDN y protección DDoS
+
+## 📊 Changelog
+
+### **🆕 Versión 4.0.0 - Sistema de Temas Unificado** (Junio 2025)
+
+#### **✨ Funcionalidades Nuevas**
+- **Sistema de Temas Completamente Local**: Eliminación del campo "activo" de la base de datos
+- **Aplicación Universal**: `tema-global.js` funciona en todas las páginas automáticamente
+- **SweetAlert2 Integrado**: Notificaciones que se adaptan automáticamente al tema activo
+- **Editor Visual Mejorado**: Sliders RGB, input hexadecimal y canal alpha
+- **Persistencia por Usuario**: Cada dispositivo/usuario mantiene su propia preferencia
+
+#### **🔧 Mejoras Técnicas**
+- **Performance**: Eliminación de consultas innecesarias al backend para tema activo
+- **UX Mejorada**: Cambio de tema instantáneo sin lag
+- **Mantenimiento**: Código más limpio y modular
+- **Escalabilidad**: Sistema preparado para múltiples usuarios concurrentes
+
+#### **🐛 Bugs Corregidos**
+- ✅ Error de `mostrarToast is not defined` resuelto
+- ✅ Inconsistencias en la aplicación de temas entre páginas
+- ✅ Problemas de sincronización entre usuario y admin
+- ✅ Carga incorrecta de dependencias de SweetAlert2
+
+### **Versión 3.0.0** - Sistema de Notificaciones Inteligentes (Mayo 2025)
+- Sistema de toast notifications no intrusivas
+- Clasificación inteligente de notificaciones
+- Correos electrónicos tematizados
+
+### **Versión 2.0.0** - Sistema de Temas Dinámicos Original (Abril 2025)
+- Editor visual de temas
+- 16 variables CSS personalizables
+- Base del sistema de temas actual
+
+## 📝 Licencia
+
+Este proyecto está bajo la **Licencia MIT** - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## 🤝 Contribución
+
+### **Cómo Contribuir**
+
+1. **Fork** del repositorio
+2. **Crear rama** para feature: `git checkout -b feature/nueva-funcionalidad`
+3. **Commit** cambios: `git commit -m 'feat: agregar nueva funcionalidad'`
+4. **Push** a la rama: `git push origin feature/nueva-funcionalidad`
+5. **Crear Pull Request** con descripción detallada
+
+### **Estándares de Contribución**
+- ✅ **Código limpio** siguiendo las convenciones del proyecto
+- ✅ **Comentarios** en español para funciones complejas
+- ✅ **Testing** manual de funcionalidades nuevas
+- ✅ **Documentación** actualizada cuando sea necesario
+
+### **Reportar Issues**
+- 🐛 **Bugs**: Descripción detallada, pasos para reproducir, comportamiento esperado
+- 💡 **Features**: Descripción clara del problema que resuelve y beneficios
+- 📚 **Documentación**: Correcciones o mejoras en la documentación
+
+## 📞 Contacto
+
+- **Desarrollador**: Anderson
+- **Proyecto**: CatalogoTienda
+- **Estado**: ✅ Producción Estable
+
+---
+
+**⚡ Sistema de Temas Revolucionario - Versión 4.0.0 ⚡**
+
+*Una experiencia de usuario completamente personalizable con el sistema de temas más avanzado del mercado.*
+
+🛍️ **¡Gracias por usar CatalogoTienda!** 🛍️
 
 ## 📋 Tabla de Contenidos
 
@@ -1054,7 +1658,39 @@ PORT=443
 
 ---
 
-## 📝 Licencia
+## � Manual de Usuario
+
+Para usuarios finales que necesitan aprender a usar el sistema, consulta el **[Manual de Usuario](MANUAL_USUARIO.md)** que incluye:
+
+### 🚀 **Guías Paso a Paso**
+- **Registro e inicio de sesión** (incluyendo Google OAuth)
+- **Navegación del catálogo** y búsqueda de productos
+- **Gestión del carrito** de compras
+- **Personalización del perfil** de usuario
+
+### 🎨 **Sistema de Temas para Usuarios**
+- **Cómo cambiar temas** de forma fácil e intuitiva
+- **Temas disponibles**: Claro, Oscuro, Fuego, Océano, Primavera
+- **Personalización automática** que se guarda en cada dispositivo
+- **Aplicación instantánea** sin necesidad de recargar páginas
+
+### 🛍️ **Experiencia de Compra**
+- **Exploración de productos** con filtros avanzados
+- **Proceso de compra** desde carrito hasta confirmación
+- **Gestión de monedas** y conversiones automáticas
+- **Historial de compras** y seguimiento de pedidos
+
+### ❓ **Solución de Problemas**
+- **Problemas comunes** y sus soluciones
+- **Requisitos del sistema** y navegadores recomendados
+- **Información de contacto** para soporte técnico
+- **Tips y trucos** para aprovechar al máximo la plataforma
+
+> 📌 **Nota**: El manual de usuario está diseñado para personas sin conocimientos técnicos y utiliza un lenguaje claro y directo con muchas capturas de pantalla e instrucciones visuales.
+
+---
+
+## �📝 Licencia
 
 Este proyecto está bajo la Licencia MIT - ver el archivo LICENSE para más detalles.
 
