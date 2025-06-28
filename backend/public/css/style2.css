@@ -1372,51 +1372,218 @@ footer {
     font-weight: bold;
 }
 
-/* ===== ESTILOS ESPECÍFICOS PARA TOAST NOTIFICATIONS ===== */
-.swal2-toast.swal2-tema-dinamico {
-    background-color: var(--bg-tertiary) !important;
-    border: 1px solid var(--border-primary) !important;
-    box-shadow: 0 4px 12px var(--shadow-medium) !important;
-    border-radius: 10px !important;
-    max-width: 350px !important;
-    min-height: auto !important;
+:root {
+  /* Variables SweetAlert2 usando el sistema de temas dinámicos */
+  --swal2-backdrop-background: var(--modal-bg);
+  --swal2-popup-background: var(--bg-tertiary);
+  --swal2-popup-border: 1px solid var(--border-primary);
+  --swal2-popup-border-radius: 10px;
+  --swal2-popup-box-shadow: 0 10px 30px var(--shadow-medium);
+  
+  --swal2-title-color: var(--text-primary);
+  --swal2-title-font-size: 1.5rem;
+  --swal2-title-font-weight: 600;
+  
+  --swal2-html-color: var(--text-secondary);
+  --swal2-html-font-size: 1rem;
+  
+  --swal2-confirm-button-background: var(--bg-secondary);
+  --swal2-confirm-button-color: var(--bg-tertiary);
+  --swal2-confirm-button-border: 1px solid var(--border-primary);
+  --swal2-confirm-button-border-radius: 8px;
+  --swal2-confirm-button-font-weight: 600;
+  
+  --swal2-cancel-button-background: var(--error);
+  --swal2-cancel-button-color: white;
+  --swal2-cancel-button-border: 1px solid var(--error);
+  --swal2-cancel-button-border-radius: 8px;
+  
+  --swal2-deny-button-background: var(--warning);
+  --swal2-deny-button-color: var(--text-primary);
+  --swal2-deny-button-border: 1px solid var(--warning);
+  --swal2-deny-button-border-radius: 8px;
+  
+  --swal2-input-background: var(--bg-primary);
+  --swal2-input-color: var(--text-primary);
+  --swal2-input-border: 1px solid var(--border-primary);
+  --swal2-input-border-radius: 6px;
+  
+  /* Variables RGB para efectos de transparencia */
+  --success-rgb: 40, 167, 69;
+  --error-rgb: 220, 53, 69;
+  --warning-rgb: 255, 193, 7;
+  --info-rgb: 23, 162, 184;
 }
 
-.swal2-toast .swal2-title-tema {
-    color: var(--text-primary) !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    margin: 0 !important;
-    padding: 0 !important;
+/* Estilos personalizados para botones */
+.swal2-styled.swal2-confirm,
+.swal2-styled.swal2-cancel,
+.swal2-styled.swal2-deny {
+  font-size: 14px !important;
+  padding: 10px 20px !important;
+  margin: 0 5px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 4px var(--shadow-light) !important;
 }
 
-.swal2-toast .swal2-html-tema {
-    color: var(--text-secondary) !important;
-    font-size: 13px !important;
-    margin: 4px 0 0 0 !important;
-    padding: 0 !important;
+/* Botón confirmar */
+.swal2-styled.swal2-confirm {
+  background-color: var(--bg-secondary) !important;
+  color: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-primary) !important;
 }
 
-.swal2-toast .swal2-timer-progress-bar {
-    background-color: var(--text-accent) !important;
-    height: 3px !important;
+.swal2-styled.swal2-confirm:hover, 
+.swal2-styled.swal2-confirm:focus {
+  background-color: var(--text-accent) !important;
+  color: var(--bg-tertiary) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px var(--shadow-medium) !important;
 }
 
-/* ===== TOAST SIN ICONO PREDETERMINADO ===== */
-.swal2-toast.swal2-no-icon {
-    padding-left: 1rem !important;
+/* Botón cancelar */
+.swal2-styled.swal2-cancel {
+  background-color: var(--error) !important;
+  color: white !important;
+  border: 1px solid var(--error) !important;
 }
 
-.swal2-toast.swal2-no-icon .swal2-content {
-    margin-left: 0 !important;
+.swal2-styled.swal2-cancel:hover, 
+.swal2-styled.swal2-cancel:focus {
+  background-color: #c82333 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px var(--shadow-medium) !important;
 }
 
-.swal2-toast.swal2-no-icon .swal2-title {
-    margin-left: 0 !important;
-    text-align: left !important;
+/* Botón deny/denegar */
+.swal2-styled.swal2-deny {
+  background-color: var(--warning) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--warning) !important;
 }
 
-.swal2-toast.swal2-no-icon .swal2-html-container {
-    margin-left: 0 !important;
-    text-align: left !important;
+.swal2-styled.swal2-deny:hover, 
+.swal2-styled.swal2-deny:focus {
+  background-color: #e0a800 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px var(--shadow-medium) !important;
+}
+/* Estilos especiales para diferentes tipos de toast */
+.swal2-toast {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px var(--shadow-medium) !important;
+}
+
+.swal2-toast .swal2-title {
+  color: var(--text-primary) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+.swal2-toast .swal2-html-container {
+  color: var(--text-secondary) !important;
+  font-size: 13px !important;
+}
+
+
+
+/* Icono de éxito - Solo colores, mantener iconos originales */
+.swal2-icon.swal2-success {
+    border-color: var(--success) !important;
+    color: var(--success) !important;
+}
+
+.swal2-icon.swal2-success [class^="swal2-success-line"] {
+    background-color: var(--success) !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-ring {
+    border-color: rgba(var(--success-rgb, 40, 167, 69), 0.3) !important;
+}
+
+/* Icono de error - Solo colores, mantener iconos originales */
+.swal2-icon.swal2-error {
+    border-color: var(--error) !important;
+    color: var(--error) !important;
+}
+
+.swal2-icon.swal2-error [class^="swal2-x-mark-line"] {
+    background-color: var(--error) !important;
+}
+
+/* Icono de advertencia - Solo colores, mantener iconos originales */
+.swal2-icon.swal2-warning {
+    border-color: var(--warning) !important;
+    color: var(--warning) !important;
+}
+
+/* Icono de información - Solo colores, mantener iconos originales */
+.swal2-icon.swal2-info {
+    border-color: var(--info) !important;
+    color: var(--info) !important;
+}
+
+/* Icono de pregunta - Solo colores, mantener iconos originales */
+.swal2-icon.swal2-question {
+    border-color: var(--info) !important;
+    color: var(--info) !important;
+}
+
+/* Inputs y formularios dentro de SweetAlert2 */
+.swal2-input,
+.swal2-textarea,
+.swal2-select {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-primary) !important;
+  border-radius: 6px !important;
+}
+
+.swal2-input:focus,
+.swal2-textarea:focus,
+.swal2-select:focus {
+  border-color: var(--text-accent) !important;
+  box-shadow: 0 0 0 2px rgba(var(--text-accent), 0.2) !important;
+}
+
+/* Progreso en SweetAlert2 */
+.swal2-progress-steps .swal2-progress-step {
+  background-color: var(--bg-secondary) !important;
+  color: var(--bg-tertiary) !important;
+}
+
+.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step {
+  background-color: var(--text-accent) !important;
+}
+
+/* Estilos principales del popup SweetAlert2 */
+.swal2-popup {
+  background-color: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-primary) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 30px var(--shadow-medium) !important;
+}
+
+.swal2-title {
+  color: var(--text-primary) !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+.swal2-html-container {
+  color: var(--text-secondary) !important;
+  font-size: 1rem !important;
+}
+
+.swal2-close {
+  color: var(--text-secondary) !important;
+}
+
+.swal2-close:hover {
+  color: var(--text-primary) !important;
+}
+
+/* Footer del popup */
+.swal2-actions {
+  margin: 1.25em auto 0 !important;
 }

@@ -560,7 +560,6 @@ class EditorTemas {
             if (resultado.tema && resultado.tema.colores) {
                 localStorage.setItem('coloresTema', JSON.stringify(resultado.tema.colores));
                 localStorage.setItem('nombreTemaSeleccionado', resultado.tema.nombre);
-                localStorage.setItem('tema', resultado.tema.nombre.toLowerCase());
                 
                 // Aplicar inmediatamente el tema al DOM
                 this.aplicarColoresAlCSS(resultado.tema.colores);

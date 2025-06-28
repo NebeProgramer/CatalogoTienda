@@ -1,7 +1,7 @@
 // ===== GESTIÓN DE TEMAS DINÁMICOS =====
 class TemasManager {
     constructor() {
-        this.temaActual = localStorage.getItem('tema') || 'light';
+        this.temaActual = localStorage.getItem('nombreTemaSeleccionado') || 'light';
         this.init();
     }
 
@@ -24,7 +24,7 @@ class TemasManager {
     aplicarTema(tema) {
         document.documentElement.setAttribute('data-theme', tema);
         this.temaActual = tema;
-        localStorage.setItem('tema', tema);
+        localStorage.setItem('nombreTemaSeleccionado', tema);
         
         // Actualizar indicador si ya existe
         this.actualizarIndicadorTema();

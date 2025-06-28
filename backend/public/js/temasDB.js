@@ -43,7 +43,7 @@ class TemaDinamicoManager {
         }
         this.aplicarTemaAlDOM(this.temaActivo);
         // Actualizar localStorage para mantener consistencia
-        localStorage.setItem('tema', this.temaActivo.nombre.toLowerCase());
+        localStorage.setItem('nombreTemaSeleccionado', this.temaActivo.nombre);
     }
     aplicarTemaAlDOM(tema) {
         if (!tema || !tema.colores) {
@@ -63,7 +63,7 @@ class TemaDinamicoManager {
         // También aplicar atributo data-theme para compatibilidad
         document.documentElement.setAttribute('data-theme', tema.nombre.toLowerCase());
         // Actualizar localStorage para persistencia
-        localStorage.setItem('tema', tema.nombre.toLowerCase());
+        localStorage.setItem('nombreTemaSeleccionado', tema.nombre);
     }
     generarCSSVariables(colores) {
         const variables = [];
@@ -99,8 +99,8 @@ class TemaDinamicoManager {
             new window.TemasManager();
         } else {
             // Aplicar tema por defecto
-            const temaDefecto = localStorage.getItem('tema') || 'light';
-            document.documentElement.setAttribute('data-theme', temaDefecto);
+            const temaDefecto = localStorage.getItem('nombreTemaSeleccionado') || 'light';
+            document.documentElement.setAttribute('data-theme', temaDefecto.toLowerCase());
         }
     }
     configurarEventListeners() {
