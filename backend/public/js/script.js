@@ -122,7 +122,7 @@ const reqEspecial = document.getElementById('req-especial');
                     });
                     
                     // Establecer el tema actual seleccionado
-                    const temaActualId = localStorage.getItem('temaSeleccionado');
+                    const temaActualId = localStorage.getItem('temaSeleccionadoId');
                     if (temaActualId) {
                         selectorTemas.value = temaActualId;
                     } else if (temas.length > 0) {
@@ -130,17 +130,21 @@ const reqEspecial = document.getElementById('req-especial');
                         selectorTemas.value = temas[0]._id;
                     }
                     
-                    // Agregar event listener para cambios en tiempo real
-                    selectorTemas.addEventListener('change', async (e) => {
-                        const temaSeleccionado = e.target.value;
-                        if (temaSeleccionado && typeof window.aplicarTemaById === 'function') {
-                            try {
-                                await window.aplicarTemaById(temaSeleccionado);
-                            } catch (error) {
-                                // Error silencioso, el usuario será notificado por la función aplicarTemaById
+                    // Agregar event listener para cambios en tiempo real (solo una vez)
+                    if (!selectorTemas.dataset.listenerAdded) {
+                        selectorTemas.addEventListener('change', async (e) => {
+                            const temaSeleccionado = e.target.value;
+                            if (temaSeleccionado && typeof window.aplicarTemaById === 'function') {
+                                try {
+                                    await window.aplicarTemaById(temaSeleccionado);
+                                    
+                                } catch (error) {
+                                    // Error silencioso, el usuario será notificado por la función aplicarTemaById
+                                }
                             }
-                        }
-                    });
+                        });
+                        selectorTemas.dataset.listenerAdded = 'true';
+                    }
                     
                 } else {
                     cargarTemasFallback(selectorTemas);
@@ -1310,7 +1314,7 @@ function openCRUD() {
             }
             
             // Si no hay tema en localStorage, intentar aplicar desde la base de datos
-            const temaGuardadoId = localStorage.getItem('temaSeleccionado');
+            const temaGuardadoId = localStorage.getItem('temaSeleccionadoId');
             if (temaGuardadoId && typeof window.aplicarTemaById === 'function') {
                 await window.aplicarTemaById(temaGuardadoId);
             }

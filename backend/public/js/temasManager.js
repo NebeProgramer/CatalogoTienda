@@ -141,7 +141,7 @@ class TemasManager {
         const temaSelect = document.getElementById('temaPreferido');
         if (temaSelect) {
             // Primero intentar con el ID del tema guardado directamente
-            const temaGuardadoId = localStorage.getItem('temaSeleccionado');
+            const temaGuardadoId = localStorage.getItem('temaSeleccionadoId');
             if (temaGuardadoId && temaSelect.querySelector(`option[value="${temaGuardadoId}"]`)) {
                 temaSelect.value = temaGuardadoId;
                 return;

@@ -8,6 +8,29 @@
     'use strict';
     
     /**
+     * Limpia claves obsoletas de localStorage
+     */
+    function limpiarClavesObsoletas() {
+        try {
+            // Remover la clave antigua 'tema' que podía causar conflictos
+            if (localStorage.getItem('tema')) {
+                localStorage.removeItem('tema');
+            }
+            
+            // Remover la clave antigua 'temaSeleccionado' y migrar a 'temaSeleccionadoId'
+            if (localStorage.getItem('temaSeleccionado') && !localStorage.getItem('temaSeleccionadoId')) {
+                const temaIdAntiguo = localStorage.getItem('temaSeleccionado');
+                localStorage.setItem('temaSeleccionadoId', temaIdAntiguo);
+                localStorage.removeItem('temaSeleccionado');
+            } else if (localStorage.getItem('temaSeleccionado')) {
+                localStorage.removeItem('temaSeleccionado');
+            }
+        } catch (error) {
+            console.warn('[TemaGlobal] Error al limpiar claves obsoletas:', error);
+        }
+    }
+    
+    /**
      * Aplica los colores guardados en localStorage inmediatamente
      */
     function aplicarTemaInmediato() {
@@ -66,6 +89,12 @@
         return;
     }
     
+    // Limpiar claves obsoletas al iniciar
+    limpiarClavesObsoletas();
+    
+    // Limpiar claves obsoletas antes de aplicar el tema
+    limpiarClavesObsoletas();
+    
     // Aplicar tema inmediatamente
     aplicarTemaInmediato();
     
@@ -78,7 +107,7 @@
     
     // Escuchar cambios en localStorage para aplicar automáticamente
     window.addEventListener('storage', function(e) {
-        if (e.key === 'coloresTema' || e.key === 'nombreTemaSeleccionado') {
+        if (e.key === 'coloresTema' || e.key === 'nombreTemaSeleccionado' || e.key === 'temaSeleccionadoId') {
             aplicarTemaInmediato();
         }
     });

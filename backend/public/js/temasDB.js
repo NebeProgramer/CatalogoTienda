@@ -26,9 +26,28 @@ class TemaDinamicoManager {
                 throw new Error('Error al cargar temas desde la base de datos');
             }
             this.temasDisponibles = await response.json();
-            this.temaActivo = this.temasDisponibles.find(tema => tema.activo);
+            
+            // Intentar usar el tema que tiene el usuario seleccionado
+            const temaUsuarioId = localStorage.getItem('temaSeleccionadoId');
+            const nombreTemaUsuario = localStorage.getItem('nombreTemaSeleccionado');
+            
+            if (temaUsuarioId) {
+                // Buscar por ID
+                this.temaActivo = this.temasDisponibles.find(tema => tema._id === temaUsuarioId);
+            } else if (nombreTemaUsuario) {
+                // Fallback: buscar por nombre
+                this.temaActivo = this.temasDisponibles.find(tema => 
+                    tema.nombre.toLowerCase() === nombreTemaUsuario.toLowerCase()
+                );
+            }
+            
+            // Si no se encontró el tema del usuario, usar el activo de la BD
+            if (!this.temaActivo) {
+                this.temaActivo = this.temasDisponibles.find(tema => tema.activo);
+            }
+            
+            // Si aún no hay tema activo, usar el primero
             if (!this.temaActivo && this.temasDisponibles.length > 0) {
-                // Si no hay tema activo, usar el primero
                 this.temaActivo = this.temasDisponibles[0];
             }
         } catch (error) {
@@ -42,8 +61,12 @@ class TemaDinamicoManager {
             return;
         }
         this.aplicarTemaAlDOM(this.temaActivo);
-        // Actualizar localStorage para mantener consistencia
-        localStorage.setItem('nombreTemaSeleccionado', this.temaActivo.nombre.toLowerCase());
+        
+        // Solo actualizar localStorage si no hay un tema ya seleccionado por el usuario
+        const temaUsuarioActual = localStorage.getItem('nombreTemaSeleccionado');
+        if (!temaUsuarioActual) {
+            localStorage.setItem('nombreTemaSeleccionado', this.temaActivo.nombre.toLowerCase());
+        }
     }
     aplicarTemaAlDOM(tema) {
         if (!tema || !tema.colores) {

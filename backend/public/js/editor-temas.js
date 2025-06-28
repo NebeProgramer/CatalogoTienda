@@ -560,6 +560,8 @@ class EditorTemas {
             if (resultado.tema && resultado.tema.colores) {
                 localStorage.setItem('coloresTema', JSON.stringify(resultado.tema.colores));
                 localStorage.setItem('nombreTemaSeleccionado', resultado.tema.nombre);
+                localStorage.setItem('temaSeleccionadoId', resultado.tema._id);
+                localStorage.setItem('iconicoTema', resultado.tema.icono || '🎨');
                 
                 // Aplicar inmediatamente el tema al DOM
                 this.aplicarColoresAlCSS(resultado.tema.colores);
@@ -981,11 +983,25 @@ window.cargarListaTemas = async function() {
  */
 window.aplicarTemaById = async function(temaId) {
     try {
+        // Primero obtener los datos del tema
         const response = await fetch(`/api/temas/${temaId}`);
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
         const tema = await response.json();
+        
+        // Actualizar la base de datos para marcar este tema como activo
+        try {
+            const activarResponse = await fetch(`/api/temas/${temaId}/aplicar`, {
+                method: 'POST'
+            });
+            if (!activarResponse.ok) {
+                console.warn('⚠️ No se pudo actualizar el estado activo en la BD, pero se aplicará localmente');
+            }
+        } catch (dbError) {
+            console.warn('⚠️ Error al actualizar BD:', dbError.message);
+        }
+        
         // Aplicar colores al CSS
         const root = document.documentElement;
         // Mapeo de nombres de la base de datos a variables CSS
@@ -1013,17 +1029,34 @@ window.aplicarTemaById = async function(temaId) {
             root.style.setProperty(propiedadCSS, valor);
         });
         // Guardar en localStorage para persistencia
-        localStorage.setItem('temaSeleccionado', temaId);
+        localStorage.setItem('temaSeleccionadoId', temaId);
         localStorage.setItem('nombreTemaSeleccionado', tema.nombre);
         localStorage.setItem('coloresTema', JSON.stringify(tema.colores));
         localStorage.setItem('iconicoTema', tema.icono || '🎨');
         // Sincronizar con el sistema de temas dinámicos si existe
         if (window.temaDinamicoManager && window.temaDinamicoManager.iniciado) {
             window.temaDinamicoManager.temaActual = tema;
+            window.temaDinamicoManager.temaActivo = tema;
+            // Recargar los temas para sincronizar con la BD actualizada
+            try {
+                await window.temaDinamicoManager.cargarTemas();
+            } catch (error) {
+                console.warn('⚠️ Error al recargar temas en temaDinamicoManager:', error);
+            }
         }
+        
+        // Notificar al editor de temas si está disponible para actualizar la UI
+        if (window.editorTemas) {
+            try {
+                setTimeout(() => window.editorTemas.cargarTemas(), 100);
+            } catch (error) {
+                console.warn('⚠️ Error al recargar temas en editorTemas:', error);
+            }
+        }
+        
         // Emitir evento para notificar el cambio
         document.dispatchEvent(new CustomEvent('temaAplicado', {
-            detail: { tema: tema }
+            detail: { tema: tema, temaId: temaId }
         }));
         // Notificar al usuario solo si SweetAlert está disponible
         if (typeof Swal !== 'undefined') {
@@ -1060,7 +1093,7 @@ window.aplicarTemaById = async function(temaId) {
  * @returns {Object|null} Información del tema actual
  */
 window.obtenerTemaActual = function() {
-    const temaId = localStorage.getItem('temaSeleccionado');
+    const temaId = localStorage.getItem('temaSeleccionadoId');
     const nombreTema = localStorage.getItem('nombreTemaSeleccionado');
     const iconoTema = localStorage.getItem('iconicoTema');
     const coloresTema = localStorage.getItem('coloresTema');
@@ -1105,6 +1138,7 @@ window.resetearTemaDefecto = async function() {
         });
         // Limpiar localStorage
         localStorage.removeItem('temaSeleccionado');
+        localStorage.removeItem('temaSeleccionadoId');
         localStorage.removeItem('nombreTemaSeleccionado');
         return true;
     } catch (error) {
