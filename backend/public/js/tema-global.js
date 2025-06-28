@@ -89,11 +89,52 @@
         return;
     }
     
+    /**
+     * Inicializa tema por defecto si localStorage está vacío
+     */
+    async function inicializarTemaDefecto() {
+        try {
+            const temaGuardado = localStorage.getItem('nombreTemaSeleccionado');
+            const temaIdGuardado = localStorage.getItem('temaSeleccionadoId');
+            
+            // Si no hay tema guardado, cargar el tema "Claro" por defecto
+            if (!temaGuardado && !temaIdGuardado) {
+                try {
+                    const response = await fetch('/api/temas');
+                    if (response.ok) {
+                        const temas = await response.json();
+                        const temaClaro = temas.find(tema => 
+                            tema.nombre.toLowerCase() === 'claro' || 
+                            tema.nombre.toLowerCase() === 'light'
+                        );
+                        
+                        if (temaClaro) {
+                            localStorage.setItem('temaSeleccionadoId', temaClaro._id);
+                            localStorage.setItem('nombreTemaSeleccionado', temaClaro.nombre);
+                            localStorage.setItem('coloresTema', JSON.stringify(temaClaro.colores));
+                            localStorage.setItem('iconicoTema', temaClaro.icono || '🌞');
+                            
+                            // Aplicar el tema inmediatamente
+                            aplicarTemaInmediato();
+                        }
+                    }
+                } catch (error) {
+                    console.warn('[TemaGlobal] No se pudo cargar tema por defecto:', error);
+                }
+            }
+        } catch (error) {
+            console.warn('[TemaGlobal] Error al inicializar tema por defecto:', error);
+        }
+    }
+    
     // Limpiar claves obsoletas al iniciar
     limpiarClavesObsoletas();
     
     // Limpiar claves obsoletas antes de aplicar el tema
     limpiarClavesObsoletas();
+    
+    // Inicializar tema por defecto si es necesario
+    inicializarTemaDefecto();
     
     // Aplicar tema inmediatamente
     aplicarTemaInmediato();
@@ -114,7 +155,13 @@
     
     // Aplicar tema cuando el DOM esté listo (por si localStorage cambia)
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', aplicarTemaInmediato);
+        document.addEventListener('DOMContentLoaded', async () => {
+            await inicializarTemaDefecto();
+            aplicarTemaInmediato();
+        });
+    } else {
+        // Si el DOM ya está listo, ejecutar inmediatamente
+        inicializarTemaDefecto().then(() => aplicarTemaInmediato());
     }
     
 })();

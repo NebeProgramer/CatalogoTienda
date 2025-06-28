@@ -1826,8 +1826,7 @@ app.post('/api/temas', async (req, res) => {
 
         const nuevoTema = new Tema({
             nombre,
-            colores: colores || {},
-            activo: false
+            colores: colores || {}
         });
 
         await nuevoTema.save();
@@ -1891,52 +1890,11 @@ app.delete('/api/temas/:id', async (req, res) => {
             return res.status(404).json({ error: 'Tema no encontrado' });
         }
 
-        // No permitir eliminar el tema activo
-        if (tema.activo) {
-            return res.status(400).json({ error: 'No se puede eliminar el tema activo' });
-        }
-
         await Tema.findByIdAndDelete(req.params.id);
         res.json({ message: 'Tema eliminado exitosamente' });
     } catch (error) {
         console.error('Error al eliminar tema:', error);
         res.status(500).json({ error: 'Error al eliminar el tema' });
-    }
-});
-
-// Aplicar un tema (marcar como activo)
-app.post('/api/temas/:id/aplicar', async (req, res) => {
-    try {
-        const tema = await Tema.findById(req.params.id);
-        if (!tema) {
-            return res.status(404).json({ error: 'Tema no encontrado' });
-        }
-
-        // Desactivar todos los temas
-        await Tema.updateMany({}, { activo: false });
-        
-        // Activar el tema seleccionado
-        tema.activo = true;
-        await tema.save();
-
-        res.json({ message: 'Tema aplicado exitosamente', tema });
-    } catch (error) {
-        console.error('Error al aplicar tema:', error);
-        res.status(500).json({ error: 'Error al aplicar el tema' });
-    }
-});
-
-// Obtener el tema activo
-app.get('/api/temas/activo/actual', async (req, res) => {
-    try {
-        const temaActivo = await Tema.findOne({ activo: true });
-        if (!temaActivo) {
-            return res.status(404).json({ error: 'No hay tema activo configurado' });
-        }
-        res.json(temaActivo);
-    } catch (error) {
-        console.error('Error al obtener tema activo:', error);
-        res.status(500).json({ error: 'Error al obtener el tema activo' });
     }
 });
 

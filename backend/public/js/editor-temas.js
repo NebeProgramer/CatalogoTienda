@@ -174,7 +174,12 @@ class EditorTemas {
     }
     crearTemaCard(tema) {
         const card = document.createElement('div');
-        card.className = `tema-card ${tema.activo ? 'activo' : ''}`;
+        
+        // Comparar con localStorage para determinar si está activo
+        const temaActivoId = localStorage.getItem('temaSeleccionadoId');
+        const esActivo = temaActivoId === tema._id;
+        
+        card.className = `tema-card ${esActivo ? 'activo' : ''}`;
         card.dataset.temaId = tema._id;
         // Crear preview de colores
         const coloresPreview = Object.values(tema.colores)
@@ -189,11 +194,11 @@ class EditorTemas {
                     ✏️ Editar
                 </button>
                 <button class="btn-tema btn-aplicar" data-accion="aplicar" data-tema-id="${tema._id}"
-                        ${tema.activo ? 'disabled' : ''}>
-                    ${tema.activo ? '✓ Activo' : '🎨 Aplicar'}
+                        ${esActivo ? 'disabled' : ''}>
+                    ${esActivo ? '✓ Activo' : '🎨 Aplicar'}
                 </button>
                 <button class="btn-tema btn-eliminar" data-accion="eliminar" data-tema-id="${tema._id}"
-                        ${tema.activo ? 'disabled' : ''}>
+                        ${esActivo ? 'disabled' : ''}>
                     🗑️
                 </button>
             </div>
@@ -296,7 +301,21 @@ class EditorTemas {
                 throw new Error(errorData.error || errorData.message || 'Error al crear el tema');
             }
             const nuevoTema = await response.json();
-            mostrarToast('success', 'Tema creado', `El tema "${nombre}" se ha creado exitosamente`);
+            
+            // Usar mostrarToast si está disponible, sino usar SweetAlert directamente
+            if (typeof window.mostrarToast === 'function') {
+                mostrarToast('success', 'Tema creado', `El tema "${nombre}" se ha creado exitosamente`);
+            } else {
+                const swalAlert = window.SwalAlert || Swal;
+                swalAlert.fire({
+                    icon: 'success',
+                    title: 'Tema creado',
+                    text: `El tema "${nombre}" se ha creado exitosamente`,
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            }
+            
             this.ocultarFormularioNuevoTema();
             this.cargarTemas();
             // Abrir editor para el nuevo tema
@@ -547,30 +566,28 @@ class EditorTemas {
     }
     async aplicarTema(temaId) {
         try {
-            const response = await fetch(`/api/temas/${temaId}/aplicar`, {
-                method: 'POST'
-            });
+            // Solo obtener el tema, no usar API obsoleta
+            const response = await fetch(`/api/temas/${temaId}`);
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error || 'Error al aplicar el tema');
+                throw new Error('Error al obtener el tema');
             }
-            const resultado = await response.json();
+            const tema = await response.json();
             
-            // Actualizar localStorage con los colores del tema aplicado
-            if (resultado.tema && resultado.tema.colores) {
-                localStorage.setItem('coloresTema', JSON.stringify(resultado.tema.colores));
-                localStorage.setItem('nombreTemaSeleccionado', resultado.tema.nombre);
-                localStorage.setItem('temaSeleccionadoId', resultado.tema._id);
-                localStorage.setItem('iconicoTema', resultado.tema.icono || '🎨');
+            // Actualizar localStorage con el tema seleccionado
+            if (tema && tema.colores) {
+                localStorage.setItem('coloresTema', JSON.stringify(tema.colores));
+                localStorage.setItem('nombreTemaSeleccionado', tema.nombre);
+                localStorage.setItem('temaSeleccionadoId', tema._id);
+                localStorage.setItem('iconicoTema', tema.icono || '🎨');
                 
                 // Aplicar inmediatamente el tema al DOM
-                this.aplicarColoresAlCSS(resultado.tema.colores);
+                this.aplicarColoresAlCSS(tema.colores);
             }
             
             Swal.fire({
                 icon: 'success',
                 title: 'Tema aplicado',
-                text: `El tema "${resultado.tema.nombre}" se ha aplicado exitosamente`,
+                text: `El tema "${tema.nombre}" se ha aplicado exitosamente`,
                 toast: true,
                 position: 'top-end',
                 timer: 2000
@@ -586,7 +603,7 @@ class EditorTemas {
             document.dispatchEvent(new CustomEvent('temaAplicado', {
                 detail: { 
                     temaId: temaId,
-                    tema: resultado.tema
+                    tema: tema
                 }
             }));
             
@@ -983,25 +1000,11 @@ window.cargarListaTemas = async function() {
  */
 window.aplicarTemaById = async function(temaId) {
     try {
-        // Primero obtener los datos del tema
         const response = await fetch(`/api/temas/${temaId}`);
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
         const tema = await response.json();
-        
-        // Actualizar la base de datos para marcar este tema como activo
-        try {
-            const activarResponse = await fetch(`/api/temas/${temaId}/aplicar`, {
-                method: 'POST'
-            });
-            if (!activarResponse.ok) {
-                console.warn('⚠️ No se pudo actualizar el estado activo en la BD, pero se aplicará localmente');
-            }
-        } catch (dbError) {
-            console.warn('⚠️ Error al actualizar BD:', dbError.message);
-        }
-        
         // Aplicar colores al CSS
         const root = document.documentElement;
         // Mapeo de nombres de la base de datos a variables CSS
@@ -1037,26 +1040,10 @@ window.aplicarTemaById = async function(temaId) {
         if (window.temaDinamicoManager && window.temaDinamicoManager.iniciado) {
             window.temaDinamicoManager.temaActual = tema;
             window.temaDinamicoManager.temaActivo = tema;
-            // Recargar los temas para sincronizar con la BD actualizada
-            try {
-                await window.temaDinamicoManager.cargarTemas();
-            } catch (error) {
-                console.warn('⚠️ Error al recargar temas en temaDinamicoManager:', error);
-            }
         }
-        
-        // Notificar al editor de temas si está disponible para actualizar la UI
-        if (window.editorTemas) {
-            try {
-                setTimeout(() => window.editorTemas.cargarTemas(), 100);
-            } catch (error) {
-                console.warn('⚠️ Error al recargar temas en editorTemas:', error);
-            }
-        }
-        
         // Emitir evento para notificar el cambio
         document.dispatchEvent(new CustomEvent('temaAplicado', {
-            detail: { tema: tema, temaId: temaId }
+            detail: { tema: tema }
         }));
         // Notificar al usuario solo si SweetAlert está disponible
         if (typeof Swal !== 'undefined') {
