@@ -8,17 +8,6 @@
     'use strict';
     
     /**
-     * Limpiar claves obsoletas del localStorage
-     */
-    function limpiarLocalStorageObsoleto() {
-        // Eliminar la clave 'tema' obsoleta
-        if (localStorage.getItem('tema')) {
-            console.log('🧹 Limpiando clave obsoleta "tema" del localStorage');
-            localStorage.removeItem('tema');
-        }
-    }
-    
-    /**
      * Aplica los colores guardados en localStorage inmediatamente
      */
     function aplicarTemaInmediato() {
@@ -76,12 +65,6 @@
         // Función deshabilitada - los cambios se manejan desde preferencias
         return;
     }
-    
-    // Limpiar claves obsoletas al iniciar
-    limpiarLocalStorageObsoleto();
-    
-    // Limpiar localStorage obsoleto antes de aplicar tema
-    limpiarLocalStorageObsoleto();
     
     // Aplicar tema inmediatamente
     aplicarTemaInmediato();
