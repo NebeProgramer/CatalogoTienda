@@ -1,6 +1,5 @@
-const { default: Swal } = require("sweetalert2");
-
 // Funciones de sesión reutilizables
+// SweetAlert2 is already globally available from HTML script tag
 function showModal(container, modal, formSesionContainer, olvidoContainer, formPreferenciasContainer, formPagoContainer) {
     modal.style.display = 'block';
     formSesionContainer.style.display = 'none';

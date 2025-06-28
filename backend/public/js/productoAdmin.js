@@ -226,7 +226,9 @@ if (idParam === 'crear') {
                 title: 'Campos incompletos',
                 text: 'Por favor, completa todos los campos obligatorios.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }
@@ -328,7 +330,9 @@ if (idParam === 'crear') {
                 title: 'Campos incompletos',
                 text: 'Por favor, completa todos los campos obligatorios.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }
@@ -380,7 +384,9 @@ if (idParam === 'crear') {
                 title: 'Error',
                 text: 'Hubo un error al actualizar el producto.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         } finally {
             ocultarLoader();
@@ -431,7 +437,9 @@ const manejarSubidaDeImagenes = () => {
                 title: 'Sin imágenes',
                 text: 'Por favor, selecciona al menos una imagen.',
                 toast: true,
-                position: 'top-end'
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
             return;
         }
@@ -493,7 +501,9 @@ function eliminarImagenActiva() {
             title: 'Sin imagen activa',
             text: 'No hay una imagen activa para eliminar.',
             toast: true,
-            position: 'top-end'
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
         });
     }
 }

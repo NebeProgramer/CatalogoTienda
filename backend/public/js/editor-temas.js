@@ -70,18 +70,29 @@ class EditorTemas {
     }
     setupEventListeners() {
         // Crear nuevo tema
-        document.getElementById('nuevoTemaCard').addEventListener('click', () => {
-            this.mostrarFormularioNuevoTema();
-        });
-        document.getElementById('formNuevoTema').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.crearNuevoTema();
-        });
-        document.getElementById('cancelarNuevoTema').addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.ocultarFormularioNuevoTema();
-        });
+        const nuevoTemaCard = document.getElementById('nuevoTemaCard');
+        if (nuevoTemaCard) {
+            nuevoTemaCard.addEventListener('click', () => {
+                this.mostrarFormularioNuevoTema();
+            });
+        }
+        
+        const formNuevoTema = document.getElementById('formNuevoTema');
+        if (formNuevoTema) {
+            formNuevoTema.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.crearNuevoTema();
+            });
+        }
+        
+        const cancelarNuevoTema = document.getElementById('cancelarNuevoTema');
+        if (cancelarNuevoTema) {
+            cancelarNuevoTema.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.ocultarFormularioNuevoTema();
+            });
+        }
         // Acciones del editor - botón principal de guardar
         document.getElementById('btnGuardarTemas').addEventListener('click', () => {
             this.guardarCambios();
