@@ -6,10 +6,14 @@
 require('dotenv').config();
 
 // Detectar entorno de producción
-const isProduction = process.env.NODE_ENV === 'production' || process.env.MONGODB_URI || process.env.GOOGLE_CLIENT_ID;
+const isProduction = process.env.NODE_ENV === 'production';
 
-// Función para decodificar valores Base64 (evita detección de secretos en GitHub)
-const decode = (encoded) => Buffer.from(encoded, 'base64').toString('utf8');
+console.log('🌍 Entorno detectado:', isProduction ? 'PRODUCCIÓN' : 'DESARROLLO');
+console.log('📁 Variables de entorno cargadas:', {
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ? '✅ Configurado' : '❌ Faltante',
+    MONGODB_URI: process.env.MONGODB_URI ? '✅ Configurado' : '❌ Faltante',
+    EMAIL_USER: process.env.EMAIL_USER ? '✅ Configurado' : '❌ Faltante'
+});
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -42,17 +46,22 @@ const session = require('express-session'); // Manejo de sesiones
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Conexión a MongoDB actualizada
-const mongoUri = isProduction 
-    ? process.env.MONGODB_URI 
-    : decode('bW9uZ29kYitzcnY6Ly9BbmRlcnNvbjoyMDAxMDExM0BwcmFjdGljYmQueW9sZmE4Ny5tb25nb2RiLm5ldC8/cmV0cnlXcml0ZXM9dHJ1ZSZ3PW1ham9yaXR5JmFwcE5hbWU9UHJhY3RpY0JE');
+// Conexión a MongoDB usando variables de entorno
+const mongoUri = process.env.MONGODB_URI;
+
+if (!mongoUri) {
+    console.error('❌ ERROR: MONGODB_URI no está configurada en el archivo .env');
+    process.exit(1);
+}
 
 mongoose.connect(mongoUri)
     .then(() => {
-        console.log('Conexión a MongoDB exitosa');
+        console.log('✅ Conexión a MongoDB exitosa');
+        console.log('🔗 URI utilizada:', mongoUri.replace(/\/\/.*@/, '//***:***@')); // Ocultar credenciales en logs
     })
     .catch((error) => {
-        console.error('Error al conectar a MongoDB:', error);
+        console.error('❌ Error al conectar a MongoDB:', error);
+        process.exit(1);
     });
 
 // Verificar conexión a MongoDB
@@ -154,9 +163,12 @@ const authLimiter = rateLimit({
 // ===== CONFIGURACIÓN DE SESIONES Y PASSPORT =====
 // NOTA: No aplicamos rate limiting general para permitir uso normal de todas las APIs
 // Solo se aplica rate limiting estricto a la ruta de inicio de sesión
-const sessionSecret = isProduction 
-    ? process.env.SESSION_SECRET 
-    : decode('Y2F0YWxvZ28tdGllbmRhLXNlY3JldC1rZXktMjAyNA==');
+const sessionSecret = process.env.SESSION_SECRET;
+
+if (!sessionSecret) {
+    console.error('❌ ERROR: SESSION_SECRET no está configurada en el archivo .env');
+    process.exit(1);
+}
 
 app.use(session({
     secret: sessionSecret,
@@ -231,15 +243,26 @@ async function descargarImagenGoogle(urlImagen, nombreUsuario) {
 }
 
 // ===== CONFIGURACIÓN DE GOOGLE OAUTH =====
-const googleConfig = isProduction ? {
+const googleConfig = {
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.GOOGLE_CALLBACK_URL || "/auth/google/callback"
-} : {
-    clientID: decode('MzE0MDU0NDQ2MDk4LW50NW4yZmJ2NWZkOWlmdm82YWM1a2l0aHFoYjZnZGVkLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t'),
-    clientSecret: decode('R09DU1BYLXV3ZXFreVBCSlRiUzM4SGYybkE3bVgzOGcxag=='),
-    callbackURL: "/auth/google/callback"
 };
+
+// Verificar que las credenciales de Google estén configuradas
+if (!googleConfig.clientID || !googleConfig.clientSecret) {
+    console.error('❌ ERROR: Credenciales de Google OAuth no configuradas correctamente');
+    console.log('📋 Para configurar Google OAuth:');
+    console.log('1. Ve a https://console.cloud.google.com/');
+    console.log('2. Crea un proyecto o selecciona uno existente');
+    console.log('3. Habilita la API de Google+ o Google People API');
+    console.log('4. Crea credenciales OAuth 2.0');
+    console.log('5. Agrega http://localhost:3000/auth/google/callback como URI de redirección');
+    console.log('6. Actualiza el archivo .env con GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET');
+} else {
+    console.log('✅ Google OAuth configurado correctamente');
+    console.log('🔑 Client ID:', googleConfig.clientID.substring(0, 20) + '...');
+}
 
 passport.use(new GoogleStrategy(googleConfig, async (accessToken, refreshToken, profile, done) => {
     try {
@@ -595,61 +618,98 @@ app.put('/api/productos/:id/comentarios/:comentarioId', async (req, res) => {
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER || 'catalogotiendauno@gmail.com',
-        pass: process.env.EMAIL_PASS || decode('cXVraCBpcG5uIHJtaGcgcXhzcA==')
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 
+// Verificar configuración de email
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.error('❌ ERROR: EMAIL_USER o EMAIL_PASS no están configuradas en el archivo .env');
+    console.log('📧 Para configurar el email:');
+    console.log('1. Actualiza EMAIL_USER con tu correo de Gmail');
+    console.log('2. Actualiza EMAIL_PASS con tu contraseña de aplicación de Gmail');
+} else {
+    console.log('✅ Configuración de email cargada correctamente');
+    console.log('📧 Email configurado:', process.env.EMAIL_USER);
+}
+
 // Función para enviar correo de verificación
-async function enviarCorreoVerificacion(correo, token) {
-    const urlVerificacion = `${process.env.BASE_URL || 'http://localhost:3000'}/verificar-correo?token=${token}`;
-    
+// Función para generar código de verificación de 6 dígitos
+function generarCodigoVerificacion() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Función para enviar correo de verificación con código de 6 dígitos
+async function enviarCorreoVerificacion(correo, codigo) {
     const mailOptions = {
         from: process.env.EMAIL_USER || 'catalogotiendauno@gmail.com',
         to: correo,
-        subject: 'Verificación de cuenta - Catálogo Tienda',        html: `
-            <div style="background-color:#fff5e6; font-family:sans-serif; padding:32px; border-radius:12px; max-width:600px; margin:auto; border:1px solid #ffb700;">
-                <div style="background-color:#ffb700; color:#222; padding:20px; border-radius:10px 10px 0 0; text-align:center;">
-                    <h2 style="margin:0; font-size:2rem;">¡Bienvenido a Catálogo Tienda!</h2>
+        subject: 'Verificación de cuenta - PawMarket',
+        html: `
+            <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                <!-- Header -->
+                <div style="background: linear-gradient(135deg, #e6a300 0%, #d49000 100%); padding: 40px 30px; text-align: center; color: white;">
+                    <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">🐾 PawMarket 🐾</h1>
+                    <p style="font-size: 16px; opacity: 0.9; margin: 0;">Tu marketplace de mascotas favorito</p>
                 </div>
-                <div style="padding:24px;">
-                    <p style="font-size:1.1rem; color:#333;">Hola,</p>
-                    <p style="font-size:1.1rem; color:#333;">
-                        Gracias por registrarte en nuestra plataforma. Para completar tu registro, necesitamos verificar tu dirección de correo electrónico.
-                    </p>
-                    <p style="font-size:1.1rem; color:#333;">
-                        Haz clic en el siguiente botón para verificar tu cuenta:
-                    </p>
-                    <div style="text-align:center; margin:32px 0;">
-                        <a href="${urlVerificacion}" style="background-color:#ffb700; color:#222; text-decoration:none; font-weight:bold; padding:14px 32px; border-radius:6px; font-size:1.1rem; display:inline-block; border:2px solid #b88400;">
-                            Verificar mi cuenta
-                        </a>
+                
+                <!-- Content -->
+                <div style="padding: 40px 30px;">
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <span style="font-size: 64px; margin-bottom: 20px; display: block;">🎉</span>
+                        <h2 style="font-size: 24px; font-weight: 600; color: #2c2c2c; margin-bottom: 12px;">¡Bienvenido a PawMarket!</h2>
+                        <p style="font-size: 16px; color: #555555; margin-bottom: 30px;">Estás a un paso de disfrutar del mejor marketplace para mascotas</p>
                     </div>
-                    <p style="font-size:1rem; color:#555;">
-                        O copia y pega este enlace en tu navegador:<br>
-                        <span style="color:#b88400; word-break:break-all;">${urlVerificacion}</span>
-                    </p>
-                    <p style="font-size:0.95rem; color:#888;">
-                        Este enlace expirará en 24 horas por seguridad.
-                    </p>
-                    <p style="font-size:1.1rem; color:#333;">
-                        Si no creaste esta cuenta, puedes ignorar este correo.
-                    </p>
-                    <hr style="border:none; border-top:1px solid #ffb700; margin:32px 0;">
-                    <p style="font-size:0.95rem; color:#b88400; text-align:center;">
-                        © 2024 Mi Catálogo de Productos
-                    </p>
+
+                    <div style="background: linear-gradient(135deg, #fff5e6 0%, #ffffff 100%); border: 2px solid #ddd; border-radius: 12px; padding: 30px; text-align: center; margin: 30px 0;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #2c2c2c; margin-bottom: 15px;">Tu código de verificación</h3>
+                        <div style="font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 36px; font-weight: 700; color: #d49000; background: white; padding: 20px 30px; border-radius: 12px; border: 3px solid #e6a300; letter-spacing: 8px; margin: 20px 0; display: inline-block; box-shadow: 0 4px 15px rgba(230, 163, 0, 0.2);">${codigo}</div>
+                        <p style="color: #555555; margin-top: 15px;">Este código expira en 1 hora</p>
+                    </div>
+
+                    <div style="background: #ffffff; border-left: 4px solid #e6a300; padding: 20px; margin: 30px 0; border-radius: 0 8px 8px 0;">
+                        <h3 style="color: #2c2c2c; font-size: 16px; font-weight: 600; margin-bottom: 8px;">📋 Instrucciones</h3>
+                        <p style="color: #555555; font-size: 14px; margin: 0;">Ingresa este código en la página de verificación para activar tu cuenta. No compartas este código con nadie.</p>
+                    </div>
+
+                    <div style="height: 1px; background: linear-gradient(90deg, transparent, #ddd, transparent); margin: 30px 0;"></div>
+
+                    <div style="background: #ffffff; border-left: 4px solid #e6a300; padding: 20px; margin: 30px 0; border-radius: 0 8px 8px 0;">
+                        <h3 style="color: #2c2c2c; font-size: 16px; font-weight: 600; margin-bottom: 8px;">🔒 Seguridad</h3>
+                        <p style="color: #555555; font-size: 14px; margin: 0;">Este correo fue enviado porque solicitaste crear una cuenta en PawMarket. Si no fuiste tú, puedes ignorar este mensaje de forma segura.</p>
+                    </div>
+
+                    <div style="background: #ffffff; border-left: 4px solid #e6a300; padding: 20px; margin: 30px 0; border-radius: 0 8px 8px 0;">
+                        <h3 style="color: #2c2c2c; font-size: 16px; font-weight: 600; margin-bottom: 8px;">📧 ¿Necesitas ayuda?</h3>
+                        <p style="color: #555555; font-size: 14px; margin: 0;">Si tienes alguna pregunta, no dudes en contactarnos. Nuestro equipo de soporte está aquí para ayudarte.</p>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div style="background: #fff5e6; padding: 30px; text-align: center; border-top: 1px solid #ddd;">
+                    <p style="color: #555555; font-size: 14px; margin-bottom: 15px;">© 2025 PawMarket. Todos los derechos reservados.</p>
+                    
+                    <div style="margin: 20px 0;">
+                        <a href="#" style="display: inline-block; margin: 0 8px; color: #e6a300; text-decoration: none; font-size: 24px;">📧</a>
+                        <a href="#" style="display: inline-block; margin: 0 8px; color: #e6a300; text-decoration: none; font-size: 24px;">📱</a>
+                        <a href="#" style="display: inline-block; margin: 0 8px; color: #e6a300; text-decoration: none; font-size: 24px;">🌐</a>
+                        <a href="#" style="display: inline-block; margin: 0 8px; color: #e6a300; text-decoration: none; font-size: 24px;">📞</a>
+                    </div>
+                    
+                    <p style="color: #999; font-size: 12px; margin-top: 20px;">Este es un correo automático, por favor no respondas a esta dirección.</p>
                 </div>
             </div>
         `
     };
     
     try {
+        console.log('📧 [EMAIL] Enviando código de verificación a:', correo);
         await transporter.sendMail(mailOptions);
-        console.log('Correo de verificación enviado a:', correo);
+        console.log('✅ [EMAIL] Código de verificación enviado exitosamente');
         return true;
     } catch (error) {
-        console.error('Error al enviar correo de verificación:', error);
+        console.error('❌ [EMAIL] Error al enviar código de verificación:', error);
         return false;
     }
 }
@@ -672,10 +732,10 @@ app.post('/api/crear-cuenta', async (req, res) => {
         const saltRounds = 12;
         const hashedPassword = await bcrypt.hash(contrasena, saltRounds);
 
-        // Generar token de verificación
-        const tokenVerificacion = uuidv4();
+        // Generar código de verificación de 6 dígitos
+        const codigoVerificacion = generarCodigoVerificacion();
         const tokenExpira = new Date();
-        tokenExpira.setHours(tokenExpira.getHours() + 24); // Expira en 24 horas
+        tokenExpira.setHours(tokenExpira.getHours() + 1); // Expira en 1 hora
 
         const newUser = new Usuario({
             correo,
@@ -690,14 +750,14 @@ app.post('/api/crear-cuenta', async (req, res) => {
             registroCompras: [],
             rol: 'no verificado',
             isVerified: false,
-            token: tokenVerificacion,
+            token: codigoVerificacion, // El token ahora es el código de 6 dígitos
             tokenExpira: tokenExpira
         });
 
         await newUser.save();
 
         // Enviar correo de verificación
-        const correoEnviado = await enviarCorreoVerificacion(correo, tokenVerificacion);
+        const correoEnviado = await enviarCorreoVerificacion(correo, codigoVerificacion);
 
         if (correoEnviado) {
             res.status(201).json({ 
@@ -776,6 +836,45 @@ app.post('/api/iniciar-sesion', authLimiter, async (req, res) => {
 });
 
 // Endpoint para verificar correo electrónico
+// Endpoint para verificar cuenta con código de 6 dígitos
+app.post('/api/verificar-codigo', async (req, res) => {
+    try {
+        const { correo, codigo } = req.body;
+        
+        if (!correo || !codigo) {
+            return res.status(400).json({ error: 'Correo y código son obligatorios.' });
+        }
+        
+        // Buscar usuario por correo y código
+        const usuario = await Usuario.findOne({ 
+            correo: correo,
+            token: codigo,
+            tokenExpira: { $gt: new Date() } // Token no expirado
+        });
+        
+        if (!usuario) {
+            return res.status(400).json({ error: 'Código inválido o expirado.' });
+        }
+        
+        // Activar la cuenta
+        usuario.isVerified = true;
+        usuario.rol = 'usuario';
+        usuario.token = '';
+        usuario.tokenExpira = null;
+        await usuario.save();
+        
+        res.status(200).json({ 
+            message: '¡Cuenta verificada exitosamente! Ya puedes iniciar sesión.',
+            success: true
+        });
+        
+    } catch (error) {
+        console.error('Error al verificar código:', error);
+        res.status(500).json({ error: 'Error del servidor al verificar el código.' });
+    }
+});
+
+// Endpoint legacy para verificar correo (mantenerlo para compatibilidad)
 app.get('/verificar-correo', async (req, res) => {
     try {
         const { token } = req.query;
@@ -885,17 +984,17 @@ app.post('/api/reenviar-verificacion', async (req, res) => {
             return res.status(400).json({ error: 'Esta cuenta ya está verificada.' });
         }
         
-        // Generar nuevo token de verificación
-        const nuevoToken = uuidv4();
+        // Generar nuevo código de verificación de 6 dígitos
+        const nuevoCodigo = generarCodigoVerificacion();
         const nuevaExpiracion = new Date();
-        nuevaExpiracion.setHours(nuevaExpiracion.getHours() + 24);
+        nuevaExpiracion.setHours(nuevaExpiracion.getHours() + 1); // Expira en 1 hora
         
-        usuario.token = nuevoToken;
+        usuario.token = nuevoCodigo;
         usuario.tokenExpira = nuevaExpiracion;
         await usuario.save();
         
         // Enviar nuevo correo de verificación
-        const correoEnviado = await enviarCorreoVerificacion(correo, nuevoToken);
+        const correoEnviado = await enviarCorreoVerificacion(correo, nuevoCodigo);
         
         if (correoEnviado) {
             res.json({ message: 'Se ha enviado un nuevo correo de verificación a tu dirección de correo electrónico.' });
@@ -1857,6 +1956,16 @@ app.put('/api/temas/:id', async (req, res) => {
             return res.status(404).json({ error: 'Tema no encontrado' });
         }
 
+        // ⛔ VERIFICAR SI EL TEMA ESTÁ PROTEGIDO
+        if (tema.protegido) {
+            console.log('🔒 [API] Intento de editar tema protegido:', tema.nombre);
+            return res.status(403).json({ 
+                error: 'Este tema está protegido y no puede ser modificado',
+                temaProtegido: true,
+                nombre: tema.nombre
+            });
+        }
+
         console.log('📋 [API] Tema encontrado:', tema.nombre);
 
         // Si se cambia el nombre, verificar que no esté duplicado
@@ -1890,10 +1999,21 @@ app.delete('/api/temas/:id', async (req, res) => {
             return res.status(404).json({ error: 'Tema no encontrado' });
         }
 
+        // ⛔ VERIFICAR SI EL TEMA ESTÁ PROTEGIDO
+        if (tema.protegido) {
+            console.log('🔒 [API] Intento de eliminar tema protegido:', tema.nombre);
+            return res.status(403).json({ 
+                error: 'Este tema está protegido y no puede ser eliminado',
+                temaProtegido: true,
+                nombre: tema.nombre
+            });
+        }
+
         await Tema.findByIdAndDelete(req.params.id);
+        console.log('🗑️ [API] Tema eliminado exitosamente:', tema.nombre);
         res.json({ message: 'Tema eliminado exitosamente' });
     } catch (error) {
-        console.error('Error al eliminar tema:', error);
+        console.error('❌ [API] Error al eliminar tema:', error);
         res.status(500).json({ error: 'Error al eliminar el tema' });
     }
 });
@@ -1999,8 +2119,8 @@ async function enviarCorreoRecuperacion(destinatario, token, req) {    // Config
     } : {
         service: 'gmail',
         auth: {
-            user: 'catalogotiendauno@gmail.com',
-            pass: decode('cXVraCBpcG5uIHJtaGcgcXhzcA==') // Contraseña de aplicación para desarrollo
+            user: process.env.EMAIL_USER || 'catalogotiendauno@gmail.com',
+            pass: process.env.EMAIL_PASS // Usar variables de entorno también para desarrollo
         }
     };
     
@@ -2010,44 +2130,285 @@ async function enviarCorreoRecuperacion(destinatario, token, req) {    // Config
     const baseUrl = process.env.BASE_URL || (req ? `${req.protocol}://${req.get('host')}` : '');
     const enlace = `${baseUrl}/restablecer-contrasena/${token}`;
     let mailOptions = {
-        from: 'catalogotiendauno@gmail.com',
+        from: process.env.EMAIL_USER || 'catalogotiendauno@gmail.com',
         to: destinatario,
-        subject: 'Recuperación de contraseña',
+        subject: 'Recuperación de contraseña - PawMarket',
         html: `
-<div style="background-color:#fff5e6; font-family:sans-serif; padding:32px; border-radius:12px; max-width:600px; margin:auto; border:1px solid #ffb700;">
-  <div style="background-color:#ffb700; color:#222; padding:20px; border-radius:10px 10px 0 0; text-align:center;">
-    <h2 style="margin:0; font-size:2rem;">Recuperación de Contraseña</h2>
-  </div>
-  <div style="padding:24px;">
-    <p style="font-size:1.1rem; color:#333;">Hola,</p>
-    <p style="font-size:1.1rem; color:#333;">
-      Hemos recibido una solicitud para restablecer la contraseña de la cuenta asociada al correo <strong>${destinatario}</strong>.
-    </p>
-    <p style="font-size:1.1rem; color:#333;">
-      Si no has solicitado este cambio, puedes ignorar este mensaje.
-    </p>
-    <p style="font-size:1.1rem; color:#333;">
-      Para restablecer tu contraseña, haz clic en el siguiente botón:
-    </p>
-    <div style="text-align:center; margin:32px 0;">
-      <a href="${enlace}" style="background-color:#ffb700; color:#222; text-decoration:none; font-weight:bold; padding:14px 32px; border-radius:6px; font-size:1.1rem; display:inline-block; border:2px solid #b88400;">
-        Restablecer Contraseña
-      </a>
-    </div>
-    <p style="font-size:1rem; color:#555;">
-      O copia y pega este enlace en tu navegador:<br>
-      <span style="color:#b88400; word-break:break-all;">${enlace}</span>
-    </p>
-    <p style="font-size:0.95rem; color:#888;">
-      Este enlace es válido por 1 hora a partir de las ${new Date(Date.now()).toLocaleString()}.
-    </p>
-    <hr style="border:none; border-top:1px solid #ffb700; margin:32px 0;">
-    <p style="font-size:0.95rem; color:#b88400; text-align:center;">
-      © 2024 Mi Catálogo de Productos
-    </p>
-  </div>
-</div>
-`
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Recuperación de Contraseña</title>
+                <style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+                    body {
+                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                        line-height: 1.6;
+                        color: #2c2c2c;
+                        background-color: #fff5e6;
+                    }
+                    .email-container {
+                        max-width: 600px;
+                        margin: 40px auto;
+                        background: #ffffff;
+                        border-radius: 16px;
+                        overflow: hidden;
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                    }
+                    .header {
+                        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+                        padding: 40px 30px;
+                        text-align: center;
+                        color: white;
+                    }
+                    .header h1 {
+                        font-size: 28px;
+                        font-weight: 700;
+                        margin-bottom: 8px;
+                        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                    }
+                    .header p {
+                        font-size: 16px;
+                        opacity: 0.9;
+                    }
+                    .content {
+                        padding: 40px 30px;
+                    }
+                    .security-alert {
+                        background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+                        border: 2px solid #ffc107;
+                        border-radius: 12px;
+                        padding: 25px;
+                        text-align: center;
+                        margin-bottom: 30px;
+                    }
+                    .security-icon {
+                        font-size: 48px;
+                        margin-bottom: 15px;
+                        display: block;
+                    }
+                    .security-title {
+                        font-size: 20px;
+                        font-weight: 600;
+                        color: #856404;
+                        margin-bottom: 10px;
+                    }
+                    .security-subtitle {
+                        color: #856404;
+                        font-size: 16px;
+                    }
+                    .reset-section {
+                        text-align: center;
+                        margin: 40px 0;
+                    }
+                    .reset-title {
+                        font-size: 24px;
+                        font-weight: 600;
+                        color: #2c2c2c;
+                        margin-bottom: 15px;
+                    }
+                    .reset-subtitle {
+                        font-size: 16px;
+                        color: #555555;
+                        margin-bottom: 30px;
+                    }
+                    .btn-reset {
+                        display: inline-block;
+                        background: linear-gradient(135deg, #e6a300 0%, #d49000 100%);
+                        color: white;
+                        text-decoration: none;
+                        padding: 18px 36px;
+                        border-radius: 10px;
+                        font-weight: 600;
+                        font-size: 18px;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 6px 20px rgba(230, 163, 0, 0.3);
+                        border: none;
+                        cursor: pointer;
+                    }
+                    .btn-reset:hover {
+                        transform: translateY(-3px);
+                        box-shadow: 0 8px 25px rgba(230, 163, 0, 0.4);
+                    }
+                    .timer-box {
+                        background: linear-gradient(135deg, #fff5e6 0%, #ffffff 100%);
+                        border: 2px solid #e6a300;
+                        border-radius: 12px;
+                        padding: 25px;
+                        text-align: center;
+                        margin: 30px 0;
+                    }
+                    .timer-icon {
+                        font-size: 40px;
+                        margin-bottom: 15px;
+                        display: block;
+                    }
+                    .timer-text {
+                        color: #d49000;
+                        font-weight: 600;
+                        font-size: 16px;
+                    }
+                    .info-section {
+                        background: #ffffff;
+                        border-left: 4px solid #e6a300;
+                        padding: 20px;
+                        margin: 30px 0;
+                        border-radius: 0 8px 8px 0;
+                        border: 1px solid #ddd;
+                    }
+                    .info-section h3 {
+                        color: #2c2c2c;
+                        font-size: 16px;
+                        font-weight: 600;
+                        margin-bottom: 8px;
+                    }
+                    .info-section p {
+                        color: #555555;
+                        font-size: 14px;
+                        margin: 0;
+                    }
+                    .security-tips {
+                        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                        border: 2px solid #28a745;
+                        border-radius: 12px;
+                        padding: 25px;
+                        margin: 30px 0;
+                        color: white;
+                    }
+                    .security-tips h3 {
+                        color: white;
+                        font-size: 18px;
+                        font-weight: 600;
+                        margin-bottom: 15px;
+                    }
+                    .security-tips ul {
+                        color: white;
+                        font-size: 14px;
+                        margin-left: 20px;
+                    }
+                    .security-tips li {
+                        margin-bottom: 8px;
+                    }
+                    .footer {
+                        background: #fff5e6;
+                        padding: 30px;
+                        text-align: center;
+                        border-top: 1px solid #ddd;
+                    }
+                    .footer-text {
+                        color: #555555;
+                        font-size: 14px;
+                        margin-bottom: 15px;
+                    }
+                    .social-links {
+                        margin: 20px 0;
+                    }
+                    .social-link {
+                        display: inline-block;
+                        margin: 0 8px;
+                        color: #d49000;
+                        text-decoration: none;
+                        font-size: 24px;
+                        transition: transform 0.2s ease;
+                    }
+                    .social-link:hover {
+                        transform: scale(1.2);
+                    }
+                    .divider {
+                        height: 1px;
+                        background: linear-gradient(90deg, transparent, #ddd, transparent);
+                        margin: 30px 0;
+                    }
+                    @media (max-width: 600px) {
+                        .email-container {
+                            margin: 20px;
+                            border-radius: 12px;
+                        }
+                        .header {
+                            padding: 30px 20px;
+                        }
+                        .content {
+                            padding: 30px 20px;
+                        }
+                        .btn-reset {
+                            font-size: 16px;
+                            padding: 16px 28px;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="email-container">
+                    <div class="header">
+                        <h1>🐾 PawMarket 🐾</h1>
+                        <p>Tu marketplace de mascotas favorito</p>
+                    </div>
+                    
+                    <div class="content">
+                        <div class="security-alert">
+                            <span class="security-icon">🔐</span>
+                            <h2 class="security-title">Solicitud de Recuperación</h2>
+                            <p class="security-subtitle">Hemos recibido una solicitud para restablecer tu contraseña</p>
+                        </div>
+
+                        <div class="reset-section">
+                            <h2 class="reset-title">Restablece tu contraseña</h2>
+                            <p class="reset-subtitle">Haz clic en el botón de abajo para crear una nueva contraseña segura</p>
+                            
+                            <a href="${enlace}" class="btn-reset">🔑 Restablecer Contraseña</a>
+                        </div>
+
+                        <div class="timer-box">
+                            <span class="timer-icon">⏰</span>
+                            <p class="timer-text">Este enlace expira en 1 hora por tu seguridad</p>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="security-tips">
+                            <h3>🛡️ Consejos de Seguridad</h3>
+                            <ul>
+                                <li>Usa una contraseña única y fuerte (mínimo 8 caracteres)</li>
+                                <li>Combina letras mayúsculas, minúsculas, números y símbolos</li>
+                                <li>No compartas tu contraseña con nadie</li>
+                                <li>Activa la verificación en dos pasos si está disponible</li>
+                            </ul>
+                        </div>
+
+                        <div class="info-section">
+                            <h3>🚫 ¿No solicitaste esto?</h3>
+                            <p>Si no solicitaste restablecer tu contraseña, puedes ignorar este correo de forma segura. Tu cuenta permanece protegida.</p>
+                        </div>
+
+                        <div class="info-section">
+                            <h3>🆘 ¿Necesitas ayuda?</h3>
+                            <p>Si tienes problemas o sospechas de actividad no autorizada, contacta inmediatamente a nuestro equipo de soporte.</p>
+                        </div>
+                    </div>
+
+                    <div class="footer">
+                        <p class="footer-text">© 2025 PawMarket. Todos los derechos reservados.</p>
+                        
+                        <div class="social-links">
+                            <a href="#" class="social-link">📧</a>
+                            <a href="#" class="social-link">📱</a>
+                            <a href="#" class="social-link">🌐</a>
+                            <a href="#" class="social-link">📞</a>
+                        </div>
+                        
+                        <p style="color: #999; font-size: 12px; margin-top: 20px;">
+                            Este es un correo automático, por favor no respondas a esta dirección.
+                        </p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `
     };
     await transporter.sendMail(mailOptions);
 }
@@ -2251,6 +2612,10 @@ app.get('/restablecer-contrasena/:token?', (req, res) => {
 });
 app.get('/factura/:factura?', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'confirmacion.html'));
+});
+
+app.get('/verificar-cuenta/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'restablecer-contrasena.html'));
 });
 
 // Endpoint para subir foto de perfil

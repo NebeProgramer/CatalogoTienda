@@ -8,6 +8,32 @@ class EditorTemas {
         this.aplicandoPrevio = false;
         this.cambiosPendientes = false;
         this.guardandoAhora = false;
+        
+        // ===== NUEVAS VARIABLES PARA PREVISUALIZACIÓN EN TIEMPO REAL =====
+        this.modoPreview = false;
+        this.temaOriginalAntesDeLaEdicion = null;
+        this.debounceTimer = null;
+        this.previewActivo = false;
+        
+        // Colores base para modo previsualización (neutros y agradables)
+        this.coloresBase = {
+            bgPrimary: '#f8f9fa',
+            bgSecondary: '#e9ecef',
+            bgTertiary: '#ffffff',
+            textPrimary: '#212529',
+            textSecondary: '#6c757d',
+            textAccent: '#495057',
+            borderPrimary: '#ced4da',
+            borderSecondary: '#e9ecef',
+            shadowLight: 'rgba(0,0,0,0.1)',
+            shadowMedium: 'rgba(0,0,0,0.15)',
+            success: '#28a745',
+            warning: '#ffc107',
+            error: '#dc3545',
+            info: '#17a2b8',
+            modalBg: 'rgba(0,0,0,0.5)',
+            hoverOverlay: 'rgba(0,0,0,0.05)'
+        };
         // Nombres amigables para los colores
         this.nombresColores = {
             bgPrimary: 'Fondo Primario',
@@ -341,6 +367,9 @@ class EditorTemas {
             const tema = await response.json();
             this.temaEditando = tema;
             
+            // ===== NUEVO: Activar modo previsualización =====
+            this.activarModoPreview();
+            
             // Guardar colores actuales como originales (para restaurar la previsualización)
             this.guardarColoresActuales();
             
@@ -551,6 +580,12 @@ class EditorTemas {
         grupo.querySelector('.hex-input').value = this.rgbToHex(valores.r, valores.g, valores.b);
         // Guardar en temporal
         this.coloresTemp[clave] = color;
+        
+        // ===== NUEVO: Previsualización en tiempo real =====
+        if (this.modoPreview) {
+            this.previsualizarCambioEnTiempoReal(clave, color);
+        }
+        
         this.marcarCambiosPendientes();
     }
     actualizarDesdeHex(clave, grupo, hex) {
@@ -561,8 +596,12 @@ class EditorTemas {
         grupo.querySelector('[data-channel="r"]').value = rgb.r;
         grupo.querySelector('[data-channel="g"]').value = rgb.g;
         grupo.querySelector('[data-channel="b"]').value = rgb.b;
-        // Actualizar el color
+        
+        // Actualizar el color (esto activará automáticamente la previsualización)
         this.actualizarColor(clave, grupo);
+        
+        // ===== NUEVO: Marcar cambios para el hex input también =====
+        this.marcarCambiosPendientes();
     }
     async aplicarTema(temaId) {
         try {
@@ -672,6 +711,180 @@ class EditorTemas {
         // Actualizar SweetAlert2 con el nuevo tema
         setTimeout(() => this.actualizarSweetAlert2Tema(), 100);
     }
+    
+    // ===== NUEVOS MÉTODOS PARA PREVISUALIZACIÓN EN TIEMPO REAL =====
+    
+    /**
+     * Activa el modo previsualización, guardando el tema actual y aplicando colores base
+     */
+    activarModoPreview() {
+        if (this.modoPreview) return; // Ya está en modo preview
+        
+        console.log('🎨 [EditorTemas] Activando modo previsualización...');
+        
+        // Guardar el tema actual antes de la edición
+        this.guardarTemaActual();
+        
+        // Aplicar colores del tema que se está editando (no colores base neutros)
+        if (this.temaEditando && this.temaEditando.colores) {
+            console.log('🎨 [EditorTemas] Aplicando colores del tema en edición:', this.temaEditando.nombre);
+            this.aplicarColoresAlCSS(this.temaEditando.colores);
+        } else {
+            // Fallback a colores base solo si no hay tema en edición
+            console.log('⚠️ [EditorTemas] No hay tema en edición, aplicando colores base');
+            this.aplicarColoresBase();
+        }
+        
+        // Marcar que estamos en modo preview
+        this.modoPreview = true;
+        this.previewActivo = true;
+        
+        // Agregar indicador visual
+        this.mostrarIndicadorPreview();
+        
+        console.log('✅ [EditorTemas] Modo previsualización activado');
+    }
+    
+    /**
+     * Desactiva el modo previsualización y restaura el tema original
+     */
+    desactivarModoPreview() {
+        if (!this.modoPreview) return; // No está en modo preview
+        
+        console.log('🔄 [EditorTemas] Desactivando modo previsualización...');
+        
+        // Restaurar tema original
+        if (this.temaOriginalAntesDeLaEdicion) {
+            this.aplicarColoresAlCSS(this.temaOriginalAntesDeLaEdicion);
+        }
+        
+        // Marcar que ya no estamos en modo preview
+        this.modoPreview = false;
+        this.previewActivo = false;
+        
+        // Quitar indicador visual
+        this.ocultarIndicadorPreview();
+        
+        console.log('✅ [EditorTemas] Modo previsualización desactivado');
+    }
+    
+    /**
+     * Guarda el tema actualmente aplicado
+     */
+    guardarTemaActual() {
+        const coloresActuales = {};
+        const root = document.documentElement;
+        const computedStyle = getComputedStyle(root);
+        
+        // Mapeo inverso: variables CSS a nombres de BD
+        const mapeoInverso = {
+            'bg-primary': 'bgPrimary',
+            'bg-secondary': 'bgSecondary',
+            'bg-tertiary': 'bgTertiary',
+            'text-primary': 'textPrimary',
+            'text-secondary': 'textSecondary',
+            'text-accent': 'textAccent',
+            'border-primary': 'borderPrimary',
+            'border-secondary': 'borderSecondary',
+            'shadow-light': 'shadowLight',
+            'shadow-medium': 'shadowMedium',
+            'success': 'success',
+            'warning': 'warning',
+            'error': 'error',
+            'info': 'info',
+            'modal-bg': 'modalBg',
+            'hover-overlay': 'hoverOverlay'
+        };
+        
+        // Obtener valores actuales
+        Object.entries(mapeoInverso).forEach(([cssVar, dbName]) => {
+            const valor = computedStyle.getPropertyValue(`--${cssVar}`).trim();
+            if (valor) {
+                coloresActuales[dbName] = valor;
+            }
+        });
+        
+        this.temaOriginalAntesDeLaEdicion = coloresActuales;
+        console.log('💾 [EditorTemas] Tema actual guardado:', coloresActuales);
+    }
+    
+    /**
+     * Aplica los colores base neutrales para empezar la edición
+     */
+    aplicarColoresBase() {
+        console.log('🎨 [EditorTemas] Aplicando colores base...');
+        this.aplicarColoresAlCSS(this.coloresBase);
+    }
+    
+    /**
+     * Maneja la previsualización en tiempo real con debounce
+     */
+    previsualizarCambioEnTiempoReal(clave, nuevoColor) {
+        if (!this.modoPreview) return;
+        
+        // Clear previous debounce timer
+        if (this.debounceTimer) {
+            clearTimeout(this.debounceTimer);
+        }
+        
+        // Apply change immediately for responsive feel
+        const coloresPreview = { ...this.coloresTemp };
+        coloresPreview[clave] = nuevoColor;
+        this.aplicarColoresAlCSS(coloresPreview);
+        
+        // Set debounce timer for final update
+        this.debounceTimer = setTimeout(() => {
+            console.log(`🔄 [EditorTemas] Preview actualizado: ${clave} = ${nuevoColor}`);
+        }, 100);
+    }
+    
+    /**
+     * Muestra un indicador visual de que se está en modo previsualización
+     */
+    mostrarIndicadorPreview() {
+        let indicador = document.getElementById('previewModeIndicator');
+        if (!indicador) {
+            indicador = document.createElement('div');
+            indicador.id = 'previewModeIndicator';
+            indicador.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 10px;
+                    right: 10px;
+                    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                    color: white;
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    font-size: 14px;
+                    font-weight: bold;
+                    z-index: 9999;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                    animation: pulse 2s infinite;
+                ">
+                    🎨 Modo Previsualización
+                </div>
+                <style>
+                    @keyframes pulse {
+                        0% { transform: scale(1); }
+                        50% { transform: scale(1.05); }
+                        100% { transform: scale(1); }
+                    }
+                </style>
+            `;
+            document.body.appendChild(indicador);
+        }
+        indicador.style.display = 'block';
+    }
+    
+    /**
+     * Oculta el indicador de modo previsualización
+     */
+    ocultarIndicadorPreview() {
+        const indicador = document.getElementById('previewModeIndicator');
+        if (indicador) {
+            indicador.style.display = 'none';
+        }
+    }
     async guardarCambios() {
         if (!this.temaEditando || this.guardandoAhora) {
             if (!this.temaEditando) {
@@ -711,7 +924,16 @@ class EditorTemas {
             this.temaEditando = temaGuardado;
             this.coloresOriginales = { ...temaGuardado.colores };
             this.cambiosPendientes = false;
-            // Aplicar el tema inmediatamente
+            
+            // ===== NUEVO: Los colores ya están aplicados por el preview, mantenerlos =====
+            // (Los colores ya están en la página gracias al preview en tiempo real)
+            
+            // ===== NUEVO: Desactivar modo preview pero mantener los colores =====
+            this.modoPreview = false;
+            this.previewActivo = false;
+            this.ocultarIndicadorPreview();
+            
+            // Aplicar el tema inmediatamente (por seguridad)
             this.aplicarColoresAlCSS(temaGuardado.colores);
             // Actualizar UI de éxito
             botones.forEach(btn => {
@@ -779,6 +1001,10 @@ class EditorTemas {
         if (this.aplicandoPrevio) {
             this.aplicarColoresAlCSS(this.coloresOriginales);
         }
+        
+        // ===== NUEVO: Desactivar modo preview =====
+        this.desactivarModoPreview();
+        
         this.cerrarEditor();
     }
     cerrarEditor() {
@@ -791,12 +1017,23 @@ class EditorTemas {
         if (temasContainer) {
             temasContainer.classList.remove('editor-abierto');
         }
+        
+        // ===== NUEVO: Asegurar que el modo preview esté desactivado =====
+        if (this.modoPreview) {
+            this.desactivarModoPreview();
+        }
+        
         // Limpiar estado de edición
         this.temaEditando = null;
         this.coloresOriginales = {};
         this.coloresTemp = {};
         this.cambiosPendientes = false;
         this.aplicandoPrevio = false;
+        
+        // ===== NUEVO: Limpiar variables de preview =====
+        this.temaOriginalAntesDeLaEdicion = null;
+        this.previewActivo = false;
+        
         // Actualizar indicadores
         this.actualizarIndicadoresCambios();
         this.desmarcarTemaEditando();

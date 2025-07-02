@@ -797,13 +797,38 @@ footer {
     top: 0;
     left: -300px; /* Ocultar el menú fuera de la pantalla */
     width: 250px;
-    height: 100%;
+    height: 100vh; /* Altura completa de la ventana */
     background-color: var(--bg-secondary);
     color: var(--text-primary);
     transition: left 0.3s ease, background-color 0.3s ease, color 0.3s ease;
     z-index: 100;
-    padding: 20px;
     box-shadow: 2px 0 5px var(--shadow-medium);
+    
+    /* ===== NUEVO: Configuración de scroll ===== */
+    overflow-y: auto; /* Permitir scroll vertical */
+    overflow-x: hidden; /* Ocultar scroll horizontal */
+    scrollbar-width: thin; /* Firefox: scroll más delgado */
+    scrollbar-color: var(--text-primary) var(--bg-secondary); /* Firefox: colores del scroll */
+}
+
+/* ===== NUEVO: Estilos personalizados para la barra de scroll (Webkit - Chrome, Safari, Edge) ===== */
+.menuHamburguesa::-webkit-scrollbar {
+    width: 8px; /* Ancho de la barra de scroll */
+}
+
+.menuHamburguesa::-webkit-scrollbar-track {
+    background: var(--bg-secondary); /* Color del fondo de la barra */
+    border-radius: 4px;
+}
+
+.menuHamburguesa::-webkit-scrollbar-thumb {
+    background: var(--text-primary); /* Color del "pulgar" de la barra */
+    border-radius: 4px;
+    border: 1px solid var(--bg-secondary); /* Borde para mejor contraste */
+}
+
+.menuHamburguesa::-webkit-scrollbar-thumb:hover {
+    background: var(--hover-overlay); /* Color al hacer hover */
 }
 
 .menuHamburguesa.activo {
@@ -814,6 +839,9 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    padding: 20px; /* ===== NUEVO: Padding interno para separar del borde ===== */
+    padding-bottom: 40px; /* ===== NUEVO: Padding extra en la parte inferior ===== */
+    min-height: calc(100vh - 40px); /* ===== NUEVO: Altura mínima para asegurar scroll ===== */
 }
 
 #Burguer {
@@ -872,6 +900,168 @@ footer {
     color: var(--bg-tertiary);
     transform: translateX(5px); /* Efecto de deslizamiento */
     box-shadow: 0 2px 8px var(--shadow-medium);
+}
+
+/* ===== ESTILOS PARA LAS SECCIONES DEL MENÚ HAMBURGUESA ===== */
+
+/* Sección CRUD (DevTools) */
+.menuHamburguesa #CRUD {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid var(--border-primary);
+}
+
+.menuHamburguesa .crud-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menuHamburguesa .crud-btn {
+    background-color: var(--text-primary);
+    color: var(--bg-secondary);
+    border: none;
+    padding: 12px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.menuHamburguesa .crud-btn:hover {
+    background-color: var(--hover-overlay);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow-medium);
+}
+
+/* Sección de Filtros */
+.menuHamburguesa #filtro {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid var(--border-primary);
+}
+
+.menuHamburguesa .filtro-container h2 {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid var(--text-primary);
+    padding-bottom: 8px;
+}
+
+.menuHamburguesa #filtro-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menuHamburguesa #filtro-lista li {
+    margin: 8px 0;
+}
+
+.menuHamburguesa #filtro-lista li a,
+.menuHamburguesa #filtro-lista li button {
+    display: block;
+    width: 100%;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 12px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    background: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-align: left;
+}
+
+.menuHamburguesa #filtro-lista li a:hover,
+.menuHamburguesa #filtro-lista li button:hover {
+    background-color: var(--text-primary);
+    color: var(--bg-secondary);
+    transform: translateX(8px);
+    border-color: var(--text-primary);
+}
+
+/* Sección Footer del menú */
+.menuHamburguesa #footer {
+    margin-top: auto;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid var(--border-primary);
+}
+
+/* ===== INDICADOR DE SCROLL ===== */
+.menuHamburguesa::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        var(--text-primary) 20%,
+        var(--text-primary) 80%,
+        transparent 100%
+    );
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.menuHamburguesa:hover::after {
+    opacity: 0.6;
+}
+
+/* ===== RESPONSIVE: Ajustes para pantallas pequeñas ===== */
+@media (max-height: 600px) {
+    .Burguer-Items {
+        gap: 15px;
+    }
+    
+    .menuHamburguesa #CRUD,
+    .menuHamburguesa #filtro,
+    .menuHamburguesa #footer {
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .menuHamburguesa .filtro-container h2 {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    
+    .menuHamburguesa ul li a {
+        font-size: 16px;
+        padding: 6px 10px;
+    }
+}
+
+@media (max-height: 400px) {
+    .Burguer-Items {
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .menuHamburguesa .filtro-container h2 {
+        font-size: 14px;
+    }
+    
+    .menuHamburguesa ul li a {
+        font-size: 14px;
+        padding: 5px 8px;
+    }
 }
 
 
@@ -2282,10 +2472,6 @@ button.eliminar-termino-btn:hover {
     background-color: var(--text-accent) !important;
     height: 3px !important;
 }
-
-
-
-
 
 /* ===== TOAST SIN ICONO PREDETERMINADO ===== */
 .swal2-toast.swal2-no-icon {

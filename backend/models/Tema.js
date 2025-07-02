@@ -24,6 +24,9 @@ const temaSchema = new mongoose.Schema({
         modalBg: { type: String, default: 'rgba(0, 0, 0, 0.4)' },
         hoverOverlay: { type: String, default: 'rgba(230, 163, 0, 0.15)' }
     },
+    esPersonaje: { type: Boolean, default: false },
+    emoji: { type: String, default: '🎨' },
+    descripcion: { type: String, default: '' },
     fechaCreacion: { type: Date, default: Date.now },
     fechaModificacion: { type: Date, default: Date.now }
 });
