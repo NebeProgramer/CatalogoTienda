@@ -2001,15 +2001,7 @@ button.eliminar-termino-btn:hover {
   margin: 1.25em auto 0 !important;
 }
 
-#loader {
-  position: fixed;
-  z-index: 9999;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: var(--modal-bg, rgba(255, 255, 255, 0.8));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 .spinner {
   border: 8px solid var(--border-secondary, #e0e0e0);
   border-top: 8px solid var(--text-accent, #ffb700);
@@ -2438,56 +2430,117 @@ button.eliminar-termino-btn:hover {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* ===== ESTILOS PARA INDICADOR DE TEMA (OCULTO) ===== */
-.theme-indicator {
-    display: none !important; /* Ocultar el indicador de tema */
+/* ===== TRANSICIONES SUAVES SIMPLES ===== */
+
+/* Transición suave para el body */
+body {
+  opacity: 1;
+  transition: opacity 0.4s ease-in-out;
 }
 
-/* ===== ESTILOS ESPECÍFICOS PARA TOAST NOTIFICATIONS ===== */
-.swal2-toast.swal2-tema-dinamico {
-    background-color: var(--bg-tertiary) !important;
-    border: 1px solid var(--border-primary) !important;
-    box-shadow: 0 4px 12px var(--shadow-medium) !important;
-    border-radius: 10px !important;
-    max-width: 350px !important;
-    min-height: auto !important;
+/* Cuando se está cargando una nueva página */
+body.page-loading {
+  opacity: 0.7;
 }
 
-.swal2-toast .swal2-title-tema {
-    color: var(--text-primary) !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    margin: 0 !important;
-    padding: 0 !important;
+/* Mejoras del loader existente */
+#loader {
+  position: fixed;
+  z-index: 9999;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--modal-bg, rgba(0, 0, 0, 0.6));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  backdrop-filter: blur(2px);
 }
 
-.swal2-toast .swal2-html-tema {
-    color: var(--text-secondary) !important;
-    font-size: 13px !important;
-    margin: 4px 0 0 0 !important;
-    padding: 0 !important;
+/* Estados del loader */
+#loader.show {
+  opacity: 1;
+  visibility: visible;
 }
 
-.swal2-toast .swal2-timer-progress-bar {
-    background-color: var(--text-accent) !important;
-    height: 3px !important;
+.spinner {
+  border: 6px solid var(--border-secondary, rgba(255, 255, 255, 0.3));
+  border-top: 6px solid var(--text-accent, #e6a300);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  box-shadow: 0 0 20px rgba(230, 163, 0, 0.2);
 }
 
-/* ===== TOAST SIN ICONO PREDETERMINADO ===== */
-.swal2-toast.swal2-no-icon {
-    padding-left: 1rem !important;
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-.swal2-toast.swal2-no-icon .swal2-content {
-    margin-left: 0 !important;
+/* Efectos suaves para enlaces */
+a {
+  transition: all 0.2s ease;
 }
 
-.swal2-toast.swal2-no-icon .swal2-title {
-    margin-left: 0 !important;
-    text-align: left !important;
+a:hover {
+  text-decoration: none;
+  opacity: 0.8;
 }
 
-.swal2-toast.swal2-no-icon .swal2-html-container {
-    margin-left: 0 !important;
-    text-align: left !important;
+/* Botones con efecto suave */
+button {
+  transition: all 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Cards y elementos con hover */
+.producto-card, .card, .item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.producto-card:hover, .card:hover, .item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive: reducir efectos en móviles */
+@media (max-width: 768px) {
+  body {
+    transition: opacity 0.2s ease;
+  }
+  
+  #loader {
+    backdrop-filter: none; /* Mejor rendimiento en móviles */
+  }
+  
+  button:hover:not(:disabled) {
+    transform: none; /* Quitar transforms en móviles */
+  }
+  
+  .producto-card:hover, .card:hover, .item:hover {
+    transform: none;
+  }
+}
+
+/* Accesibilidad: respetar preferencias de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  #loader,
+  a,
+  button,
+  .producto-card,
+  .card,
+  .item {
+    transition: none;
+  }
+  
+  .spinner {
+    animation: none;
+  }
 }

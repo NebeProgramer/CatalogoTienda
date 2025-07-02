@@ -1,0 +1,45 @@
+/* ===== GUÍA DE USO: TRANSICIONES SUAVES SIMPLES ===== */
+
+/*
+Este sistema está diseñado para ser simple y no interferir con la navegación normal.
+
+1. NAVEGACIÓN AUTOMÁTICA SUAVE:
+   - Añade la clase 'nav-suave' a cualquier enlace para navegación suave:
+   
+   <a href="/contacto" class="nav-suave">Contacto</a>
+
+2. NAVEGACIÓN PROGRAMÁTICA:
+   - Desde JavaScript, usa:
+   
+   window.irASuave('/sobre-nosotros', 400); // URL y delay opcional
+
+3. CONTROL MANUAL DEL LOADER:
+   - Mostrar loader: window.mostrarLoaderManual();
+   - Ocultar loader: window.ocultarLoaderManual();
+
+4. EJEMPLO EN BOTONES:
+   
+   document.getElementById('miBoton').addEventListener('click', () => {
+       window.irASuave('/admin', 500);
+   });
+
+5. EJEMPLO CON FORMULARIOS:
+   
+   document.getElementById('miFormulario').addEventListener('submit', (e) => {
+       window.mostrarLoaderManual();
+       // Tu lógica de envío aquí...
+   });
+
+CARACTERÍSTICAS:
+- ✅ Transiciones CSS suaves automáticas
+- ✅ Loader con backdrop blur
+- ✅ Optimizado para móviles
+- ✅ Respeta preferencias de accesibilidad
+- ✅ No intercepta navegación normal (solo con clase 'nav-suave')
+- ✅ Manejo automático de carga de página e imágenes
+
+COMPATIBILIDAD:
+- ✅ Funciona con el sistema existente
+- ✅ No rompe navegación existente
+- ✅ Fácil de implementar gradualmente
+*/

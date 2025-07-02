@@ -264,7 +264,11 @@ const reqEspecial = document.getElementById('req-especial');
                     // Agregar eventos a los botones
                     const btnMasInfo = divProducto.querySelector('.btnMasInfo');
                     btnMasInfo.addEventListener('click', () => {
-                        window.location.href = `/producto/${producto.id}`;
+                        if (typeof window.irASuave === 'function') {
+                            window.irASuave(`/producto/${producto.id}`, 400);
+                        } else {
+                            window.location.href = `/producto/${producto.id}`;
+                        }
                     });
 
                     const btnCarrito = divProducto.querySelector('.btnCarrito');
@@ -1166,7 +1170,12 @@ function openCRUD() {
     });
 
     btnCrear.addEventListener('click', () => {
-        window.location.href = '/admin';
+        // Usar navegación suave si está disponible
+        if (typeof window.irASuave === 'function') {
+            window.irASuave('/admin', 500);
+        } else {
+            window.location.href = '/admin';
+        }
     });
 
     // Cargar categorías dinámicamente
