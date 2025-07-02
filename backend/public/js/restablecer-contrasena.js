@@ -16,6 +16,18 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         currentTab = tab;
         
+        // Cambiar título de la página y header dinámicamente
+        const pageTitle = document.querySelector('title');
+        const headerTitle = document.getElementById('page-title');
+        
+        if (tab === 'verificar') {
+            pageTitle.textContent = 'PawMarket - Verificar Cuenta';
+            headerTitle.textContent = 'PawMarket - Verificar Cuenta';
+        } else if (tab === 'restablecer') {
+            pageTitle.textContent = 'PawMarket - Restablecer Contraseña';
+            headerTitle.textContent = 'PawMarket - Restablecer Contraseña';
+        }
+        
         // Limpiar mensajes
         const mensajeVerificar = document.getElementById('mensaje-verificar');
         const mensajeRestablecer = document.getElementById('mensaje-restablecer');
@@ -35,9 +47,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         urlToken && urlToken !== 'restablecer-contrasena') {
         showTab('restablecer');
     }
-    
     // Si la URL es /verificar-cuenta/, mostrar formulario de verificar
-    if (window.location.pathname.includes('/verificar-cuenta/')) {
+    else if (window.location.pathname.includes('/verificar-cuenta/')) {
+        showTab('verificar');
+    }
+    // Por defecto, mostrar verificar (ya está activo en el HTML, solo actualizamos título)
+    else {
         showTab('verificar');
     }
 

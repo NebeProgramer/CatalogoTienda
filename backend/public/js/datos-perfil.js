@@ -262,9 +262,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Obtener valores
         const calle = document.getElementById('calle').value.trim();
         const carrera = document.getElementById('carrera').value.trim();
-        const casa = document.getElementById('piso').value.trim();
+        let casa = document.getElementById('piso').value.trim();
         const piso = document.getElementById('dpto').value.trim();
         const codigoPostal = document.getElementById('cp').value.trim();
+        
+        // Auto-agregar "#" al número secundario si el usuario no lo incluye
+        if (casa && !casa.startsWith('#')) {
+            casa = '#' + casa;
+        }
         const departamento = document.getElementById('departamento').value.trim();
         const ciudad = document.getElementById('ciudad').value.trim();
         const pais = document.getElementById('pais').value.trim();
