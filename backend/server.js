@@ -1875,7 +1875,7 @@ app.delete('/api/redes-sociales/:id', async (req, res) => {
 // Obtener todos los temas
 app.get('/api/temas', async (req, res) => {
     try {
-        const temas = await Tema.find().sort({ fechaCreacion: -1 });
+        const temas = await Tema.find().sort({ orden: 1, nombre: 1 });
         res.json(temas);
     } catch (error) {
         console.error('Error al obtener temas:', error);
@@ -1911,7 +1911,7 @@ app.get('/api/temas/:id', async (req, res) => {
 // Crear un nuevo tema
 app.post('/api/temas', async (req, res) => {
     try {
-        const { nombre, colores } = req.body;
+        const { nombre, emoji, colores } = req.body;
         
         if (!nombre) {
             return res.status(400).json({ error: 'El nombre del tema es requerido' });
@@ -1925,6 +1925,7 @@ app.post('/api/temas', async (req, res) => {
 
         const nuevoTema = new Tema({
             nombre,
+            emoji: emoji || '🎨',
             colores: colores || {}
         });
 

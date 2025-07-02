@@ -115,8 +115,8 @@ const reqEspecial = document.getElementById('req-especial');
                     temas.forEach(tema => {
                         const opcion = document.createElement('option');
                         opcion.value = tema._id;
-                        // Mostrar nombre completo con icono
-                        opcion.textContent = `${tema.icono || '🎨'} ${tema.nombre}`;
+                        // Mostrar nombre completo con emoji
+                        opcion.textContent = `${tema.emoji || '🎨'} ${tema.nombre}`;
                         opcion.dataset.tema = JSON.stringify(tema); // Guardar datos completos del tema
                         selectorTemas.appendChild(opcion);
                     });

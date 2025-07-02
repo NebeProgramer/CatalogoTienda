@@ -172,7 +172,10 @@ scale=1.0">
                     <div class="nuevo-tema-icon">➕</div>
                     <div class="nuevo-tema-text">Crear Nuevo Tema</div>
                     <form class="form-nuevo-tema" id="formNuevoTema">
-                        <input type="text" class="input-nombre-tema" id="nombreNuevoTema" placeholder="Nombre del tema" required>
+                        <div class="input-group">
+                            <input type="text" class="input-emoji-tema" id="emojiNuevoTema" placeholder="🎨" maxlength="4" title="Emoji del tema (opcional)">
+                            <input type="text" class="input-nombre-tema" id="nombreNuevoTema" placeholder="Nombre del tema" required>
+                        </div>
                         <div class="form-buttons">
                             <button type="submit" class="btn-tema btn-aplicar">✓ Crear</button>
                             <button type="button" class="btn-tema btn-eliminar" id="cancelarNuevoTema">✗ Cancelar</button>

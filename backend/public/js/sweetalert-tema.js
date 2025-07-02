@@ -239,7 +239,7 @@ window.mostrarNotificacionTema = function(tema) {
     
     // Preparar el título y contenido
     const tituloTema = tema.nombre || 'Tema aplicado';
-    const iconoTema = tema.icono || '🎨';
+    const iconoTema = tema.emoji || '🎨';
     
     Swal.fire({
         // Quitar el icono predeterminado que se ve mal
@@ -271,8 +271,6 @@ window.mostrarNotificacionTema = function(tema) {
             icon: 'swal2-icon-custom'
         },
         buttonsStyling: false,
-        backdrop: false,
-        allowOutsideClick: true,
         allowEscapeKey: true,
         showClass: {
             popup: 'swal2-show swal2-toast-show'
@@ -298,7 +296,7 @@ window.mostrarNotificacionTemaSimple = function(tema) {
     }
     
     const tituloTema = tema.nombre || 'Tema aplicado';
-    const iconoTema = tema.icono || '🎨';
+    const iconoTema = tema.emoji || '🎨';
     
     Swal.fire({
         // Sin icono predeterminado
@@ -317,8 +315,6 @@ window.mostrarNotificacionTemaSimple = function(tema) {
             htmlContainer: 'swal2-html-tema'
         },
         buttonsStyling: false,
-        backdrop: false,
-        allowOutsideClick: true,
         allowEscapeKey: true,
         showClass: {
             popup: 'swal2-show swal2-toast-show'

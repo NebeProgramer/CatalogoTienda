@@ -615,18 +615,40 @@
     justify-content: center;
 }
 
-.input-nombre-tema {
+.input-group {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+    margin-bottom: 12px;
+}
+
+.input-nombre-tema, .input-emoji-tema {
     padding: 8px 12px;
     border: 1px solid var(--border-primary);
     border-radius: 6px;
     background: var(--bg-tertiary);
     color: var(--text-primary);
     font-size: 14px;
-    width: 100%;
     box-sizing: border-box;
+    height: 38px;
 }
 
-.input-nombre-tema:focus {
+.input-nombre-tema {
+    flex: 1;
+}
+
+.input-emoji-tema {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 18px;
+    width: 50px;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+.input-nombre-tema:focus, .input-emoji-tema:focus {
     outline: none;
     border-color: var(--text-accent);
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);

@@ -56,6 +56,13 @@ class EditorTemas {
         this.init();
     }
     init() {
+        // Verificar si estamos en la página correcta (que tenga los elementos necesarios)
+        const temasLista = document.getElementById('temasLista');
+        if (!temasLista) {
+            console.log('💡 [EditorTemas] No se encuentra en la página del editor de temas, omitiendo inicialización');
+            return;
+        }
+        
         this.cargarTemas();
         this.setupEventListeners();
         this.configurarSweetAlert2();
@@ -120,12 +127,20 @@ class EditorTemas {
             });
         }
         // Acciones del editor - botón principal de guardar
-        document.getElementById('btnGuardarTemas').addEventListener('click', () => {
-            this.guardarCambios();
-        });
-        document.getElementById('btnCancelarTemas').addEventListener('click', () => {
-            this.cancelarCambios();
-        });
+        const btnGuardarTemas = document.getElementById('btnGuardarTemas');
+        if (btnGuardarTemas) {
+            btnGuardarTemas.addEventListener('click', () => {
+                this.guardarCambios();
+            });
+        }
+        
+        const btnCancelarTemas = document.getElementById('btnCancelarTemas');
+        if (btnCancelarTemas) {
+            btnCancelarTemas.addEventListener('click', () => {
+                this.cancelarCambios();
+            });
+        }
+        
         // Botón de guardar en el editor
         const btnGuardarEditor = document.getElementById('btnGuardarEditor');
         if (btnGuardarEditor) {
@@ -133,12 +148,20 @@ class EditorTemas {
                 this.guardarCambios();
             });
         }
-        document.getElementById('btnAplicarPrevio').addEventListener('click', () => {
-            this.aplicarPrevio();
-        });
-        document.getElementById('btnCerrarEditor').addEventListener('click', () => {
-            this.cerrarEditor();
-        });
+        
+        const btnAplicarPrevio = document.getElementById('btnAplicarPrevio');
+        if (btnAplicarPrevio) {
+            btnAplicarPrevio.addEventListener('click', () => {
+                this.aplicarPrevio();
+            });
+        }
+        
+        const btnCerrarEditor = document.getElementById('btnCerrarEditor');
+        if (btnCerrarEditor) {
+            btnCerrarEditor.addEventListener('click', () => {
+                this.cerrarEditor();
+            });
+        }
         // Detectar cambios en inputs de color para marcar cambios pendientes
         document.addEventListener('input', (e) => {
             if (e.target.classList.contains('color-picker') || 
@@ -271,19 +294,26 @@ class EditorTemas {
     ocultarFormularioNuevoTema() {
         const form = document.getElementById('formNuevoTema');
         const card = document.getElementById('nuevoTemaCard');
-        const input = document.getElementById('nombreNuevoTema');
+        const inputNombre = document.getElementById('nombreNuevoTema');
+        const inputEmoji = document.getElementById('emojiNuevoTema');
+        
         if (form) {
             form.classList.remove('visible');
         }
         if (card) {
             card.classList.remove('activo');
         }
-        if (input) {
-            input.value = '';
+        if (inputNombre) {
+            inputNombre.value = '';
+        }
+        if (inputEmoji) {
+            inputEmoji.value = '';
         }
     }
     async crearNuevoTema() {
         const nombre = document.getElementById('nombreNuevoTema').value.trim();
+        const emoji = document.getElementById('emojiNuevoTema').value.trim() || '🎨';
+        
         if (!nombre) {
             const swalAlert = window.SwalAlert || Swal;
             swalAlert.fire({
@@ -318,6 +348,7 @@ class EditorTemas {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     nombre, 
+                    emoji,
                     colores: coloresPorDefecto 
                 })
             });
@@ -617,7 +648,7 @@ class EditorTemas {
                 localStorage.setItem('coloresTema', JSON.stringify(tema.colores));
                 localStorage.setItem('nombreTemaSeleccionado', tema.nombre);
                 localStorage.setItem('temaSeleccionadoId', tema._id);
-                localStorage.setItem('iconicoTema', tema.icono || '🎨');
+                localStorage.setItem('iconicoTema', tema.emoji || '🎨');
                 
                 // Aplicar inmediatamente el tema al DOM
                 this.aplicarColoresAlCSS(tema.colores);
@@ -1272,7 +1303,7 @@ window.aplicarTemaById = async function(temaId) {
         localStorage.setItem('temaSeleccionadoId', temaId);
         localStorage.setItem('nombreTemaSeleccionado', tema.nombre);
         localStorage.setItem('coloresTema', JSON.stringify(tema.colores));
-        localStorage.setItem('iconicoTema', tema.icono || '🎨');
+        localStorage.setItem('iconicoTema', tema.emoji || '🎨');
         // Sincronizar con el sistema de temas dinámicos si existe
         if (window.temaDinamicoManager && window.temaDinamicoManager.iniciado) {
             window.temaDinamicoManager.temaActual = tema;
@@ -1292,7 +1323,7 @@ window.aplicarTemaById = async function(temaId) {
             } else {
                 // Fallback con configuración toast directa sin icono
                 Swal.fire({
-                    title: `${tema.icono || '🎨'} ${tema.nombre}`,
+                    title: `${tema.emoji || '🎨'} ${tema.nombre}`,
                     text: 'Tema aplicado correctamente',
                     toast: true,
                     position: 'top-end',
@@ -1325,7 +1356,7 @@ window.obtenerTemaActual = function() {
         return {
             id: temaId,
             nombre: nombreTema,
-            icono: iconoTema || '🎨',
+            emoji: iconoTema || '🎨',
             colores: coloresTema ? JSON.parse(coloresTema) : null,
             aplicado: !!coloresTema
         };
