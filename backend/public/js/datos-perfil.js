@@ -709,7 +709,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const avatarInput = document.getElementById('avatarInput');
     const btnCambiarAvatar = document.getElementById('btnCambiarAvatar');
     const btnEliminarAvatar = document.getElementById('btnEliminarAvatar');
-    // Funcionalidad del avatar    const inicializarAvatar = () => {
+    
+    // Funcionalidad del avatar
+    function inicializarAvatar() {
         // Mostrar la imagen actual del usuario
         if (usuario.fotoGoogle && usuario.fotoGoogle.trim() !== "") {
             avatarPreview.src = usuario.fotoGoogle;
@@ -728,6 +730,8 @@ document.addEventListener('DOMContentLoaded', () => {
             this.style.objectFit = 'cover';
             this.style.borderRadius = '50%';
         };
+    }
+    
     // Event listener para cambiar avatar
     btnCambiarAvatar.addEventListener('click', () => {
         avatarInput.click();
