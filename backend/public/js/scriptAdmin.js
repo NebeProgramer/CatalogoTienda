@@ -49,130 +49,156 @@ document.addEventListener('DOMContentLoaded', () => {
         if (loader) loader.style.display = 'none';
     }
     // Modificar la función cargarProductos para ocultar el botón "Comprar todo" al aplicar filtros
+    // --- Carrusel admin con paginación y funciones de edición/eliminación/estado ---
+    let paginaActualAdmin = 0;
+    const productosPorPaginaAdmin = 16;
+    let productosFiltradosAdmin = [];
+
+    function renderizarCarruselAdmin(productos) {
+        const carruselItems = document.querySelector('.carrusel-items');
+        carruselItems.innerHTML = '';
+        const inicio = paginaActualAdmin * productosPorPaginaAdmin;
+        const fin = inicio + productosPorPaginaAdmin;
+        const productosPagina = productos.slice(inicio, fin);
+        for (const producto of productosPagina) {
+            const divProducto = document.createElement('div');
+            divProducto.classList.add('producto');
+            divProducto.dataset.id = producto.id;
+            const primeraImagen = producto.imagenes && producto.imagenes.length > 0 ? producto.imagenes[0] : '/placeholder.jpg';
+            divProducto.innerHTML = `
+                <div class="producto-frontal">
+                    <img src="${primeraImagen}" alt="${producto.nombre}" class="producto-imagen">
+                    <h3 class="producto-nombre">${producto.nombre}</h3>
+                    <p class="producto-precio">💰 ${producto.moneda} ${producto.precio}</p>
+                    <p class="producto-stock">📦 Stock: ${producto.stock}</p>
+                    <div class="producto-acciones">
+                        <button class="btnEditar" data-id="${producto.id}">Actualizar</button>
+                        <button class="btnEliminar" data-id="${producto.id}">Eliminar</button>
+                    </div>
+                    <div class="estado-switch">
+                        <label class="switch">
+                            <input type="checkbox" id="estado-${producto.id}" ${producto.estado === 'disponible' ? 'checked' : ''}>
+                            <span class="slider"></span>
+                        </label>
+                        <label for="estado-${producto.id}" class="estado-label">${producto.estado}</label>
+                    </div>
+                </div>
+            `;
+            // Eventos de estado
+            divProducto.querySelector(`#estado-${producto.id}`).addEventListener('change', async (event) => {
+                const labelEstado = divProducto.querySelector('.estado-label');
+                const nuevoEstado = event.target.checked ? 'disponible' : 'no disponible';
+                try {
+                    const respuesta = await fetch(`/api/productos/${producto.id}/disponibilidad`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ estado: nuevoEstado })
+                    });
+                    if (!respuesta.ok) throw new Error('Error al actualizar el estado del producto.');
+                    labelEstado.textContent = nuevoEstado;
+                } catch (error) {
+                    console.error('Error al actualizar el estado:', error);
+                    alert('Hubo un error al actualizar el estado del producto.');
+                }
+            });
+            // Evento editar
+            divProducto.querySelector('.btnEditar').addEventListener('click', () => {
+                window.location.href = `/admin/producto/${producto.id}`;
+            });
+            // Evento eliminar
+            divProducto.querySelector('.btnEliminar').addEventListener('click', async () => {
+                const confirmar = await Swal.fire({
+                    title: '¿Estás seguro de que deseas eliminar este producto?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                });
+                if (confirmar.isConfirmed) {
+                    try {
+                        const respuesta = await fetch(`/api/productos/${producto.id}`, { method: 'DELETE' });
+                        if (respuesta.ok) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Producto eliminado',
+                                text: 'Producto eliminado exitosamente.',
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                            cargarProductos();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Error al eliminar el producto.',
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error al eliminar el producto:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Hubo un error al eliminar el producto.',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    }
+                }
+            });
+            carruselItems.appendChild(divProducto);
+        }
+        // Actualizar botones de paginación
+        const btnPrev = document.querySelector('.carrusel-prev');
+        const btnNext = document.querySelector('.carrusel-next');
+        const totalPaginas = Math.ceil(productos.length / productosPorPaginaAdmin);
+        if (btnPrev && btnNext) {
+            btnPrev.disabled = totalPaginas <= 1 || paginaActualAdmin === 0;
+            btnNext.disabled = totalPaginas <= 1 || paginaActualAdmin === totalPaginas - 1;
+            btnPrev.classList.toggle('disabled', btnPrev.disabled);
+            btnNext.classList.toggle('disabled', btnNext.disabled);
+            btnPrev.onclick = () => {
+                if (paginaActualAdmin > 0) {
+                    paginaActualAdmin--;
+                    renderizarCarruselAdmin(productosFiltradosAdmin);
+                }
+            };
+            btnNext.onclick = () => {
+                if (paginaActualAdmin < totalPaginas - 1) {
+                    paginaActualAdmin++;
+                    renderizarCarruselAdmin(productosFiltradosAdmin);
+                }
+            };
+        }
+    }
+
+    // Modificar cargarProductos para usar paginación y renderizado admin
     const cargarProductos = async (categoria = 'Todos') => {
         mostrarLoader();
         try {
             const respuesta = await fetch('/api/productos');
-            if (!respuesta.ok) {
-                throw new Error('Error al cargar los productos.');
-            }
+            if (!respuesta.ok) throw new Error('Error al cargar los productos.');
             const productos = await respuesta.json();
-            const carruselItems = document.querySelector('.carrusel-items');
-            carruselItems.innerHTML = ''; // Limpiar el carrusel
             const monedaPreferida = localStorage.getItem('monedaPreferida') || 'USD';
-            // Filtrar los productos si se selecciona una categoría específica
-            const productosFiltrados = categoria === 'Todos'
-                ? productos
-                : productos.filter(producto => producto.categoria === categoria);
+            const productosFiltrados = categoria === 'Todos' ? productos : productos.filter(producto => producto.categoria === categoria);
+            productosFiltradosAdmin = productosFiltrados;
+            paginaActualAdmin = 0;
             if (productosFiltrados.length === 0) {
+                const carruselItems = document.querySelector('.carrusel-items');
+                carruselItems.innerHTML = '';
                 const mensajeVacio = document.createElement('p');
                 mensajeVacio.textContent = 'No se encontraron productos.';
                 mensajeVacio.classList.add('mensaje-vacio');
                 carruselItems.appendChild(mensajeVacio);
             } else {
-                for (const producto of productosFiltrados) {
-                    const divProducto = document.createElement('div');
-                    divProducto.classList.add('producto');
-                    divProducto.dataset.id = producto.id;
-                    // Mostrar solo la primera imagen del producto
-                    const primeraImagen = producto.imagenes.length > 0 ? producto.imagenes[0] : '/placeholder.jpg';
-                    divProducto.innerHTML = `
-                        <div class="producto-frontal">
-                            <img src="${primeraImagen}" alt="${producto.nombre}" class="producto-imagen">
-                            <h3 class="producto-nombre">${producto.nombre}</h3>
-                            <p class="producto-precio">💰 ${producto.moneda} ${producto.precio}</p>
-                            <p class="producto-stock">📦 Stock: ${producto.stock}</p>
-                            <div class="producto-acciones">
-                                <button class="btnEditar" data-id="${producto.id}">Actualizar</button>
-                                <button class="btnEliminar" data-id="${producto.id}">Eliminar</button>
-                            </div>
-                            <div class="estado-switch">
-            <label class="switch">
-                <input type="checkbox" id="estado-${producto.id}" ${producto.estado === 'disponible' ? 'checked' : ''}>
-                <span class="slider"></span>
-            </label>
-            <label for="estado-${producto.id}" class="estado-label">${producto.estado}</label>
-        </div>
-                        </div>
-                    `;
-                    // Agregar el div del producto al carrusel
-                    carruselItems.appendChild(divProducto);
-                    document.getElementById(`estado-${producto.id}`).addEventListener('change', async (event) => {
-                        const labelEstado = divProducto.querySelector('.estado-label');
-                        const nuevoEstado = event.target.checked ? 'disponible' : 'no disponible';
-                        try {
-                            const respuesta = await fetch(`/api/productos/${producto.id}/disponibilidad`, { // Ajuste en la URL
-                                method: 'PATCH',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({ estado: nuevoEstado })
-                            });
-                            if (!respuesta.ok) {
-                                throw new Error('Error al actualizar el estado del producto.');
-                            }
-                            labelEstado.textContent = nuevoEstado;
-                        } catch (error) {
-                            console.error('Error al actualizar el estado:', error);
-                            alert('Hubo un error al actualizar el estado del producto.');
-                        }
-                    });
-                    // Agregar eventos a los botones
-                    const btnEditar = divProducto.querySelector('.btnEditar');
-                    btnEditar.addEventListener('click', () => {
-                        window.location.href = `/admin/producto/${producto.id}`;
-                    });
-                    const btnCarrito = divProducto.querySelector('.btnEliminar');
-                    btnCarrito.addEventListener('click', async () => {
-                        const confirmar = await Swal.fire({
-                            title: '¿Estás seguro de que deseas eliminar este producto?',
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonText: 'Sí, eliminar',
-                            cancelButtonText: 'Cancelar'
-                        });
-                        if (confirmar.isConfirmed) {
-                            try {
-                                const respuesta = await fetch(`/api/productos/${producto.id}`, {
-                                    method: 'DELETE',
-                                });
-                                if (respuesta.ok) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Producto eliminado',
-                                        text: 'Producto eliminado exitosamente.',
-                                        toast: true,
-                                        position: 'top-end',
-                                        showConfirmButton: false,
-                                        timer: 3000
-                                    });
-                                    cargarProductos(); // Recargar los productos después de eliminar
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: 'Error al eliminar el producto.',
-                                        toast: true,
-                                        position: 'top-end',
-                                        showConfirmButton: false,
-                                        timer: 3000
-                                    });
-                                }
-                            } catch (error) {
-                                console.error('Error al eliminar el producto:', error);
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: 'Hubo un error al eliminar el producto.',
-                                    toast: true,
-                                    position: 'top-end',
-                                    showConfirmButton: false,
-                                    timer: 3000
-                                });
-                            }
-                        }
-                    });
-                }
+                renderizarCarruselAdmin(productosFiltrados);
             }
         } catch (error) {
             console.error('Error al cargar los productos:', error);
@@ -1237,7 +1263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     // Manejar el botón para agregar red social
     document.getElementById('btn-agregar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes-sociales');
+        const contenedor = document.querySelector('.redes_sociales');
         contenedor.innerHTML = ''; // Limpiar el contenedor para preparar la edición
         contenedor.style.flexDirection = 'column'; // Cambia a columna en modo edición
         try {
@@ -1298,7 +1324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     document.getElementById('btn-guardar-red').addEventListener('click', async () => {
-        const contenedor = document.querySelector('.redes-sociales');
+        const contenedor = document.querySelector('.redes_sociales');
         contenedor.style.flexDirection = 'row'; // Vuelve a fila al guardar
         const items = contenedor.querySelectorAll('li');
         for (const item of items) {
@@ -1373,7 +1399,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarRedesSociales(); // Recargar las redes sociales
         document.getElementById('btn-guardar-red').style.display = 'none'; // Ocultar el botón de guardar
         document.getElementById('Cancelar').style.display = 'none';
-        const contenedor = document.querySelector('.redes-sociales');
+        const contenedor = document.querySelector('.redes_sociales');
         contenedor.style.flexDirection = 'row'; // Vuelve a fila al cancelar
     });
     // Cargar redes sociales al cargar la página

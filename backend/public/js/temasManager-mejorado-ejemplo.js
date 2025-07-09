@@ -50,66 +50,6 @@ class TemasManagerMejorado {
         
         // Aplicar tema inicial
         this.aplicarTema(this.temaActual);
-        
-        // Configurar event listeners cuando el DOM esté listo
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                this.configurarEventListenersTemas();
-                this.mostrarIndicadorTema();
-            });
-        } else {
-            this.configurarEventListenersTemas();
-            this.mostrarIndicadorTema();
-        }
     }
-
-    actualizarIndicadorTema() {
-        const indicador = document.getElementById('theme-indicator');
-        if (!indicador) return;
-
-        // Usar el nombre real del tema en lugar del ID
-        let nombreTema = 'Tema Desconocido';
-        let iconoTema = '🎨';
-        
-        if (this.temaActivoNombre && this.temaActivoIcono) {
-            // Si tenemos info del tema activo desde la API
-            nombreTema = this.temaActivoNombre;
-            iconoTema = this.temaActivoIcono;
-        } else if (this.temas[this.temaActual]) {
-            // Si tenemos info del tema en nuestro cache
-            nombreTema = this.temas[this.temaActual].nombre;
-            iconoTema = this.temas[this.temaActual].icono;
-        } else {
-            // Fallback para temas hardcodeados
-            const temasDefault = {
-                'light': { nombre: 'Claro', icono: '🌞' },
-                'dark': { nombre: 'Oscuro', icono: '🌙' },
-                'blue': { nombre: 'Azul', icono: '🌊' },
-                'green': { nombre: 'Verde', icono: '🌿' }
-            };
-            
-            if (temasDefault[this.temaActual]) {
-                nombreTema = temasDefault[this.temaActual].nombre;
-                iconoTema = temasDefault[this.temaActual].icono;
-            }
-        }
-        
-        indicador.textContent = `${iconoTema} ${nombreTema}`;
-        
-        // Hacer clickeable el indicador para abrir preferencias
-        indicador.style.cursor = 'pointer';
-        indicador.onclick = () => {
-            const btnPreferencias = document.getElementById('btnPreferencias');
-            if (btnPreferencias) {
-                btnPreferencias.click();
-            }
-        };
-    }
-
-    // ... resto del código igual ...
 }
 
-// Para usar esta versión mejorada, simplemente reemplaza:
-// const temasManager = new TemasManager();
-// por:
-// const temasManager = new TemasManagerMejorado();

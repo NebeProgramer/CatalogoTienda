@@ -637,6 +637,23 @@ function openCRUD() {
                 carruselItems.appendChild(divProducto);
             }
         }
+        // Actualizar botones de paginación
+        const btnPrev = document.querySelector('.carrusel-prev');
+        const btnNext = document.querySelector('.carrusel-next');
+        const totalPaginas = Math.ceil(productos.length / productosPorPagina);
+        if (btnPrev && btnNext) {
+            if (totalPaginas <= 1) {
+                btnPrev.disabled = true;
+                btnNext.disabled = true;
+                btnPrev.classList.add('disabled');
+                btnNext.classList.add('disabled');
+            } else {
+                btnPrev.disabled = paginaActual === 0;
+                btnNext.disabled = paginaActual === totalPaginas - 1;
+                btnPrev.classList.toggle('disabled', paginaActual === 0);
+                btnNext.classList.toggle('disabled', paginaActual === totalPaginas - 1);
+            }
+        }
     }
 
     // Botones de paginación para el carrusel normal
@@ -644,18 +661,71 @@ function openCRUD() {
     const btnNext = document.querySelector('.carrusel-next');
     if (btnPrev && btnNext) {
         btnPrev.addEventListener('click', () => {
+            console.log('Botón < presionado');
             if (paginaActual > 0) {
                 paginaActual--;
                 renderizarCarrusel(productosFiltradosGlobal);
+                console.log(`Carrusel movido a la página ${paginaActual + 1}`);
             }
         });
         btnNext.addEventListener('click', () => {
+            console.log('Botón > presionado');
             const totalPaginas = Math.ceil(productosFiltradosGlobal.length / productosPorPagina);
             if (paginaActual < totalPaginas - 1) {
                 paginaActual++;
                 renderizarCarrusel(productosFiltradosGlobal);
+                console.log(`Carrusel movido a la página ${paginaActual + 1}`);
             }
         });
+    }
+
+    // Modificar renderizarCarrusel para deshabilitar visualmente los botones
+    function renderizarCarrusel(productos) {
+        const carruselItems = document.querySelector('.carrusel-items');
+        carruselItems.innerHTML = '';
+        const inicio = paginaActual * productosPorPagina;
+        const fin = inicio + productosPorPagina;
+        const productosPagina = productos.slice(inicio, fin);
+        for (const producto of productosPagina) {
+            if (producto.estado === 'disponible' && producto.stock > 0) {
+                const precioConvertido = producto.precio; // Usa tu lógica de conversión si es necesario
+                const divProducto = document.createElement('div');
+                divProducto.classList.add('producto');
+                divProducto.dataset.id = producto.id;
+                const primeraImagen = producto.imagenes.length > 0 ? producto.imagenes[0] : '/placeholder.jpg';
+                divProducto.innerHTML = `
+                    <div class="producto-frontal">
+                        <img src="${primeraImagen}" alt="${producto.nombre}" class="producto-imagen">
+                        <h3 class="producto-nombre">${producto.nombre}</h3>
+                        <p class="producto-precio">💰 ${producto.moneda} ${precioConvertido}</p>
+                        <p class="producto-stock">📦 Stock: ${producto.stock}</p>
+                        <div class="producto-acciones">
+                            <button class="btnMasInfo" data-id="${producto.id}">ℹ️ Más información</button>
+                            <button class="btnCarrito" data-id="${producto.id}" ${producto.stock === 0 ? 'disabled' : ''}>🛒 Añadir al carrito</button>
+                        </div>
+                    </div>
+                `;
+                // ...agrega listeners si es necesario...
+                carruselItems.appendChild(divProducto);
+            }
+        }
+        // Actualizar botones de paginación
+        const btnPrev = document.querySelector('.carrusel-prev');
+        const btnNext = document.querySelector('.carrusel-next');
+        const totalPaginas = Math.ceil(productos.length / productosPorPagina);
+        if (btnPrev && btnNext) {
+            if (totalPaginas <= 1) {
+                btnPrev.disabled = true;
+                btnNext.disabled = true;
+                btnPrev.classList.add('disabled');
+                btnNext.classList.add('disabled');
+            } else {
+                btnPrev.disabled = paginaActual === 0;
+                btnNext.disabled = paginaActual === totalPaginas - 1;
+                btnPrev.classList.toggle('disabled', paginaActual === 0);
+                btnNext.classList.toggle('disabled', paginaActual === totalPaginas - 1);
+            }
+        }
     }
 
     // --- Carrusel recomendados (3 productos, mueve de 1 en 1, automático) ---
@@ -666,6 +736,8 @@ function openCRUD() {
         const productos = carruselItems.querySelectorAll('.producto-recomendado');
         const productosPorVista = 3;
         let currentIndex = 0;
+        let intervalId = null;
+        let isPaused = false;
 
         const actualizarCarrusel = () => {
             productos.forEach((producto, index) => {
@@ -675,21 +747,53 @@ function openCRUD() {
                     producto.style.display = 'none';
                 }
             });
+            // Deshabilitar visualmente los botones si hay menos de 4 productos
+            if (productos.length <= productosPorVista) {
+                prevButton.disabled = true;
+                nextButton.disabled = true;
+                prevButton.classList.add('disabled');
+                nextButton.classList.add('disabled');
+            } else {
+                prevButton.disabled = false;
+                nextButton.disabled = false;
+                prevButton.classList.remove('disabled');
+                nextButton.classList.remove('disabled');
+            }
         };
 
         const moverCarrusel = (direccion) => {
             const totalProductos = productos.length;
             currentIndex += direccion;
-            if (currentIndex < 0) currentIndex = totalProductos - productosPorVista;
-            else if (currentIndex > totalProductos - productosPorVista) currentIndex = 0;
+            if (currentIndex < 0) {
+                currentIndex = totalProductos - productosPorVista;
+            } else if (currentIndex > totalProductos - productosPorVista) {
+                currentIndex = 0;
+            }
             actualizarCarrusel();
         };
 
         if (prevButton && nextButton) {
-            prevButton.addEventListener('click', () => moverCarrusel(-1));
-            nextButton.addEventListener('click', () => moverCarrusel(1));
+            prevButton.addEventListener('click', () => { moverCarrusel(-1); console.log('Botón < presionado'); });
+            nextButton.addEventListener('click', () => { moverCarrusel(1); console.log('Botón > presionado'); });
         }
-        setInterval(() => moverCarrusel(1), 5000);
+
+        // Pausar y reanudar el carrusel al hacer hover
+        productos.forEach(producto => {
+            producto.addEventListener('mouseenter', () => {
+                isPaused = true;
+            });
+            producto.addEventListener('mouseleave', () => {
+                isPaused = false;
+            });
+        });
+
+        function startAuto() {
+            if (intervalId) clearInterval(intervalId);
+            intervalId = setInterval(() => {
+                if (!isPaused) moverCarrusel(1);
+            }, 5000);
+        }
+        startAuto();
         actualizarCarrusel();
     };
     

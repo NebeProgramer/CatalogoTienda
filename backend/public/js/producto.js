@@ -414,7 +414,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
     
     // Función para agregar un producto al carrito
     document.getElementById('btnCarrito').addEventListener('click', () => {
-        const productoId = parseInt(new URLSearchParams(window.location.search).get('id'), 10);
+        const productoId = parseInt(window.location.pathname.split('/').pop(), 10);
         const cantidad = parseInt(document.getElementById('cantidadProducto').value, 10);
     
         if (!productoId || isNaN(cantidad) || cantidad <= 0) {
@@ -436,7 +436,7 @@ alert('Hubo un error al cargar el producto. Intenta nuevamente.');
         mostrarLoader();
         const comentarioTexto = document.getElementById('comentarioTexto').value.trim();
         const calificacion = parseFloat(document.getElementById('calificacion').value);
-        const productoId = parseInt(new URLSearchParams(window.location.search).get('id'), 10);
+        const productoId = parseInt(window.location.pathname.split('/').pop(), 10);
         const perfil = JSON.parse(localStorage.getItem('usuario'));
 
         if (!perfil || !perfil.correo) {
