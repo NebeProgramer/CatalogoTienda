@@ -6,6 +6,7 @@
     --bg-tertiary: #ffffff;
     --text-primary: #2c2c2c;  /* Negro más suave pero con buen contraste */
     --text-secondary: #555555;  /* Gris más oscuro para mejor contraste */
+    --text-tertiary: #333333;  /* Gris más claro para texto terciario */
     --text-accent: #d49000;  /* Naranja oscuro para texto de acento */
     --border-primary: #ddd;
     --border-secondary: #ccc;
@@ -26,6 +27,7 @@
     --bg-tertiary: #2d2d2d;  /* Más claro que el primario */
     --text-primary: #ffffff;
     --text-secondary: #e0e0e0;  /* Blanco más suave pero visible */
+    --text-tertiary: #ffffff;  /* Blanco puro para máximo contraste */
     --text-accent: #ffb84d;  /* Naranja más claro para tema oscuro */
     --border-primary: #555;
     --border-secondary: #666;
@@ -46,7 +48,7 @@
     --bg-tertiary: #ffffff;
     --text-primary: #1a237e;  /* Azul muy oscuro para buen contraste */
     --text-secondary: #283593;  /* Azul oscuro pero legible */
-    --text-accent: #0d47a1;  /* Azul oscuro para acentos */
+    --text-tertiary: #0d47a1;  /* Azul oscuro para acentos */
     --border-primary: #64b5f6;  /* Borde más oscuro */
     --border-secondary: #42a5f5;  /* Borde secundario más oscuro */
     --shadow-light: rgba(25, 118, 210, 0.1);
@@ -66,7 +68,7 @@
     --bg-tertiary: #ffffff;
     --text-primary: #1b5e20;  /* Verde oscuro mantenido */
     --text-secondary: #2e7d32;  /* Verde oscuro pero legible */
-    --text-accent: #388e3c;  /* Verde oscuro para acentos */
+    --text-tertiary: #388e3c;  /* Verde oscuro para acentos */
     --border-primary: #81c784;  /* Borde más oscuro */
     --border-secondary: #66bb6a;  /* Borde secundario más oscuro */
     --shadow-light: rgba(76, 175, 80, 0.1);
@@ -192,7 +194,7 @@ main {
 
 .close-btn:hover,
 .close-btn:focus {
-    color: var(--text-primary);
+    color: var(--text-accent);
     text-decoration: none;
     cursor: pointer;
 }
@@ -236,20 +238,20 @@ textarea {
 
 button {
     background: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
-    border: 1px solid var(--text-primary); /* Borde para mejor definición */
+    color: var(--text-secondary); /* Dinámico: color secundario del texto */
+    border: 1px solid var(--text-primary);
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    font-weight: 600; /* Más bold para mejor legibilidad */
+    font-weight: 600;
     font-size: 14px;
     box-shadow: 0 2px 4px var(--shadow-light);
 }
 
 button:hover {
     background: var(--text-primary);
-    color: var(--bg-tertiary);
+    color: var(--text-tertiary); /* Dinámico: color terciario del texto */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--shadow-medium);
 }
@@ -262,7 +264,7 @@ input[type="file"] {
 .custom-file-label {
     display: inline-block;
     background-color: var(--bg-secondary);
-    color: var(--text-primary);
+    color: var(--text-secondary);
     padding: 10px 15px;
     border-radius: 5px;
     font-size: 14px;
@@ -273,7 +275,7 @@ input[type="file"] {
 
 .custom-file-label:hover {
     background-color: var(--hover-overlay);
-    color: var(--text-accent);
+    color: var(--text-tertiary);
 }
 
 /* Estilos para los checkboxes */
@@ -313,24 +315,61 @@ nav ul li a:hover {
     color: var(--text-accent);
 }
 
+.menuHamburguesa .Burguer-Items ul li a{
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.menuHamburguesa .Burguer-Items ul li a:hover {
+    text-decoration: underline;
+    color: var(--text-accent);
+}
+
+.menuHamburguesa .Burguer-Items .filtro-container li a{
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.menuHamburguesa .Burguer-Items .filtro-container li a:hover {
+    text-decoration: underline;
+    color: var(--text-accent);
+}
+
+.menuHamburguesa .Burguer-Items .filtro-container h2{
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+
 /* Estilos para los productos en el carrusel */
 .producto {
-    border: 1px solid var(--border-primary);
+    border: 1px solid var(--border-primary); /* Dinámico */
+    background-color: var(--bg-tertiary); /* Dinámico */
+    color: var(--text-primary); /* Dinámico */
+    box-shadow: 0 4px 6px var(--shadow-light); /* Dinámico */
     border-radius: 10px;
     padding: 15px;
     text-align: center;
     width: 200px;
     margin: 10px;
-    background-color: var(--bg-tertiary);
-    color: var(--text-primary);
-    box-shadow: 0 4px 6px var(--shadow-light);
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+th {
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-primary);
 }
 
 .producto:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 10px var(--shadow-medium);
-    background-color: var(--hover-overlay);
+    box-shadow: 0 6px 10px var(--shadow-medium); /* Dinámico */
+    background-color: var(--hover-overlay); /* Dinámico */
 }
 
 .producto-imagen {
@@ -363,9 +402,9 @@ nav ul li a:hover {
 }
 
 .producto-acciones button {
-    background-color: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
-    border: 1px solid var(--text-primary);
+    background-color: var(--bg-secondary); /* Dinámico */
+    color: var(--text-secondary); /* Dinámico */
+    border: 1px solid var(--border-primary); /* Dinámico */
     padding: 8px 10px;
     border-radius: 5px;
     font-size: 14px;
@@ -376,8 +415,8 @@ nav ul li a:hover {
 }
 
 .producto-acciones button:hover {
-    background-color: var(--text-primary);
-    color: var(--bg-tertiary);
+    background-color: var(--text-primary); /* Dinámico */
+    color: var(--text-tertiary); /* Dinámico */
     transform: translateY(-2px) scale(1.02);
     box-shadow: 0 4px 8px var(--shadow-medium);
 }
@@ -406,12 +445,12 @@ nav ul li a:hover {
 }
 
 .comentarios {
+    border: 1px solid var(--border-primary); /* Dinámico */
+    background-color: var(--bg-primary); /* Dinámico */
+    color: var(--text-primary); /* Dinámico */
     margin: 20px;
     padding: 20px;
-    border: 1px solid var(--border-primary);
     border-radius: 10px;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -597,8 +636,8 @@ footer {
 }
 
 .social-icon-item span {
+    color: var(--text-secondary); /* Dinámico */
     font-size: 16px;
-    color: #ffffff; /* Blanco para máximo contraste */
     margin-top: 2px;
     font-weight: bold;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Sombra para mejor legibilidad */
@@ -665,15 +704,10 @@ footer {
 }
 
 .carrusel-item {
-    flex: 0 0 340px;
-    margin: 0 24px;
-    text-align: center;
-    position: relative;
-    border: 1px solid var(--border-primary);
-    border-radius: 16px;
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    box-shadow: 0 4px 12px var(--shadow-light);
+    border: 1px solid var(--border-primary); /* Dinámico */
+    background: var(--bg-tertiary); /* Dinámico */
+    color: var(--text-primary); /* Dinámico */
+    box-shadow: 0 4px 12px var(--shadow-light); /* Dinámico */
     padding: 28px 16px 28px 16px;
     min-height: 420px;
     max-width: 340px;
@@ -681,9 +715,8 @@ footer {
 }
 
 .carrusel-item:hover {
-    box-shadow: 0 8px 20px var(--shadow-medium);
-    transform: translateY(-8px) scale(1.04);
-    background-color: var(--hover-overlay);
+    box-shadow: 0 8px 20px var(--shadow-medium); /* Dinámico */
+    background-color: var(--hover-overlay); /* Dinámico */
 }
 
 .carruselModal {
@@ -881,7 +914,8 @@ footer {
 }
 
 .menuHamburguesa ul li a {
-    color: #ffffff; /* Blanco para máximo contraste */
+    color: var(--text-primary); /* Dinámico */
+    background: none;
     text-decoration: none;
     font-size: 18px;
     font-weight: 500;
@@ -889,17 +923,39 @@ footer {
     border-radius: 4px;
     display: block;
     transition: background-color 0.3s, color 0.3s, transform 0.2s;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .menuHamburguesa ul li a:hover {
-    background-color: var(--text-primary);
-    color: var(--bg-tertiary);
-    transform: translateX(5px); /* Efecto de deslizamiento */
+    background-color: var(--hover-overlay); /* Dinámico */
+    color: var(--text-accent); /* Dinámico */
+    text-decoration: underline;
+    transform: translateX(5px);
     box-shadow: 0 2px 8px var(--shadow-medium);
 }
 
-/* ===== ESTILOS PARA LAS SECCIONES DEL MENÚ HAMBURGUESA ===== */
+.menuHamburguesa #filtro-lista li a,
+.menuHamburguesa #filtro-lista li button {
+    display: block;
+    width: 100%;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 12px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    background: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-align: left;
+}
+
+.menuHamburguesa #filtro-lista li a:hover,
+.menuHamburguesa #filtro-lista li button:hover {
+    background-color: var(--text-primary);
+    color: var(--bg-secondary);
+    transform: translateX(8px);
+    border-color: var(--text-primary);
+}
 
 /* Sección CRUD (DevTools) */
 .menuHamburguesa #CRUD {
@@ -1068,16 +1124,15 @@ footer {
     bottom: 10px; /* Separación desde la parte inferior */
     left: 50%; /* Centrar horizontalmente */
     transform: translateX(-50%); /* Ajustar el centrado */
-    background-color: var(--bg-secondary); 
-    color: #ffffff; /* Blanco para máximo contraste */
-    border: 2px solid var(--text-primary); /* Borde para mejor definición */
+    background-color: var(--bg-secondary); /* Dinámico */
+    color: var(--text-secondary); /* Dinámico */
+    border: 2px solid var(--text-primary); /* Dinámico */
+    box-shadow: 0 4px 6px var(--shadow-light); /* Dinámico */
     border-radius: 5px; /* Bordes redondeados */
     padding: 10px 20px; /* Espaciado interno */
     font-size: 16px; /* Tamaño del texto */
     font-weight: bold; /* Texto en negrita */
     cursor: pointer; /* Cambiar el cursor al pasar por encima */
-    box-shadow: 0 4px 6px var(--shadow-light); /* Sombra */
-    z-index: 10; /* Asegurarse de que esté encima de otros elementos */
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* Animación al pasar el mouse */
     width: auto; /* Ajusta el ancho al contenido */
     max-width: 200px; /* Limita el ancho máximo */
@@ -1086,8 +1141,8 @@ footer {
 
 /* Cambiar el color al pasar el mouse */
 .btnComprarTodo:hover {
-    background-color: var(--text-primary);
-    color: var(--bg-tertiary);
+    background-color: var(--text-primary); /* Dinámico */
+    color: var(--text-tertiary); /* Dinámico */
     transform: translateX(-50%) translateY(-2px) scale(1.05);
     box-shadow: 0 6px 12px var(--shadow-medium);
 }
@@ -1283,7 +1338,7 @@ footer {
 
 #modal-preferencias button {
     background-color: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
+    color: var(--text-secondary);
     border: 1px solid var(--text-primary);
     padding: 8px 12px;
     border-radius: 5px;
@@ -1296,7 +1351,7 @@ footer {
 
 #modal-preferencias button:hover {
     background-color: var(--text-primary);
-    color: var(--bg-tertiary);
+    color: var(--text-tertiary);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--shadow-medium);
 }
@@ -1366,7 +1421,7 @@ footer {
 #terminos-lista button {
     align-self: flex-end;
     background-color: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
+    color: var(--text-secondary); /* Dinámico */
     border: 1px solid var(--text-primary);
     padding: 8px 12px;
     border-radius: 5px;
@@ -1379,7 +1434,7 @@ footer {
 
 #terminos-lista button:hover {
     background-color: var(--text-primary);
-    color: var(--bg-tertiary);
+    color: var(--text-tertiary); /* Dinámico */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--shadow-medium);
 }
@@ -1387,7 +1442,7 @@ footer {
 #agregar-termino-btn,
 #guardar-terminos-btn {
     background-color: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
+    color: var(--text-secondary); /* Dinámico */
     border: 1px solid var(--text-primary);
     padding: 10px 15px;
     border-radius: 5px;
@@ -1402,7 +1457,7 @@ footer {
 #agregar-termino-btn:hover,
 #guardar-terminos-btn:hover {
     background-color: var(--text-primary);
-    color: var(--bg-tertiary);
+    color: var(--text-tertiary); /* Dinámico */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--shadow-medium);
 }
@@ -1480,7 +1535,7 @@ footer {
     display: block;
     margin: 20px auto;
     background-color: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
+    color: var(--text-secondary); /* Dinámico */
     border: 1px solid var(--text-primary);
     padding: 10px 20px;
     border-radius: 5px;
@@ -1494,7 +1549,7 @@ footer {
 
 .confirmacion-button:hover {
     background-color: var(--text-primary);
-    color: var(--bg-tertiary);
+    color: var(--text-tertiary); /* Dinámico */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--shadow-medium);
 }
@@ -1538,7 +1593,7 @@ footer {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: var(--border-secondary); /* Dinámico */
     transition: 0.4s;
     border-radius: 20px;
 }
@@ -1550,17 +1605,17 @@ footer {
     width: 14px;
     left: 3px;
     bottom: 3px;
-    background-color: white;
+    background-color: var(--bg-tertiary); /* Dinámico */
     transition: 0.4s;
     border-radius: 50%;
 }
 
 input:checked + .slider {
-    background-color: #4caf50;
+    background-color: var(--bg-secondary); /* Dinámico */
 }
 
-input:checked + .slider:before {
-    transform: translateX(20px);
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--bg-secondary); /* Dinámico */
 }
 
 .estado-label {
@@ -1676,7 +1731,7 @@ input:checked + .slider:before {
 
 .team-actions button {
     background-color: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
+    color: var(--text-secondary); /* Dinámico */
     border: 1px solid var(--text-primary);
     padding: 10px 20px;
     border-radius: 5px;
@@ -1690,7 +1745,7 @@ input:checked + .slider:before {
 
 .team-actions button:hover {
     background-color: var(--text-primary);
-    color: var(--bg-tertiary);
+    color: var(--text-tertiary); /* Dinámico */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--shadow-medium);
 }
@@ -1700,7 +1755,7 @@ input:checked + .slider:before {
 /* Estilo para el botón de eliminar */
 button.eliminar-termino-btn {
     background-color: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
+    color: var(--text-secondary); /* Dinámico */
     border: 1px solid var(--text-primary);
     padding: 10px 20px;
     border-radius: 5px;
@@ -1715,7 +1770,7 @@ button.eliminar-termino-btn {
 
 button.eliminar-termino-btn:hover {
     background-color: var(--text-primary);
-    color: var(--bg-tertiary);
+    color: var(--text-tertiary); /* Dinámico */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--shadow-medium);
 }
@@ -1761,7 +1816,7 @@ button.eliminar-termino-btn:hover {
 /* Estilo para el botón de eliminar (duplicado - corregido) */
 button.eliminar-termino-btn {
     background-color: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
+    color: var(--text-secondary); /* Dinámico */
     border: 1px solid var(--text-primary);
     padding: 10px 20px;
     border-radius: 5px;
@@ -1776,7 +1831,7 @@ button.eliminar-termino-btn {
 
 button.eliminar-termino-btn:hover {
     background-color: var(--text-primary);
-    color: var(--bg-tertiary);
+    color: var(--text-tertiary); /* Dinámico */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--shadow-medium);
 }
@@ -2155,7 +2210,7 @@ button.eliminar-termino-btn:hover {
     box-shadow: 0 4px 16px var(--shadow-medium);
     padding: 0;
     min-height: 420px;
-    max-width: 340px;
+    max-width:  340px;
     transition: box-shadow 0.3s, transform 0.3s, border-color 0.3s;
     display: flex;
     flex-direction: column;
@@ -2567,3 +2622,10 @@ button:hover:not(:disabled) {
     animation: none;
   }
 }
+
+  
+  .spinner {
+    animation: none;
+  }
+
+
