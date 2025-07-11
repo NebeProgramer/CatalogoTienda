@@ -18,6 +18,7 @@
     --info: #17a2b8;
     --modal-bg: rgba(0, 0, 0, 0.4);
     --hover-overlay: rgba(230, 163, 0, 0.15);  /* Overlay más visible */
+    
 }
 
 /* Tema Oscuro */
@@ -102,11 +103,11 @@ body {
 
 header {
     background-color: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
+    color: var(--text-primary); /* Blanco para máximo contraste */
     padding: 20px;
     text-align: center;
     transition: background-color 0.3s ease;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Sombra para mejor legibilidad */
+    text-shadow: var(--shadow-medium)
 }
 
 main {
@@ -182,7 +183,7 @@ main {
 }
 
 .close-btn {
-    color: #aaa;
+    color: var(--error);
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -873,14 +874,13 @@ footer {
     padding-bottom: 40px; /* ===== NUEVO: Padding extra en la parte inferior ===== */
     min-height: calc(100vh - 40px); /* ===== NUEVO: Altura mínima para asegurar scroll ===== */
 }
-
 #Burguer {
     position: fixed;
     top: 20px;
-    left: -30px; /* Semioculto, solo se asoma */
+    left: -30px;
     background-color: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
-    border: 2px solid var(--text-primary); /* Borde para mejor definición */
+    color: var(--text-tertiary);
+    border: 2px solid var(--text-primary);
     padding: 10px 15px;
     cursor: pointer;
     font-size: 16px;
@@ -891,8 +891,9 @@ footer {
     box-shadow: 0 2px 8px var(--shadow-medium);
 }
 
+
 #Burguer:hover {
-    left: 0; /* Se muestra completamente al pasar el mouse */
+    left: 0;
     background-color: var(--text-primary);
     color: var(--bg-tertiary);
     transform: scale(1.05); /* Efecto de escala para mejor feedback */
@@ -935,18 +936,15 @@ footer {
 
 .menuHamburguesa #filtro-lista li a,
 .menuHamburguesa #filtro-lista li button {
-    display: block;
-    width: 100%;
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 16px;
-    padding: 10px 12px;
-    border-radius: 5px;
-    transition: all 0.3s ease;
+    color: var(--text-primary);
     background: none;
-    border: 1px solid transparent;
-    cursor: pointer;
-    text-align: left;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: block;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
 }
 
 .menuHamburguesa #filtro-lista li a:hover,
@@ -1003,7 +1001,7 @@ footer {
 .menuHamburguesa .filtro-container h2 {
     margin: 0 0 15px 0;
     font-size: 18px;
-    color: #ffffff;
+    color: var(--text-primary);
     font-weight: bold;
     text-align: center;
     border-bottom: 2px solid var(--text-primary);
@@ -1024,7 +1022,7 @@ footer {
 .menuHamburguesa #filtro-lista li button {
     display: block;
     width: 100%;
-    color: #ffffff;
+    color: var(--text-primary);
     text-decoration: none;
     font-size: 16px;
     padding: 10px 12px;
@@ -1572,56 +1570,65 @@ footer {
     
 }
 
-/* Estilos para el interruptor (switch) */
 .switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 20px;
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+  margin-left: 10px;
 }
 
+/* Oculta el checkbox nativo */
 .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
+/* Estilo del contenedor del interruptor */
 .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--border-secondary); /* Dinámico */
-    transition: 0.4s;
-    border-radius: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--border-secondary);
+  transition: background-color 0.4s;
+  border-radius: 28px;
+  cursor: pointer;
 }
 
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 14px;
-    width: 14px;
-    left: 3px;
-    bottom: 3px;
-    background-color: var(--bg-tertiary); /* Dinámico */
-    transition: 0.4s;
-    border-radius: 50%;
+/* El círculo del interruptor */
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--bg-tertiary);
+  transition: transform 0.4s;
+  border-radius: 50%;
 }
 
+/* Cuando está activado */
 input:checked + .slider {
-    background-color: var(--bg-secondary); /* Dinámico */
+  background-color: var(--bg-secondary);
 }
 
+input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+/* Opcional: Estilo al enfocar con teclado */
 input:focus + .slider {
-    box-shadow: 0 0 1px var(--bg-secondary); /* Dinámico */
+  box-shadow: 0 0 2px var(--bg-secondary);
 }
 
 .estado-label {
     margin-left: 10px;
     font-size: 14px;
-    color: #333;
+    color: var(--text-secundary); /* Dinámico */
 }
 
 

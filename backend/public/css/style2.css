@@ -1013,22 +1013,23 @@ input:checked + .slider:before {
 #Burguer {
     position: fixed;
     top: 20px;
-    left: -30px; /* Semioculto, solo se asoma */
-    background-color: var(--text-secondary);
-    color: var(--bg-tertiary);
-    border: none;
+    left: -30px;
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary);
+    border: 2px solid var(--text-primary);
     padding: 10px 15px;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
     border-radius: 5px;
     z-index: 500;
-    transition: left 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    transition: left 0.3s ease, background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
     box-shadow: 0 2px 8px var(--shadow-medium);
 }
 
+
 #Burguer:hover {
-    left: 0; /* Se muestra completamente al pasar el mouse */
+    left: 0;
     background-color: var(--text-primary);
     color: var(--bg-tertiary);
 }
