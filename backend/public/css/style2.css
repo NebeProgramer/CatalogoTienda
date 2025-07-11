@@ -131,10 +131,10 @@ textarea {
     margin: 10px auto;
 }
 
-#dir, #mis-tarjetas {
+#direccionesdireccionesContainer, #mis-tarjetas {
     margin-top: 20px;
     padding: 15px;
-    background: var(--bg-primary); /* Fondo claro */
+    background: var(--bg-tertiary); /* Fondo claro */
     border: 1px solid var(--bg-secondary); /* Naranja base */
     border-radius: 8px;
     box-shadow: 0 0 5px var(--shadow-light);
