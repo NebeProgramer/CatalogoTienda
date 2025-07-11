@@ -644,7 +644,7 @@ footer {
     right: 10px;
 }
 .carrusel-btn:hover, .carrusel-prev:hover, .carrusel-next:hover {
-    background-color: var(--text-primary);
+    background-color: var(--text-accent);
     color: var(--bg-tertiary);
     box-shadow: 0 6px 12px var(--shadow-medium);
 }
