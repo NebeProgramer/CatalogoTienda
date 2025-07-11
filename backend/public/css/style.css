@@ -855,7 +855,7 @@ footer {
 
 #Burguer:hover {
     left: 0;
-    background-color: var(--bg-secundary);
+    background-color: var(--bg-secondary);
     color: var(--bg-tertiary);
     transform: scale(1.05); /* Efecto de escala para mejor feedback */
     box-shadow: 0 4px 12px var(--shadow-medium);
