@@ -18,7 +18,8 @@
     --info: #17a2b8;
     --modal-bg: rgba(0, 0, 0, 0.4);
     --hover-overlay: rgba(230, 163, 0, 0.15);  /* Overlay más visible */
-    
+    --selected: #e6a300;
+
 }
 
 /* Tema Oscuro */
@@ -40,46 +41,6 @@
     --info: #42a5f5;  /* Azul más claro */
     --modal-bg: rgba(0, 0, 0, 0.7);
     --hover-overlay: rgba(255, 184, 77, 0.2);
-}
-
-/* Tema Azul */
-[data-theme="blue"] {
-    --bg-primary: #e3f2fd;
-    --bg-secondary: #1565c0;  /* Azul más oscuro para mejor contraste */
-    --bg-tertiary: #ffffff;
-    --text-primary: #1a237e;  /* Azul muy oscuro para buen contraste */
-    --text-secondary: #283593;  /* Azul oscuro pero legible */
-    --text-tertiary: #0d47a1;  /* Azul oscuro para acentos */
-    --border-primary: #64b5f6;  /* Borde más oscuro */
-    --border-secondary: #42a5f5;  /* Borde secundario más oscuro */
-    --shadow-light: rgba(25, 118, 210, 0.1);
-    --shadow-medium: rgba(25, 118, 210, 0.2);
-    --success: #4caf50;
-    --warning: #ff9800;
-    --error: #f44336;
-    --info: #2196f3;
-    --modal-bg: rgba(0, 0, 0, 0.4);
-    --hover-overlay: rgba(21, 101, 192, 0.15);
-}
-
-/* Tema Verde */
-[data-theme="green"] {
-    --bg-primary: #e8f5e8;
-    --bg-secondary: #388e3c;  /* Verde más oscuro para mejor contraste */
-    --bg-tertiary: #ffffff;
-    --text-primary: #1b5e20;  /* Verde oscuro mantenido */
-    --text-secondary: #2e7d32;  /* Verde oscuro pero legible */
-    --text-tertiary: #388e3c;  /* Verde oscuro para acentos */
-    --border-primary: #81c784;  /* Borde más oscuro */
-    --border-secondary: #66bb6a;  /* Borde secundario más oscuro */
-    --shadow-light: rgba(76, 175, 80, 0.1);
-    --shadow-medium: rgba(76, 175, 80, 0.2);
-    --success: #4caf50;
-    --warning: #ff9800;
-    --error: #f44336;
-    --info: #2196f3;
-    --modal-bg: rgba(0, 0, 0, 0.4);
-    --hover-overlay: rgba(56, 142, 60, 0.15);
 }
 
 /* ===== APLICACIÓN DE VARIABLES A LOS ELEMENTOS EXISTENTES ===== */
@@ -472,8 +433,8 @@ th {
 }
 
 .producto.seleccionado {
-    border: 2px solid red;
-    background-color: #ffe6e6;
+    border: 2px var(--border-secondary);
+    background-color: var(--selected);
 }
 
 .mensaje-vacio {
@@ -531,7 +492,7 @@ th {
 
 footer {
     background-color: var(--bg-secondary); 
-    color: #ffffff; /* Blanco para máximo contraste */
+    color: var(--text-primary); /* Blanco para máximo contraste */
     padding: 10px;
     text-align: center;
     position: relative;
@@ -663,7 +624,7 @@ footer {
     position: absolute;
     top: 50%;
     background-color: var(--bg-secondary);
-    color: #ffffff;
+    color: var(--text-primary);
     border: 2px solid var(--text-primary);
     padding: 14px;
     cursor: pointer;
@@ -754,8 +715,8 @@ footer {
 .carrusel-prevModal, .carrusel-nextModal {
     position: absolute;
     top: 50%;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
     border: none;
     padding: 10px;
     cursor: pointer;
@@ -776,7 +737,7 @@ footer {
     overflow: hidden;
     border: 1px solid #ccc;
     border-radius: 10px;
-    background-color: #f9f9f9; /* Fondo para que se vea limpio */
+    background-color: var(--bg-tertiary); /* Fondo para que se vea limpio */
     text-align: center;
     height: 400px; /* Altura fija para evitar que el carrusel cambie de tamaño */
     display: flex;
@@ -797,8 +758,8 @@ footer {
 .carrusel-btn {
     position: absolute;
     top: 50%;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     border: none;
     padding: 10px;
     cursor: pointer;
@@ -819,7 +780,7 @@ footer {
 }
 
 .carrusel-btn:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: var(--bg-primary, 0.8); /* Cambia el fondo al hacer hover */
 }
 
 /* Estilos para el menú hamburguesa */
@@ -878,8 +839,8 @@ footer {
     position: fixed;
     top: 20px;
     left: -30px;
-    background-color: var(--bg-secondary);
-    color: var(--text-tertiary);
+    background-color: var(--bg-primary);
+    color: var(--text-secondary);
     border: 2px solid var(--text-primary);
     padding: 10px 15px;
     cursor: pointer;
@@ -894,7 +855,7 @@ footer {
 
 #Burguer:hover {
     left: 0;
-    background-color: var(--text-primary);
+    background-color: var(--bg-secundary);
     color: var(--bg-tertiary);
     transform: scale(1.05); /* Efecto de escala para mejor feedback */
     box-shadow: 0 4px 12px var(--shadow-medium);
@@ -1323,7 +1284,7 @@ footer {
 
 #modal-preferencias table th {
     background-color: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
+    color: var(--text-primary); /* Blanco para máximo contraste */
     font-weight: bold;
     text-align: center;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -1463,15 +1424,15 @@ footer {
 
 /* Estilos específicos para la página de confirmación */
 .confirmacion-body {
-    background-color: #f9f9f9; /* Fondo claro para la página */
-    color: #333; /* Texto oscuro para contraste */
+    background-color: var(--bg-tertiary); /* Fondo claro para la página */
+    color: var(--text-primary); /* Texto oscuro para contraste */
     font-family: Arial, sans-serif;
     line-height: 1.6;
 }
 
 .confirmacion-header {
-    background-color: #ffb700;
-    color: #fff;
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary);
     padding: 20px;
     text-align: center;
     border-radius: 5px;
@@ -1482,13 +1443,13 @@ footer {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
+    background-color: var(--bg-tertiary);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .confirmacion-h1, .confirmacion-h2 {
-    color: #333;
+    color: var(--text-primary);
     text-align: center;
     margin-bottom: 20px;
 }
@@ -1502,11 +1463,11 @@ footer {
 .confirmacion-resumen-compra table th, .confirmacion-resumen-compra table td {
     padding: 10px;
     text-align: left;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-primary);
 }
 
 .confirmacion-resumen-compra table th {
-    background-color: #f4f4f4;
+    background-color: var(--bg-tertiary);
     font-weight: bold;
 }
 
@@ -1526,7 +1487,7 @@ footer {
     margin-top: 20px;
     text-align: center;
     font-size: 1.1rem;
-    color: #555;
+    color: var(--text-secondary);
 }
 
 .confirmacion-button {
@@ -1592,7 +1553,7 @@ footer {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--border-secondary);
+  background-color: var(--bg-primary);
   transition: background-color 0.4s;
   border-radius: 28px;
   cursor: pointer;
@@ -1637,8 +1598,8 @@ input:focus + .slider {
     top: 5px;
     right: 5px;
     z-index: 10; /* Asegura que la 'X' esté por encima de la imagen */
-    background-color: red;
-    color: white;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
     border: none;
     border-radius: 50%;
     width: 25px;
@@ -1666,17 +1627,17 @@ input:focus + .slider {
 .team-info h3 {
     margin: 0;
     font-size: 18px;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .team-info p {
     margin: 0;
     font-size: 14px;
-    color: #555;
+    color: var(--text-secondary);
 }
 
 .team-info p strong {
-    color: #000;
+    color: var(--text-primary);
 }
 
 /* Estilo para el contenedor principal */
@@ -1686,10 +1647,10 @@ input:focus + .slider {
     justify-content: center;
     gap: 20px;
     padding: 50px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-primary);
     border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: var(--bg-tertiary);
+    box-shadow: 0 4px 8px var(--shadow-light);
     max-width: 800px;
     margin: 0 auto;
     margin-bottom: 20px;
@@ -1703,7 +1664,7 @@ input:focus + .slider {
     border-radius: 50%;
     object-fit: cover;
     cursor: pointer;
-    border: 2px solid #ffb700;
+    border: 2px solid var(--border-secondary);
 }
 
 /* Estilo para los campos de entrada */
@@ -1922,7 +1883,7 @@ button.eliminar-termino-btn:hover {
 
 .swal2-styled.swal2-cancel:hover, 
 .swal2-styled.swal2-cancel:focus {
-  background-color: #c82333 !important;
+  background-color: var(--error) !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 8px var(--shadow-medium) !important;
 }
@@ -1936,7 +1897,7 @@ button.eliminar-termino-btn:hover {
 
 .swal2-styled.swal2-deny:hover, 
 .swal2-styled.swal2-deny:focus {
-  background-color: #e0a800 !important;
+  background-color: var(--warning) !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 8px var(--shadow-medium) !important;
 }
@@ -2087,7 +2048,7 @@ button.eliminar-termino-btn:hover {
 .sobre-nosotros-historia, .sobre-nosotros-equipo {
     flex: 1 1 50%;
     max-width: 50%;
-    background: #fff;
+    background: var(--bg-tertiary);
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.07);
     padding: 32px 28px;
@@ -2105,10 +2066,10 @@ button.eliminar-termino-btn:hover {
     width: 100%;
     margin: 0 auto;
     padding: 40px 0 60px 0;
-    background: #fff5e6;
+    background: var(--bg-tertiary);
 }
 .faq-item {
-    background: #fff;
+    background: var(--bg-tertiary);
     border-radius: 16px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     padding: 32px 28px;
@@ -2128,7 +2089,7 @@ button.eliminar-termino-btn:hover {
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 30px;
-    color: #333;
+    color: var(--text-accent);
     width: 100%;
 }
 .faq-author {
@@ -2136,13 +2097,13 @@ button.eliminar-termino-btn:hover {
     font-size: 1.2rem;
     font-weight: bold;
     margin: 0 auto 8px auto;
-    color: #222;
+    color: var(--text-primary);
     width: 100%;
 }
 .faq-email {
     text-align: center;
     font-size: 1rem;
-    color: #444;
+    color: var(--text-secondary);
     margin-bottom: 18px;
     width: 100%;
 }
@@ -2150,15 +2111,15 @@ button.eliminar-termino-btn:hover {
     font-size: 1.1rem;
     font-weight: 500;
     margin-bottom: 8px;
-    color: #222;
+    color: var(--text-secondary);
 }
 .faq-answer {
     font-size: 1rem;
-    color: #333;
+    color: var(--text-primary);
     margin-bottom: 0;
 }
 .faq-answer strong {
-    color: #b88400;
+    color: var(--text-accent);
 }
 @media (max-width: 900px) {
     .faq-item {
@@ -2369,7 +2330,7 @@ button.eliminar-termino-btn:hover {
     border-radius: 6px;
     cursor: pointer;
     background-color: var(--bg-secondary);
-    color: #ffffff; /* Blanco para máximo contraste */
+    color: var(--text-primary); /* Blanco para máximo contraste */
     font-weight: bold;
     box-shadow: 0 2px 6px var(--shadow-light);
     transition: background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
@@ -2397,10 +2358,10 @@ button.eliminar-termino-btn:hover {
     width: 100%;
     padding: 12px 16px;
     margin: 10px 0;
-    border: 1px solid #dadce0;
+    border: 1px solid var(--border-primary);
     border-radius: 4px;
-    background-color: #fff;
-    color: #3c4043;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     font-weight: 500;
@@ -2411,13 +2372,13 @@ button.eliminar-termino-btn:hover {
 
 .google-signin-btn:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    border-color: #c6c6c6;
-    background-color: #f8f9fa;
+    border-color: var(--border-primary);
+    background-color: var(--bg-tertiary);
 }
 
 .google-signin-btn:active {
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    background-color: #f1f3f4;
+    background-color: var(--bg-tertiary);
 }
 
 .google-signin-btn svg {
@@ -2432,7 +2393,7 @@ button.eliminar-termino-btn:hover {
     align-items: center;
     text-align: center;
     margin: 15px 0;
-    color: #5f6368;
+    color: var(--text-secondary);
     font-size: 14px;
 }
 
@@ -2441,7 +2402,7 @@ button.eliminar-termino-btn:hover {
     content: '';
     flex: 1;
     height: 1px;
-    background: #dadce0;
+    background: var(--border-secondary);
 }
 
 .login-separator::before {
