@@ -643,7 +643,7 @@ function generarCodigoVerificacion() {
 // Función para enviar correo de verificación con código de 6 dígitos
 async function enviarCorreoVerificacion(correo, codigo) {
     const mailOptions = {
-        from: process.env.EMAIL_USER || 'catalogotiendauno@gmail.com',
+        from: process.env.EMAIL_USER || 'pawmarket@gmail.com',
         to: correo,
         subject: 'Verificación de cuenta - PawMarket',
         html: `
@@ -2120,7 +2120,7 @@ async function enviarCorreoRecuperacion(destinatario, token, req) {    // Config
     } : {
         service: 'gmail',
         auth: {
-            user: process.env.EMAIL_USER || 'catalogotiendauno@gmail.com',
+            user: process.env.EMAIL_USER || 'pawmarket@gmail.com',
             pass: process.env.EMAIL_PASS // Usar variables de entorno también para desarrollo
         }
     };
@@ -2131,7 +2131,7 @@ async function enviarCorreoRecuperacion(destinatario, token, req) {    // Config
     const baseUrl = process.env.BASE_URL || (req ? `${req.protocol}://${req.get('host')}` : '');
     const enlace = `${baseUrl}/restablecer-contrasena/${token}`;
     let mailOptions = {
-        from: process.env.EMAIL_USER || 'catalogotiendauno@gmail.com',
+        from: process.env.EMAIL_USER || 'pawmarket@gmail.com',
         to: destinatario,
         subject: 'Recuperación de contraseña - PawMarket',
         html: `
