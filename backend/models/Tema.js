@@ -23,7 +23,7 @@ const temaSchema = new mongoose.Schema({
         info: { type: String, default: '#17a2b8' },
         modalBg: { type: String, default: 'rgba(0, 0, 0, 0.4)' },
         hoverOverlay: { type: String, default: 'rgba(230, 163, 0, 0.15)' },
-        selected: { type: String, default: '#e6a300' },
+        selected: { type: String, default: '#e6000062' },
     },
     esPersonaje: { type: Boolean, default: false },
     emoji: { type: String, default: '🎨' },
