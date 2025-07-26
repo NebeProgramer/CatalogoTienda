@@ -787,7 +787,7 @@ tr.selected {
     padding: 20px;
     border: 1px solid var(--border-primary); /* Dinámico */
     width: 90%; /* Ajuste responsivo para pantallas pequeñas */
-    max-width: 600px; /* Ancho máximo para pantallas grandes */
+    max-width: 95vw; /* Ancho máximo para pantallas grandes */
     border-radius: 10px; /* Bordes redondeados */
     box-shadow: 0 4px 8px var(--shadow-medium); /* Dinámico */
     position: relative;
@@ -834,7 +834,7 @@ tr.selected {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-tertiary);
   transition: background-color 0.4s;
   border-radius: 28px;
   cursor: pointer;
@@ -848,7 +848,7 @@ tr.selected {
   width: 22px;
   left: 3px;
   bottom: 3px;
-  background-color: var(--bg-tertiary);
+  background-color: var(--bg-primary);
   transition: transform 0.4s;
   border-radius: 50%;
 }

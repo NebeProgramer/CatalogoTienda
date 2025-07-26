@@ -190,48 +190,94 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 //Subir facturas al modal
                 const cargarFacturasEnModal = async (correo) => {
-                    detalleFactura.innerHTML = '';
-                    // Buscar el usuario por correo y obtener su registroCompra
-                    try {
-                        const respuesta = await fetch(`/api/usuarios/${correo}`);
-                        if (!respuesta.ok) {
-                            detalleFactura.innerHTML = '<p>Error al obtener las facturas del usuario.</p>';
-                            return;
-                        }
-                        const usuarioData = await respuesta.json();
-                        const facturasUsuario = usuarioData.registroCompra || [];
-                        if (facturasUsuario.length === 0) {
-                            detalleFactura.innerHTML = '<p>No se encontraron facturas para este usuario.</p>';
-                        } else {
-                            // Crear tabla si hay facturas
-                            const tabla = document.createElement('table');
-                            tabla.innerHTML = `
-                                <thead>
-                                    <tr>
-                                        <th>Factura</th>
-                                        <th>Fecha</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            `;
-                            const tbody = tabla.querySelector('tbody');
-                            facturasUsuario.forEach(factura => {
-                                const row = document.createElement('tr');
-                                row.innerHTML = `
-                                    <td>${factura.factura}</td>
-                                    <td>${factura.fecha}</td>
-                                    <td>$${(factura.precio * factura.cantidad) ? (factura.precio * factura.cantidad).toFixed(2) : 'N/A'}</td>
-                                `;
-                                tbody.appendChild(row);
-                            });
-                            detalleFactura.appendChild(tabla);
-                        }
-                        modalFactura.classList.remove('oculto');
-                    } catch (error) {
-                        detalleFactura.innerHTML = '<p>Error al obtener las facturas del usuario.</p>';
-                    }
-                };
+    detalleFactura.innerHTML = '';
+    try {
+        const respuesta = await fetch(`/api/usuarios/${correo}`);
+        if (!respuesta.ok) {
+            detalleFactura.innerHTML = '<p>Error al obtener las facturas del usuario.</p>';
+            return;
+        }
+
+        const usuarioData = await respuesta.json();
+        const facturasUsuario = usuarioData.registroCompra || [];
+
+        if (facturasUsuario.length === 0) {
+            detalleFactura.innerHTML = '<p>No se encontraron facturas para este usuario.</p>';
+        } else {
+            const tabla = document.createElement('table');
+            tabla.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Factura</th>
+                        <th>Fecha</th>
+                        <th>Dirección</th>
+                        <th>Tarjeta</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            `;
+
+            const tbody = tabla.querySelector('tbody');
+
+            // Agrupar productos por factura
+            const facturasAgrupadas = {};
+            facturasUsuario.forEach(f => {
+                if (!facturasAgrupadas[f.factura]) {
+                    facturasAgrupadas[f.factura] = [];
+                }
+                facturasAgrupadas[f.factura].push(f);
+            });
+
+            // Generar filas agrupadas
+            Object.entries(facturasAgrupadas).forEach(([facturaId, productos]) => {
+                let totalFactura = 0;
+
+                productos.forEach((producto, index) => {
+                    const subtotal = producto.precio * producto.cantidad;
+                    totalFactura += subtotal;
+
+                    const fecha = new Date(producto.fecha).toLocaleDateString();
+                    const direccion = producto.direccion || '—';
+                    const ultimosDigitos = producto.tarjeta?.slice(-4) || '****';
+                    const tarjetaFormateada = `**** **** **** ${ultimosDigitos}`;
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index === 0 ? facturaId : ''}</td>
+                        <td>${index === 0 ? fecha : ''}</td>
+                        <td>${index === 0 ? direccion : ''}</td>
+                        <td>${index === 0 ? tarjetaFormateada : ''}</td>
+                        <td>${producto.nombre}</td>
+                        <td>${producto.cantidad}</td>
+                        <td>$${producto.precio.toFixed(2)}</td>
+                        <td>$${subtotal.toFixed(2)}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                // Fila de total
+                const totalRow = document.createElement('tr');
+                totalRow.innerHTML = `
+                    <td colspan="7" style="text-align: right;"><strong>Total:</strong></td>
+                    <td><strong>$${totalFactura.toFixed(2)}</strong></td>
+                `;
+                tbody.appendChild(totalRow);
+            });
+
+            detalleFactura.appendChild(tabla);
+        }
+
+        modalFactura.classList.remove('oculto');
+    } catch (error) {
+        console.error('❌ Error al obtener las facturas:', error);
+        detalleFactura.innerHTML = '<p>Error al obtener las facturas del usuario.</p>';
+    }
+};
+
 
                 // Agregar evento al botón para mostrar el modal con las facturas
                 const btnVerFacturas = usuarioDiv.querySelector('.btn-ver-facturas');
