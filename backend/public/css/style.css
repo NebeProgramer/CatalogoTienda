@@ -2606,4 +2606,184 @@ button:hover:not(:disabled) {
     animation: none;
   }
 
+        .main-container {
+            max-width: 480px;
+            margin: 40px auto;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px var(--border-primary);
+            overflow: hidden;
+        }
 
+        .header {
+            background: linear-gradient(135deg, var(--bg-primary));
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .tab-container {
+            display: flex;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button.active {
+            color: var(--bg-tertiary);
+            border-bottom-color: var(--bg-tertiary);
+            background: var(--bg-secondary);
+        }
+
+        .tab-button:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-secondary);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--border-primary);
+            box-shadow: 0 0 0 3px rgba(230, 163, 0, 0.1);
+        }
+
+        .code-input {
+            text-align: center;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 24px;
+            letter-spacing: 4px;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--bg-primary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(230, 163, 0, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: var(--border-secondary);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .password-requirements {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .password-requirements li {
+            padding: 5px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .password-requirements li.valid {
+            color: var(--success);
+        }
+
+        .password-requirements li.invalid {
+            color: var(--error);
+        }
+
+        .password-requirements li::before {
+            content: '✗';
+            margin-right: 8px;
+            color: var(--error);
+        }
+
+        .password-requirements li.valid::before {
+            content: '✓';
+            color: var(--success);
+        }
+
+        .info-box {
+            background: var(--bg-primary);
+            border-left: 4px solid var(--border-primary);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .success-message {
+            color: var(--success);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        #captcha-container {
+            margin: 15px 0;
+            text-align: center;
+        }
