@@ -299,13 +299,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (usuarioSesion && usuarioSesion.nombre) {
             const bienvenida = document.querySelector('.bienvenida');
             if (bienvenida) {
-                bienvenida.textContent = usuarioSesion.nombre ? `Bienvenido ${usuarioSesion.nombre} a nuestra tienda!` : `Bienvenido Invitado a nuestra tienda!`;
+                bienvenida.textContent = usuarioSesion.nombre ? `¡Bienvenido ${usuarioSesion.nombre} a PawMarket!` : `¡Bienvenido Invitado a PawMarket!`;
             } else {
 
                 // Crear y mostrar el mensaje de bienvenida
                 const bienvenida = document.createElement('h3');
                 bienvenida.classList.add('bienvenida');
-                bienvenida.textContent = usuarioSesion.nombre ? `Bienvenido ${usuarioSesion.nombre} a nuestra tienda!` : `Bienvenido Invitado a nuestra tienda!`;
+                bienvenida.textContent = usuarioSesion.nombre ? `¡Bienvenido ${usuarioSesion.nombre} a PawMarket!` : `¡Bienvenido Invitado a PawMarket!`;
                 bienvenida.style.textAlign = 'center';
                 bienvenida.style.marginBottom = '20px';
                 crudSection.insertAdjacentElement('beforebegin', bienvenida);
