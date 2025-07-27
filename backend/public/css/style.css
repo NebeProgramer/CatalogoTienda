@@ -2416,6 +2416,9 @@ button.eliminar-termino-btn:hover {
 /* Ajustes para el modal de sesión con Google */
 .form-sesion-container {
     position: relative;
+    /* Activar scroll si el contenido desborda */
+    overflow-y: auto;
+    max-height: 400px; /* Ajustar según sea necesario */
 }
 
 .google-auth-section {
@@ -2488,6 +2491,13 @@ body {
 body.page-loading {
   opacity: 0.7;
 }
+
+#formSesionContainer {
+    max-height: 90vh;
+    overflow-y: auto;
+    padding-right: 10px; /* para compensar el scroll y que no corte nada */
+}
+
 
 /* Mejoras del loader existente */
 #loader {

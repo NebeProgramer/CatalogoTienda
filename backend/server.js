@@ -315,7 +315,8 @@ passport.use(new GoogleStrategy(googleConfig, async (accessToken, refreshToken, 
                 tarjeta: [],
                 carrito: [],
                 registroCompras: [],
-                rol: 'usuario'
+                rol: 'usuario',
+                isVerified: true, // Marcar como verificado por defecto
             });
             
             await nuevoUsuario.save();
@@ -347,7 +348,7 @@ app.get('/auth/google', passport.authenticate('google', {
 
 app.get('/auth/google/callback', 
     passport.authenticate('google', { failureRedirect: '/' }),
-    (req, res) => {        // *** NUEVO: Reiniciar contador de rate limit para esta IP al tener login exitoso con Google ***
+    async (req, res) => {        // *** NUEVO: Reiniciar contador de rate limit para esta IP al tener login exitoso con Google ***
         try {
             const key = req.ip; // Usar directamente la IP como clave
             // Resetear usando el método correcto del rate limiter
@@ -362,7 +363,8 @@ app.get('/auth/google/callback',
         } catch (resetError) {
             console.error('Error al resetear rate limit para Google OAuth:', resetError);
         }
-        
+            
+        console.log('✅ Login exitoso con Google:', req.user);
         res.redirect('/?google_login=success');
     }
 );
@@ -375,6 +377,22 @@ app.get('/api/auth/user', (req, res) => {
         res.status(401).json({ error: 'No autenticado' });
     }
 });
+
+// Endpoint para cerrar sesión
+app.get('/api/auth/logout', (req, res) => {
+    req.logout((err) => {
+        if (err) {
+            console.error('Error al cerrar sesión:', err);
+            return res.status(500).json({ error: 'Error al cerrar sesión.' });
+        }
+
+        req.session.destroy(() => {
+            res.clearCookie('connect.sid'); // Muy importante
+            res.status(200).json({ message: 'Sesión cerrada correctamente.' });
+        });
+    });
+});
+
 
 // Endpoint para obtener los productos
 app.get('/api/productos', async (req, res) => {
@@ -671,6 +689,7 @@ async function enviarCorreoVerificacion(correo, codigo) {
                     <div style="background: #ffffff; border-left: 4px solid #e6a300; padding: 20px; margin: 30px 0; border-radius: 0 8px 8px 0;">
                         <h3 style="color: #2c2c2c; font-size: 16px; font-weight: 600; margin-bottom: 8px;">📋 Instrucciones</h3>
                         <p style="color: #555555; font-size: 14px; margin: 0;">Ingresa este código en la página de verificación para activar tu cuenta. No compartas este código con nadie.</p>
+                        <a href="http://localhost:3000/verificar-cuenta/" style="color: #e6a300; text-decoration: underline;">Ir a la página de verificación</a>
                     </div>
 
                     <div style="height: 1px; background: linear-gradient(90deg, transparent, #ddd, transparent); margin: 30px 0;"></div>

@@ -47,12 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
         btnEditarPerfil.href = 'datos-perfil.html'; // Redirigir a la misma página
         // Asignar la función de cerrar sesión al botón "Cerrar sesión"
         btnCerrarSesion.addEventListener('click', () => {
-            localStorage.clear(); // Limpiar el localStorage
+            
             Swal.fire({
                 icon: 'success',
                 title: 'Sesión cerrada',
                 text: 'Has cerrado sesión correctamente.',
             }).then(() => {
+                cerrarSesion();
                 localStorage.removeItem('usuario'); // Limpiar el localStorage
                 window.location.href = '/'; // Redirigir al index
             });

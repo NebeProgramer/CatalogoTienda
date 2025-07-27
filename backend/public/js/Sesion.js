@@ -26,6 +26,22 @@ function hideModal(modal, formSesionContainer, olvidoContainer, formPreferencias
     document.getElementById('passwordSesion').value = '';
     document.getElementById('emailSesionC').value = '';
     document.getElementById('passwordSesionC').value = '';
+    document.getElementById('emailSesion').style.borderColor = '';
+    //resetear requisitos y borde de contraseña y correo
+    document.getElementById('emailSesion').style.borderColor = '';    
+    document.getElementById('emailSesionC').style.borderColor = '';
+    document.getElementById('passwordSesion').style.borderColor = '';
+    document.getElementById('passwordSesionC').style.borderColor = '';
+    const reqLength = document.getElementById('reqLength');
+    const reqMayus = document.getElementById('reqMayus');
+    const reqMinus = document.getElementById('reqMinus');
+    const reqNum = document.getElementById('reqNum');
+    const reqEspecial = document.getElementById('reqEspecial');
+    if (reqLength) reqLength.style.color = 'red';
+    if (reqMayus) reqMayus.style.color = 'red';
+    if (reqMinus) reqMinus.style.color = 'red';
+    if (reqNum) reqNum.style.color = 'red';
+    if (reqEspecial) reqEspecial.style.color = 'red';
 }
 //color de req rojo
 function resetRequisitos(reqLength, reqMayus, reqMinus, reqNum, reqEspecial) {
@@ -34,6 +50,17 @@ function resetRequisitos(reqLength, reqMayus, reqMinus, reqNum, reqEspecial) {
     reqMinus.style.color = 'red';
     reqNum.style.color = 'red';
     reqEspecial.style.color = 'red';
+}
+
+function resetform(emailSesion, emailSesionC, passwordSesion, passwordSesionC) {
+    emailSesion.value = '';
+    emailSesionC.value = '';
+    passwordSesion.value = '';
+    passwordSesionC.value = '';
+    emailSesion.style.borderColor = '';
+    emailSesionC.style.borderColor = '';
+    passwordSesion.style.borderColor = '';
+    passwordSesionC.style.borderColor = '';
 }
 function setupLoginForm({
     opcionTitulo, tco, tca, emailSesionC, passwordSesionC, btnSesion, olvidoContainer, terminos, privacidad, imputTerminos, imputPrivacidad, reqLength, reqMayus, reqMinus, reqNum, reqEspecial
@@ -184,6 +211,8 @@ async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultar
             title: 'Campos incompletos',
             text: 'Por favor, completa todos los campos.',
             toast: true,
+            timer: 3000,
+            showConfirmButton: false,
             position: 'top-end'
         });
         ocultarLoader();
@@ -269,6 +298,8 @@ async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultar
                     title: 'Cuenta creada',
                     text: 'Tu cuenta ha sido creada exitosamente.',
                     toast: true,
+                    timer: 3000,
+                    showConfirmButton: false,
                     position: 'top-end'
                 });
             }
@@ -290,10 +321,15 @@ async function crearCuenta({ emailSesion, passwordSesion, mostrarLoader, ocultar
             title: 'Error',
             text: 'Hubo un error al crear la cuenta. Intenta nuevamente.',
             toast: true,
+            timer: 3000,
+            showConfirmButton: false,
             position: 'top-end'
         });
         ocultarLoader();
     } finally {
+        //Restablecer estado del formulario
+        resetRequisitos(reqLength, reqMayus, reqMinus, reqNum, reqEspecial);
+        resetform(emailSesion, emailSesionC, passwordSesion, passwordSesionC);
         ocultarLoader();
     }
     hideModal();
@@ -309,7 +345,9 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
             title: 'Campos incompletos',
             text: 'Por favor, completa todos los campos.',
             toast: true,
-            position: 'top-end'
+            position: 'top-end',
+            timer: 3000,
+            showConfirmButton: false
         });
         ocultarLoader();
         return;
@@ -324,6 +362,19 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
         });
         const data = await respuesta.json();
         if (respuesta.ok) {
+            if (data.isverified === false) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Cuenta no verificada',
+                    text: 'Por favor, verifica tu cuenta antes de iniciar sesión.',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+                ocultarLoader();
+                return;
+            }
             localStorage.setItem('usuario', JSON.stringify(data.user));
             if (data.user && data.user.rol === 'admin') {
                 if (typeof openCRUD === 'function') {
@@ -518,17 +569,57 @@ async function iniciarSesion({ emailSesion, passwordSesion, mostrarLoader, ocult
     }
 }
 function cerrarSesion() {
-    localStorage.removeItem('usuario');
-    location.reload();
-    Swal.fire({
-        icon: 'success',
-        title: 'Sesión Cerrada',
-        text: 'Has cerrado sesión correctamente.',
-        toast: true,
-        position: 'top-end',
-        timer: 3000,
-        showConfirmButton: false
-    });
+    fetch('/api/auth/logout')
+        .then(() => {
+            // Limpia localStorage y reinicia UI
+            localStorage.removeItem('usuario');
+
+            // Opcional: ocultar botones y actualizar menú
+            const bienvenida = document.querySelector('.bienvenida');
+            if (bienvenida) bienvenida.remove();
+
+            const listaSesion = document.querySelector('.iniciosesion');
+            if (listaSesion) {
+                listaSesion.innerHTML = `
+                    <li><a href="#" id="iniciarSesion">Iniciar sesión</a></li>
+                    <li><a href="#" id="crearCuenta">Crear cuenta</a></li>
+                `;
+                // Volver a agregar listeners si es necesario
+                document.getElementById('iniciarSesion').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    iniciarSesion.click();
+                });
+                document.getElementById('crearCuenta').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    crearCuenta.click();
+                });
+            }
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Sesión Cerrada',
+                text: 'Has cerrado sesión correctamente.',
+                toast: true,
+                position: 'top-end',
+                timer: 3000,
+                showConfirmButton: false
+            }).then(() => {
+                // Redirige a la página de inicio o a donde sea necesario
+                window.location.reload();
+            });
+        })
+        .catch((err) => {
+            console.error('Error al cerrar sesión:', err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al cerrar sesión',
+                text: 'No se pudo cerrar la sesión correctamente.',
+                toast: true,
+                position: 'top-end',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        });
 }
 async function mostrarPerfil(user, Swal, mostrarLoader, ocultarLoader) {
     mostrarLoader();
@@ -631,24 +722,31 @@ async function verificarAutenticacionGoogle() {
         if (respuesta.ok) {
             const data = await respuesta.json();
             if (data.user) {
+                if (data.user.rol === 'admin') {
+                    const ip = data.user.ip || (await (await fetch('https://api.ipify.org?format=json')).json()).ip;
+                    // Verificar IP permitida para admin
+                    const ipPermitidaResponse = await fetch(`/api/ips/${ip}`);
+                    if (!ipPermitidaResponse.ok) {
+                        
+                        setTimeout(() => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Acceso denegado',
+                                text: 'Tu dirección IP no está permitida para acceder a esta área.',
+                                toast: true,
+                                position: 'top-end',
+                                timer: 3000
+                            }).then(() => {
+                                cerrarSesion();
+                            });
+                        }, 1000);
+                        return;
+                    }
+                }
                 // Usuario autenticado exitosamente con Google
                 localStorage.setItem('usuario', JSON.stringify(data.user));
                 // Actualizar la interfaz primero para evitar pantalla negra
                 actualizarInterfazUsuario(data.user);
-                // Mostrar mensaje de bienvenida después de actualizar la interfaz
-                setTimeout(() => {
-                    if (typeof Swal !== 'undefined') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: '¡Bienvenido!',
-                            text: `Has iniciado sesión con Google como ${data.user.nombre || 'Usuario'}`,
-                            toast: true,
-                            position: 'top-end',
-                            timer: 3000,
-                            showConfirmButton: false
-                        });
-                    }
-                }, 100);
                 return true;
             }
         }
@@ -738,6 +836,28 @@ function actualizarInterfazUsuario(usuario) {
     if (carrito) {
         carrito.style.display = 'block';
     }
+    // Mostrar mensaje de bienvenida
+    if (usuario.rol === 'admin') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Bienvenido de nuevo!',
+            text: 'Has iniciado sesión con Google como administrador.',
+            toast: true,
+            position: 'top-end',
+            timer: 3000
+        });
+    }else{
+        Swal.fire({
+            icon: 'success',
+            title: 'Bienvenido de nuevo!',
+            text: 'Has iniciado sesión con Google.',
+            toast: true,
+            position: 'top-end',
+            timer: 3000
+        });
+    }
+
+
 }
 // Función para verificar autenticación de Google al cargar la página
 function verificarParametrosGoogle() {
