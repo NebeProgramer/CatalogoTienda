@@ -93,8 +93,9 @@ if (idParam === 'crear') {
             position: 'top-end',
             showConfirmButton: false,
             timer: 3000
+        }).then(() => {
+            window.location.href = '/admin';
         });
-        window.location.href = '/admin';
         return;
     }
     try {
@@ -114,8 +115,9 @@ if (idParam === 'crear') {
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 3000
+            }).then(() => {
+                window.location.href = '/admin';
             });
-            window.location.href = '/admin';
             return;
         }
         // Mostrar la información del producto en formularioProducto
@@ -175,8 +177,17 @@ if (idParam === 'crear') {
         });
     } catch (error) {
         console.error('Error al cargar el producto:', error);
-        alert('Hubo un error al cargar el producto. Intenta nuevamente.');
-        window.location.href = '/admin';
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al cargar el producto. Intenta nuevamente.',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        }).then(() => {
+            window.location.href = '/admin';
+        });
     }
 }
     if (usuario) {
@@ -258,9 +269,10 @@ if (idParam === 'crear') {
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 3000
+                }).then(() => {
+                    imagenesSeleccionadas = [];
+                    window.location.href = '/admin';
                 });
-                imagenesSeleccionadas = [];
-                window.location.href = '/admin';
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -304,8 +316,7 @@ if (idParam === 'crear') {
             });
             return;
         }
-        const params = new URLSearchParams(window.location.search);
-        const productoId = parseInt(params.get('id'), 10);
+        const productoId = window.location.pathname.split('/').pop(); // Obtener el ID del producto de la URL
         if (Number.isNaN(productoId) || productoId <= 0) {
             Swal.fire({
                 icon: 'error',
@@ -363,9 +374,10 @@ if (idParam === 'crear') {
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 3000
+                }).then(() => {
+                    imagenesSeleccionadas = [];
+                    window.location.href = '/admin'; // Redirigir a la página principal
                 });
-                imagenesSeleccionadas = [];
-                window.location.href = '/admin'; // Redirigir a la página principal
             } else {
                 Swal.fire({
                     icon: 'error',
