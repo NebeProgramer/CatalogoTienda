@@ -2,12 +2,12 @@
 :root {
     /* Tema Claro (por defecto) */
     --bg-primary: #fff5e6;
-    --bg-secondary: #e6a300;  /* Naranja más oscuro para mejor contraste */
+    --bg-secondary: #e6a300;
     --bg-tertiary: #ffffff;
-    --text-primary: #2c2c2c;  /* Negro más suave pero con buen contraste */
-    --text-secondary: #555555;  /* Gris más oscuro para mejor contraste */
-    --text-tertiary: #333333;  /* Gris más claro para texto terciario */
-    --text-accent: #d49000;  /* Naranja oscuro para texto de acento */
+    --text-primary: #2c2c2c;
+    --text-secondary: #555555;
+    --text-tertiary: #333333;
+    --text-accent: #d49000;
     --border-primary: #ddd;
     --border-secondary: #ccc;
     --shadow-light: rgba(0, 0, 0, 0.1);
@@ -17,7 +17,7 @@
     --error: #dc3545;
     --info: #17a2b8;
     --modal-bg: rgba(0, 0, 0, 0.4);
-    --hover-overlay: rgba(230, 163, 0, 0.15);  /* Overlay más visible */
+    --hover-overlay: rgba(230, 163, 0, 0.15);
     --selected: #e6a300;
 
 }
@@ -64,7 +64,7 @@ body {
 
 header {
     background-color: var(--bg-secondary);
-    color: var(--text-primary); /* Blanco para máximo contraste */
+    color: var(--text-tertiary); /* Mejor contraste sobre fondo oscuro */
     padding: 20px;
     text-align: center;
     transition: background-color 0.3s ease;
@@ -72,6 +72,215 @@ header {
 }
 
 main {
+    background-color: var(--bg-primary);
+    display: flex; /* Para maquetación flexible - Los alumnos pueden
+    experimentar con grid también */
+    
+    flex-wrap: wrap; /* Para que los productos se envuelvan en pantallas
+    pequeñas */
+    justify-content: center; /* Centrar los productos horizontalmente */
+    padding: 20px;
+    width: 100%;
+    max-width: 100vw;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* General backgrounds */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    /* ...existing code... */
+}
+
+header {
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary); /* Mejor contraste sobre fondo oscuro */
+    /* ...existing code... */
+}
+
+main {
+    background-color: var(--bg-primary);
+    /* ...existing code... */
+}
+
+/* Cards, containers, modals */
+.modal-content,
+.formPerfilContainer,
+.confirmacion-main,
+.team-member,
+.faq-item,
+.sobre-nosotros-historia,
+.sobre-nosotros-equipo {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    /* ...existing code... */
+}
+
+/* Tablas y celdas */
+th {
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary); /* Contraste sobre fondo secundario */
+    /* ...existing code... */
+}
+td {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    /* ...existing code... */
+}
+
+/* Botones principales */
+button,
+.btnComprarTodo,
+#modal-preferencias button,
+#agregar-termino-btn,
+#guardar-terminos-btn,
+.team-actions button,
+button.eliminar-termino-btn {
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary); /* Mejor contraste sobre fondo secundario */
+    border: 1px solid var(--border-primary);
+    /* ...existing code... */
+}
+button:hover,
+.btnComprarTodo:hover,
+#modal-preferencias button:hover,
+#agregar-termino-btn:hover,
+#guardar-terminos-btn:hover,
+.team-actions button:hover,
+button.eliminar-termino-btn:hover {
+    background-color: var(--text-accent); /* Acento para hover */
+    color: var(--bg-tertiary); /* Contraste sobre acento */
+    /* ...existing code... */
+}
+
+/* Botones secundarios o de acción rápida */
+.producto-acciones button {
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary);
+    border: 1px solid var(--border-primary);
+    /* ...existing code... */
+}
+.producto-acciones button:hover {
+    background-color: var(--text-accent);
+    color: var(--bg-tertiary);
+    /* ...existing code... */
+}
+
+/* Inputs, selects, textareas */
+input, textarea, select {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-primary);
+    /* ...existing code... */
+}
+input:focus, textarea:focus, select:focus {
+    border-color: var(--text-accent);
+    /* ...existing code... */
+}
+
+/* Menú hamburguesa */
+.menuHamburguesa {
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary);
+    /* ...existing code... */
+}
+.menuHamburguesa ul li a {
+    color: var(--text-tertiary);
+    background: none;
+    /* ...existing code... */
+}
+.menuHamburguesa ul li a:hover {
+    background-color: var(--hover-overlay);
+    color: var(--text-accent);
+    /* ...existing code... */
+}
+
+/* Footer */
+footer {
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary);
+    /* ...existing code... */
+}
+
+/* Carrusel */
+.carrusel,
+.carrusel-items,
+.carrusel-item,
+.carruselProd,
+.carruselProd-imagen {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    /* ...existing code... */
+}
+.carrusel-item:hover {
+    background-color: var(--hover-overlay);
+    color: var(--text-primary);
+    /* ...existing code... */
+}
+
+/* Comentarios */
+.comentarios {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-primary);
+    /* ...existing code... */
+}
+
+/* SweetAlert2 (ya usa variables base correctamente) */
+
+/* Otros detalles */
+.confirmacion-header {
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary);
+    /* ...existing code... */
+}
+.confirmacion-main {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    /* ...existing code... */
+}
+.faq-title {
+    color: var(--text-accent);
+    /* ...existing code... */
+}
+.faq-question {
+    color: var(--text-secondary);
+    /* ...existing code... */
+}
+.faq-answer strong {
+    color: var(--text-accent);
+    /* ...existing code... */
+}
+
+/* Estilos CSS Base - Los alumnos deben completar este archivo */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header {
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary); /* Mejor contraste sobre fondo oscuro */
+    padding: 20px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    text-shadow: var(--shadow-medium)
+}
+
+main {
+    background-color: var(--bg-primary);
     display: flex; /* Para maquetación flexible - Los alumnos pueden
     experimentar con grid también */
     
@@ -183,15 +392,14 @@ input, textarea, select {
     padding: 8px;
     border: 1px solid var(--border-primary);
     border-radius: 5px;
-    background-color: var(--bg-tertiary);
-    color: var(--text-primary);
+    padding: 8px;
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 input:focus, textarea:focus, select:focus {
-    outline: none;
     border-color: var(--text-accent);
     box-shadow: 0 0 5px var(--shadow-light);
+    outline: none;
 }
 
 textarea {
@@ -200,7 +408,7 @@ textarea {
 
 button {
     background: var(--bg-secondary);
-    color: var(--text-secondary); /* Dinámico: color secundario del texto */
+    color: var(--text-tertiary); /* Mejor contraste sobre fondo secundario */
     border: 1px solid var(--text-primary);
     padding: 10px;
     border-radius: 5px;
@@ -212,8 +420,8 @@ button {
 }
 
 button:hover {
-    background: var(--text-primary);
-    color: var(--text-tertiary); /* Dinámico: color terciario del texto */
+    background: var(--text-accent);
+    color: var(--bg-tertiary); /* Contraste sobre acento */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--shadow-medium);
 }
@@ -364,9 +572,9 @@ th {
 }
 
 .producto-acciones button {
-    background-color: var(--bg-secondary); /* Dinámico */
-    color: var(--text-secondary); /* Dinámico */
-    border: 1px solid var(--border-primary); /* Dinámico */
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary);
+    border: 1px solid var(--border-primary);
     padding: 8px 10px;
     border-radius: 5px;
     font-size: 14px;
@@ -377,8 +585,8 @@ th {
 }
 
 .producto-acciones button:hover {
-    background-color: var(--text-primary); /* Dinámico */
-    color: var(--text-tertiary); /* Dinámico */
+    background-color: var(--text-accent);
+    color: var(--bg-tertiary);
     transform: translateY(-2px) scale(1.02);
     box-shadow: 0 4px 8px var(--shadow-medium);
 }
@@ -407,9 +615,9 @@ th {
 }
 
 .comentarios {
-    border: 1px solid var(--border-primary); /* Dinámico */
-    background-color: var(--bg-primary); /* Dinámico */
-    color: var(--text-primary); /* Dinámico */
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-primary);
     margin: 20px;
     padding: 20px;
     border-radius: 10px;
@@ -491,8 +699,8 @@ th {
 }
 
 footer {
-    background-color: var(--bg-secondary); 
-    color: var(--text-primary); /* Blanco para máximo contraste */
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary); /* Mejor contraste sobre fondo oscuro */
     padding: 10px;
     text-align: center;
     position: relative;
@@ -791,7 +999,7 @@ footer {
     width: 250px;
     height: 100vh; /* Altura completa de la ventana */
     background-color: var(--bg-secondary);
-    color: var(--text-primary);
+    color: var(--text-tertiary);
     transition: left 0.3s ease, background-color 0.3s ease, color 0.3s ease;
     z-index: 100;
     box-shadow: 2px 0 5px var(--shadow-medium);
@@ -948,6 +1156,7 @@ footer {
     background-color: var(--hover-overlay);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--shadow-medium);
+    color: var(--text-accent);
 }
 
 /* Sección de Filtros */
@@ -1081,10 +1290,10 @@ footer {
 .btnComprarTodo {
     position: absolute; /* Para posicionarlo dentro del carrusel */
     bottom: 10px; /* Separación desde la parte inferior */
-    left: 50%; /* Centrar horizontalmente */
-    transform: translateX(-50%); /* Ajustar el centrado */
+
+    left: 46%; /* Centrar horizontalmente */
     background-color: var(--bg-secondary); /* Dinámico */
-    color: var(--text-secondary); /* Dinámico */
+    color: var(--text-tertiary); /* Mejor contraste sobre fondo secundario */
     border: 2px solid var(--text-primary); /* Dinámico */
     box-shadow: 0 4px 6px var(--shadow-light); /* Dinámico */
     border-radius: 5px; /* Bordes redondeados */
@@ -1092,7 +1301,6 @@ footer {
     font-size: 16px; /* Tamaño del texto */
     font-weight: bold; /* Texto en negrita */
     cursor: pointer; /* Cambiar el cursor al pasar por encima */
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* Animación al pasar el mouse */
     width: auto; /* Ajusta el ancho al contenido */
     max-width: 200px; /* Limita el ancho máximo */
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Sombra del texto */
@@ -1101,8 +1309,7 @@ footer {
 /* Cambiar el color al pasar el mouse */
 .btnComprarTodo:hover {
     background-color: var(--text-primary); /* Dinámico */
-    color: var(--text-tertiary); /* Dinámico */
-    transform: translateX(-50%) translateY(-2px) scale(1.05);
+    color: var(--bg-tertiary); /* Dinámico */
     box-shadow: 0 6px 12px var(--shadow-medium);
 }
 
@@ -1440,10 +1647,11 @@ footer {
 }
 
 .confirmacion-main {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: var(--bg-tertiary);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -2051,73 +2259,73 @@ button.eliminar-termino-btn:hover {
     background: var(--bg-tertiary);
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.07);
-    padding: 32px 28px;
-    min-height: 320px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
-
-/* === Estilos para Preguntas y Respuestas (FAQ) === */
-.faq-container {
+    padding: 32px 24px;
+    margin: 40px auto 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-    margin: 0 auto;
-    padding: 40px 0 60px 0;
-    background: var(--bg-tertiary);
 }
-.faq-item {
-    background: var(--bg-tertiary);
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    padding: 32px 28px;
-    margin-bottom: 32px;
-    max-width: 800px;
+
+/* ===== NUEVO: Estilos para el formulario de historia ===== */
+#form-historia-container {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    transition: box-shadow 0.3s;
+    align-items: center;
 }
-.faq-item:hover {
-    box-shadow: 0 8px 32px rgba(0,0,0,0.13);
-}
-.faq-title {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 30px;
-    color: var(--text-accent);
+
+#form-historia {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
-.faq-author {
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 0 auto 8px auto;
+
+#historia-textarea {
+    width: 100%;
+    min-height: 120px;
+    max-height: 300px;
+    resize: vertical;
+    padding: 14px 12px;
+    font-size: 16px;
+    border: 1.5px solid var(--border-primary);
+    border-radius: 7px;
+    background: var(--bg-primary);
     color: var(--text-primary);
+    box-sizing: border-box;
+    margin-bottom: 0;
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+}
+
+#historia-textarea:focus {
+    border-color: var(--text-accent);
+    outline: none;
+    background: var(--bg-tertiary);
+}
+
+#guardar-historia-btn {
+    margin-top: 8px;
     width: 100%;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    background: var(--bg-secondary);
+    color: var(--text-tertiary);
+    border: 1px solid var(--border-primary);
+    box-shadow: 0 2px 6px var(--shadow-light);
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.2s;
 }
-.faq-email {
-    text-align: center;
-    font-size: 1rem;
-    color: var(--text-secondary);
-    margin-bottom: 18px;
-    width: 100%;
-}
-.faq-question {
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin-bottom: 8px;
-    color: var(--text-secondary);
-}
-.faq-answer {
-    font-size: 1rem;
+
+#guardar-historia-btn:hover {
+    background: var(--text-accent);
+    color: var(--bg-tertiary);
+    box-shadow: 0 4px 12px var(--shadow-medium);
     color: var(--text-primary);
     margin-bottom: 0;
 }
+    
 .faq-answer strong {
     color: var(--text-accent);
 }
@@ -2687,7 +2895,6 @@ button:hover:not(:disabled) {
             border-radius: 8px;
             font-size: 16px;
             transition: all 0.3s ease;
-            box-sizing: border-box;
         }
 
         .form-group input:focus {
