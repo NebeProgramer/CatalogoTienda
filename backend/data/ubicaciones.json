@@ -1,0 +1,292 @@
+[
+  {
+    "nombre": "Colombia",
+    "departamentos": [
+      {
+        "nombre": "Antioquia",
+        "ciudades": [
+          { "nombre": "Medellín" },
+          { "nombre": "Envigado" },
+          { "nombre": "Bello" },
+          { "nombre": "Itagüí" },
+          { "nombre": "Rionegro" },
+          { "nombre": "Sabaneta" },
+          { "nombre": "La Ceja" },
+          { "nombre": "Copacabana" },
+          { "nombre": "Girardota" },
+          { "nombre": "Caldas" }
+        ]
+      },
+      {
+        "nombre": "Cundinamarca",
+        "ciudades": [
+          { "nombre": "Bogotá" },
+          { "nombre": "Soacha" },
+          { "nombre": "Chía" },
+          { "nombre": "Zipaquirá" },
+          { "nombre": "Facatativá" },
+          { "nombre": "Fusagasugá" },
+          { "nombre": "Girardot" },
+          { "nombre": "Mosquera" },
+          { "nombre": "Funza" },
+          { "nombre": "Madrid" }
+        ]
+      },
+      {
+        "nombre": "Valle del Cauca",
+        "ciudades": [
+          { "nombre": "Cali" },
+          { "nombre": "Palmira" },
+          { "nombre": "Buenaventura" },
+          { "nombre": "Tuluá" },
+          { "nombre": "Buga" },
+          { "nombre": "Cartago" },
+          { "nombre": "Jamundí" },
+          { "nombre": "Yumbo" },
+          { "nombre": "Candelaria" },
+          { "nombre": "La Unión" }
+        ]
+      },
+      {
+        "nombre": "Atlántico",
+        "ciudades": [
+          { "nombre": "Barranquilla" },
+          { "nombre": "Soledad" },
+          { "nombre": "Malambo" },
+          { "nombre": "Sabanalarga" },
+          { "nombre": "Baranoa" },
+          { "nombre": "Galapa" },
+          { "nombre": "Puerto Colombia" },
+          { "nombre": "Santo Tomás" },
+          { "nombre": "Palmar de Varela" },
+          { "nombre": "Polonuevo" }
+        ]
+      },
+      {
+        "nombre": "Santander",
+        "ciudades": [
+          { "nombre": "Bucaramanga" },
+          { "nombre": "Floridablanca" },
+          { "nombre": "Girón" },
+          { "nombre": "Piedecuesta" },
+          { "nombre": "Barrancabermeja" },
+          { "nombre": "Socorro" },
+          { "nombre": "San Gil" },
+          { "nombre": "Lebrija" },
+          { "nombre": "Rionegro" },
+          { "nombre": "Vélez" }
+        ]
+      },
+      {
+        "nombre": "Bolívar",
+        "ciudades": [
+          { "nombre": "Cartagena" },
+          { "nombre": "Magangué" },
+          { "nombre": "El Carmen de Bolívar" },
+          { "nombre": "Turbaco" },
+          { "nombre": "Arjona" },
+          { "nombre": "San Juan Nepomuceno" },
+          { "nombre": "Santa Rosa" },
+          { "nombre": "Mompox" },
+          { "nombre": "Cicuco" },
+          { "nombre": "San Jacinto" }
+        ]
+      },
+      {
+        "nombre": "Nariño",
+        "ciudades": [
+          { "nombre": "Pasto" },
+          { "nombre": "Tumaco" },
+          { "nombre": "Ipiales" },
+          { "nombre": "Túquerres" },
+          { "nombre": "Sandoná" },
+          { "nombre": "La Unión" },
+          { "nombre": "Samaniego" },
+          { "nombre": "El Charco" },
+          { "nombre": "Barbacoas" },
+          { "nombre": "Cumbal" }
+        ]
+      },
+      {
+        "nombre": "Córdoba",
+        "ciudades": [
+          { "nombre": "Montería" },
+          { "nombre": "Lorica" },
+          { "nombre": "Sahagún" },
+          { "nombre": "Cereté" },
+          { "nombre": "Montelíbano" },
+          { "nombre": "Tierralta" },
+          { "nombre": "Planeta Rica" },
+          { "nombre": "San Antero" },
+          { "nombre": "Ciénaga de Oro" },
+          { "nombre": "Chinú" }
+        ]
+      },
+      {
+        "nombre": "Meta",
+        "ciudades": [
+          { "nombre": "Villavicencio" },
+          { "nombre": "Acacías" },
+          { "nombre": "Granada" },
+          { "nombre": "Puerto López" },
+          { "nombre": "Cumaral" },
+          { "nombre": "San Martín" },
+          { "nombre": "Restrepo" },
+          { "nombre": "Guamal" },
+          { "nombre": "Castilla La Nueva" },
+          { "nombre": "El Dorado" }
+        ]
+      },
+      {
+        "nombre": "Cesar",
+        "ciudades": [
+          { "nombre": "Valledupar" },
+          { "nombre": "Aguachica" },
+          { "nombre": "La Jagua de Ibirico" },
+          { "nombre": "Codazzi" },
+          { "nombre": "Bosconia" },
+          { "nombre": "El Copey" },
+          { "nombre": "Curumaní" },
+          { "nombre": "Chimichagua" },
+          { "nombre": "Pailitas" },
+          { "nombre": "San Alberto" }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "Argentina",
+    "departamentos": [
+      { "nombre": "Departamento 1", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 2", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 3", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 4", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 5", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 6", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 7", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 8", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 9", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 10", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] }
+    ]
+  },
+  {
+    "nombre": "Brasil",
+    "departamentos": [
+      { "nombre": "Departamento 1", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 2", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 3", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 4", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 5", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 6", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 7", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 8", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 9", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 10", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] }
+    ]
+  },
+  {
+    "nombre": "México",
+    "departamentos": [
+      { "nombre": "Departamento 1", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 2", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 3", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 4", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 5", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 6", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 7", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 8", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 9", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 10", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] }
+    ]
+  },
+  {
+    "nombre": "Perú",
+    "departamentos": [
+      { "nombre": "Departamento 1", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 2", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 3", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 4", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 5", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 6", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 7", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 8", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 9", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 10", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] }
+    ]
+  },
+  {
+    "nombre": "Chile",
+    "departamentos": [
+      { "nombre": "Departamento 1", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 2", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 3", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 4", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 5", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 6", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 7", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 8", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 9", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 10", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] }
+    ]
+  },
+  {
+    "nombre": "Ecuador",
+    "departamentos": [
+      { "nombre": "Departamento 1", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 2", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 3", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 4", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 5", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 6", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 7", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 8", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 9", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 10", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] }
+    ]
+  },
+  {
+    "nombre": "Venezuela",
+    "departamentos": [
+      { "nombre": "Departamento 1", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 2", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 3", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 4", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 5", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 6", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 7", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 8", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 9", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 10", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] }
+    ]
+  },
+  {
+    "nombre": "Uruguay",
+    "departamentos": [
+      { "nombre": "Departamento 1", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 2", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 3", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 4", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 5", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 6", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 7", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 8", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 9", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 10", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] }
+    ]
+  },
+  {
+    "nombre": "Paraguay",
+    "departamentos": [
+      { "nombre": "Departamento 1", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 2", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 3", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 4", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 5", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 6", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 7", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 8", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 9", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] },
+      { "nombre": "Departamento 10", "ciudades": [ { "nombre": "Ciudad 1" }, { "nombre": "Ciudad 2" }, { "nombre": "Ciudad 3" }, { "nombre": "Ciudad 4" }, { "nombre": "Ciudad 5" }, { "nombre": "Ciudad 6" }, { "nombre": "Ciudad 7" }, { "nombre": "Ciudad 8" }, { "nombre": "Ciudad 9" }, { "nombre": "Ciudad 10" } ] }
+    ]
+  }
+]
