@@ -44,7 +44,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy; // Google OA
 const session = require('express-session'); // Manejo de sesiones
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port =8080;
 
 // Conexión a MongoDB usando variables de entorno
 const mongoUri = process.env.MONGODB_URI;
