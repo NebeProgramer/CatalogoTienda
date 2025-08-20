@@ -1576,6 +1576,4 @@ document.addEventListener('DOMContentLoaded', () => {
         closeCRUD();
     }
 }
-
-    verificarUsuarioGoogle(); // Verificar usuario al cargar la página
 });
